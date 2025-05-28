@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -35,9 +34,10 @@ export const FlatListingForm = ({ data, onChange, onNext }: FlatListingFormProps
     if (fieldParts.length === 1) {
       onChange({ [field]: value });
     } else {
+      const currentObject = data[fieldParts[0] as keyof FlatListing] as Record<string, any>;
       onChange({
         [fieldParts[0]]: {
-          ...data[fieldParts[0] as keyof FlatListing],
+          ...currentObject,
           [fieldParts[1]]: value
         }
       });

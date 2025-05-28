@@ -1,7 +1,7 @@
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Wifi, Car, Dumbbell, Swimming, TreePine, ShieldCheck, Utensils, Waves } from "lucide-react";
+import { Wifi, Car, Dumbbell, Waves, TreePine, ShieldCheck, Utensils } from "lucide-react";
 
 interface AmenitiesSelectorProps {
   selected: string[];
@@ -13,7 +13,7 @@ export const AmenitiesSelector = ({ selected, onChange }: AmenitiesSelectorProps
     { id: 'wifi', label: 'High Speed Internet', icon: Wifi },
     { id: 'parking', label: 'Parking Space', icon: Car },
     { id: 'gym', label: 'Gym/Fitness Center', icon: Dumbbell },
-    { id: 'swimming', label: 'Swimming Pool', icon: Swimming },
+    { id: 'swimming', label: 'Swimming Pool', icon: Waves },
     { id: 'garden', label: 'Garden/Balcony', icon: TreePine },
     { id: 'security', label: '24/7 Security', icon: ShieldCheck },
     { id: 'kitchen', label: 'Modular Kitchen', icon: Utensils },
