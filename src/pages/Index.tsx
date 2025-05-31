@@ -95,9 +95,10 @@ const Index = () => {
               </h1>
             </div>
             <nav className="hidden md:flex space-x-6">
-              <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors">Find Flats</a>
-              <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors">List Your Flat</a>
-              <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors">How it Works</a>
+              <a href="/browse" className="text-gray-600 hover:text-blue-600 transition-colors">Find Flats</a>
+              <a href="/" className="text-blue-600 font-medium">List Your Flat</a>
+              <a href="/about" className="text-gray-600 hover:text-blue-600 transition-colors">About</a>
+              <a href="/profile" className="text-gray-600 hover:text-blue-600 transition-colors">Profile</a>
             </nav>
           </div>
         </div>
