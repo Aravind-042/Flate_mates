@@ -9,7 +9,167 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      flat_listings: {
+        Row: {
+          amenities: string[] | null
+          bathrooms: number
+          bedrooms: number
+          contact_call: boolean
+          contact_email: boolean
+          contact_whatsapp: boolean
+          created_at: string
+          description: string | null
+          furnished: boolean
+          id: string
+          images: string[] | null
+          is_active: boolean
+          location_address: string
+          location_area: string
+          location_city: string
+          owner_id: string
+          parking: boolean
+          preferences_additional_requirements: string | null
+          preferences_gender: string | null
+          preferences_lifestyle: string[] | null
+          preferences_profession: string[] | null
+          property_type: string
+          rent_amount: number
+          rent_deposit: number
+          rent_includes: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          amenities?: string[] | null
+          bathrooms?: number
+          bedrooms?: number
+          contact_call?: boolean
+          contact_email?: boolean
+          contact_whatsapp?: boolean
+          created_at?: string
+          description?: string | null
+          furnished?: boolean
+          id?: string
+          images?: string[] | null
+          is_active?: boolean
+          location_address: string
+          location_area: string
+          location_city: string
+          owner_id: string
+          parking?: boolean
+          preferences_additional_requirements?: string | null
+          preferences_gender?: string | null
+          preferences_lifestyle?: string[] | null
+          preferences_profession?: string[] | null
+          property_type: string
+          rent_amount: number
+          rent_deposit?: number
+          rent_includes?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          amenities?: string[] | null
+          bathrooms?: number
+          bedrooms?: number
+          contact_call?: boolean
+          contact_email?: boolean
+          contact_whatsapp?: boolean
+          created_at?: string
+          description?: string | null
+          furnished?: boolean
+          id?: string
+          images?: string[] | null
+          is_active?: boolean
+          location_address?: string
+          location_area?: string
+          location_city?: string
+          owner_id?: string
+          parking?: boolean
+          preferences_additional_requirements?: string | null
+          preferences_gender?: string | null
+          preferences_lifestyle?: string[] | null
+          preferences_profession?: string[] | null
+          property_type?: string
+          rent_amount?: number
+          rent_deposit?: number
+          rent_includes?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      flat_requests: {
+        Row: {
+          created_at: string
+          id: string
+          listing_id: string
+          message: string | null
+          owner_id: string
+          seeker_id: string
+          status: Database["public"]["Enums"]["request_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          listing_id: string
+          message?: string | null
+          owner_id: string
+          seeker_id: string
+          status?: Database["public"]["Enums"]["request_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          listing_id?: string
+          message?: string | null
+          owner_id?: string
+          seeker_id?: string
+          status?: Database["public"]["Enums"]["request_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flat_requests_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "flat_listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          city: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          phone_number: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+        }
+        Insert: {
+          city?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          phone_number: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Update: {
+          city?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          phone_number?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +178,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      request_status: "pending" | "accepted" | "rejected" | "withdrawn"
+      user_role: "flat_seeker" | "flat_owner"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +294,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      request_status: ["pending", "accepted", "rejected", "withdrawn"],
+      user_role: ["flat_seeker", "flat_owner"],
+    },
   },
 } as const

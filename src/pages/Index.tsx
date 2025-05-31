@@ -1,8 +1,10 @@
 
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { FlatListingForm } from "@/components/FlatListingForm";
 import { FlatPreview } from "@/components/FlatPreview";
-import { Home, Users, Shield } from "lucide-react";
+import { Home, Users, Shield, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export interface FlatListing {
   title: string;
@@ -40,6 +42,7 @@ export interface FlatListing {
 }
 
 const Index = () => {
+  const { profile, signOut } = useAuth();
   const [currentStep, setCurrentStep] = useState<'form' | 'preview'>('form');
   const [flatData, setFlatData] = useState<FlatListing>({
     title: "",
@@ -80,6 +83,58 @@ const Index = () => {
     setFlatData(prev => ({ ...prev, ...newData }));
   };
 
+  // Show different content based on user role
+  const isOwner = profile?.role === 'flat_owner';
+
+  if (!isOwner) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
+        {/* Header */}
+        <header className="bg-white shadow-sm border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="bg-gradient-to-r from-blue-600 to-orange-500 p-2 rounded-lg">
+                  <Home className="h-6 w-6 text-white" />
+                </div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">
+                  FlatMates
+                </h1>
+              </div>
+              <div className="flex items-center space-x-4">
+                <span className="text-sm text-gray-600">Welcome, {profile?.full_name}</span>
+                <Button variant="outline" onClick={signOut}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </Button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Welcome to FlatMates!
+          </h1>
+          <p className="text-xl text-gray-600 mb-8">
+            You're registered as a flat seeker. Browse available flats and connect with verified owners.
+          </p>
+          <div className="space-x-4">
+            <Button 
+              asChild
+              className="bg-gradient-to-r from-blue-600 to-orange-500"
+            >
+              <a href="/browse">Browse Flats</a>
+            </Button>
+            <Button variant="outline" asChild>
+              <a href="/profile">Update Profile</a>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
       {/* Header */}
@@ -94,12 +149,19 @@ const Index = () => {
                 FlatMates
               </h1>
             </div>
-            <nav className="hidden md:flex space-x-6">
-              <a href="/browse" className="text-gray-600 hover:text-blue-600 transition-colors">Find Flats</a>
-              <a href="/" className="text-blue-600 font-medium">List Your Flat</a>
-              <a href="/about" className="text-gray-600 hover:text-blue-600 transition-colors">About</a>
-              <a href="/profile" className="text-gray-600 hover:text-blue-600 transition-colors">Profile</a>
-            </nav>
+            <div className="flex items-center space-x-4">
+              <nav className="hidden md:flex space-x-6">
+                <a href="/browse" className="text-gray-600 hover:text-blue-600 transition-colors">Find Flats</a>
+                <a href="/" className="text-blue-600 font-medium">List Your Flat</a>
+                <a href="/about" className="text-gray-600 hover:text-blue-600 transition-colors">About</a>
+                <a href="/profile" className="text-gray-600 hover:text-blue-600 transition-colors">Profile</a>
+              </nav>
+              <span className="text-sm text-gray-600">Welcome, {profile?.full_name}</span>
+              <Button variant="outline" onClick={signOut}>
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
+              </Button>
+            </div>
           </div>
         </div>
       </header>
