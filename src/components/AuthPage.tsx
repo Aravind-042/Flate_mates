@@ -9,29 +9,30 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { ArrowLeft, Phone, User, UserCheck } from "lucide-react";
+import { ArrowLeft, Mail, User, UserCheck, Sparkles } from "lucide-react";
 
-type AuthStep = 'phone' | 'otp' | 'profile';
+type AuthStep = 'email' | 'otp' | 'profile';
 
 export const AuthPage = () => {
-  const [step, setStep] = useState<AuthStep>('phone');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [step, setStep] = useState<AuthStep>('email');
+  const [email, setEmail] = useState('');
   const [otpValue, setOtpValue] = useState('');
   const [fullName, setFullName] = useState('');
   const [role, setRole] = useState<'flat_seeker' | 'flat_owner'>('flat_seeker');
   const [isLoading, setIsLoading] = useState(false);
 
   const sendOTP = async () => {
-    if (!phoneNumber || phoneNumber.length < 10) {
-      toast.error("Please enter a valid phone number");
+    if (!email || !email.includes('@')) {
+      toast.error("Please enter a valid email address");
       return;
     }
 
     setIsLoading(true);
     try {
       const { error } = await supabase.auth.signInWithOtp({
-        phone: phoneNumber,
+        email: email,
         options: {
+          emailRedirectTo: `${window.location.origin}/`,
           data: {
             full_name: fullName,
             role: role
@@ -41,7 +42,7 @@ export const AuthPage = () => {
 
       if (error) throw error;
       
-      toast.success("OTP sent successfully!");
+      toast.success("OTP sent to your email!");
       setStep('otp');
     } catch (error: any) {
       toast.error(error.message || "Failed to send OTP");
@@ -59,14 +60,14 @@ export const AuthPage = () => {
     setIsLoading(true);
     try {
       const { error } = await supabase.auth.verifyOtp({
-        phone: phoneNumber,
+        email: email,
         token: otpValue,
-        type: 'sms'
+        type: 'email'
       });
 
       if (error) throw error;
 
-      toast.success("Phone verified successfully!");
+      toast.success("Email verified successfully!");
       setStep('profile');
     } catch (error: any) {
       toast.error(error.message || "Invalid OTP");
@@ -102,82 +103,114 @@ export const AuthPage = () => {
     }
   };
 
-  const renderPhoneStep = () => (
-    <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-2xl w-fit mx-auto shadow-lg">
-          <Phone className="h-8 w-8 text-white" />
+  const renderEmailStep = () => (
+    <div className="space-y-8">
+      <div className="text-center space-y-4">
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-coral-400 to-violet-500 blur-xl opacity-30 rounded-full animate-pulse"></div>
+          <div className="relative bg-gradient-to-r from-coral-400 to-violet-500 p-4 rounded-3xl shadow-2xl">
+            <Mail className="h-10 w-10 text-white" />
+          </div>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Welcome to FlatMates</h1>
-        <p className="text-gray-600">Enter your phone number to get started</p>
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 bg-clip-text text-transparent">
+            Welcome to FlatMates
+          </h1>
+          <p className="text-lg text-slate-600 font-medium">Find your perfect flatmate adventure</p>
+        </div>
       </div>
 
-      <div className="space-y-4">
-        <div>
-          <Label htmlFor="phone" className="text-gray-700 font-medium">Phone Number</Label>
+      <div className="space-y-6">
+        <div className="space-y-3">
+          <Label htmlFor="email" className="text-slate-700 font-semibold text-base">Email Address</Label>
           <Input
-            id="phone"
-            type="tel"
-            placeholder="+91 XXXXX XXXXX"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            className="mt-2 border-purple-200 focus:border-purple-500 focus:ring-purple-500"
+            id="email"
+            type="email"
+            placeholder="your.email@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="h-14 text-lg border-2 border-slate-200 focus:border-coral-400 focus:ring-coral-400 rounded-2xl bg-white/80 backdrop-blur-sm shadow-lg"
           />
         </div>
 
         <Button 
           onClick={sendOTP}
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-3 rounded-xl font-semibold shadow-lg"
+          className="w-full h-14 text-lg font-bold bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-200"
         >
-          {isLoading ? "Sending..." : "Send OTP"}
+          {isLoading ? (
+            <div className="flex items-center space-x-2">
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              <span>Sending Magic Link...</span>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <Sparkles className="h-5 w-5" />
+              <span>Send Magic Code</span>
+            </div>
+          )}
         </Button>
       </div>
     </div>
   );
 
   const renderOTPStep = () => (
-    <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-2xl w-fit mx-auto shadow-lg">
-          <UserCheck className="h-8 w-8 text-white" />
+    <div className="space-y-8">
+      <div className="text-center space-y-4">
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-coral-400 to-violet-500 blur-xl opacity-30 rounded-full animate-pulse"></div>
+          <div className="relative bg-gradient-to-r from-coral-400 to-violet-500 p-4 rounded-3xl shadow-2xl">
+            <UserCheck className="h-10 w-10 text-white" />
+          </div>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Verify Your Phone</h1>
-        <p className="text-gray-600 text-sm sm:text-base">
-          Enter the 6-digit code sent to {phoneNumber}
-        </p>
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 bg-clip-text text-transparent">
+            Check Your Email
+          </h1>
+          <p className="text-lg text-slate-600 font-medium">
+            We sent a 6-digit code to <span className="font-bold text-coral-500">{email}</span>
+          </p>
+        </div>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div className="flex justify-center">
           <InputOTP value={otpValue} onChange={setOtpValue} maxLength={6}>
-            <InputOTPGroup>
-              <InputOTPSlot index={0} className="border-purple-200 focus:border-purple-500" />
-              <InputOTPSlot index={1} className="border-purple-200 focus:border-purple-500" />
-              <InputOTPSlot index={2} className="border-purple-200 focus:border-purple-500" />
-              <InputOTPSlot index={3} className="border-purple-200 focus:border-purple-500" />
-              <InputOTPSlot index={4} className="border-purple-200 focus:border-purple-500" />
-              <InputOTPSlot index={5} className="border-purple-200 focus:border-purple-500" />
+            <InputOTPGroup className="gap-3">
+              {[0, 1, 2, 3, 4, 5].map((index) => (
+                <InputOTPSlot 
+                  key={index}
+                  index={index} 
+                  className="w-14 h-14 text-xl font-bold border-2 border-slate-200 focus:border-coral-400 rounded-2xl bg-white/80 backdrop-blur-sm shadow-lg"
+                />
+              ))}
             </InputOTPGroup>
           </InputOTP>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-3">
           <Button 
             onClick={verifyOTP}
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-3 rounded-xl font-semibold shadow-lg"
+            className="w-full h-14 text-lg font-bold bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-200"
           >
-            {isLoading ? "Verifying..." : "Verify OTP"}
+            {isLoading ? (
+              <div className="flex items-center space-x-2">
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                <span>Verifying...</span>
+              </div>
+            ) : (
+              "Verify Code"
+            )}
           </Button>
           
           <Button 
             variant="outline" 
-            onClick={() => setStep('phone')}
-            className="w-full border-purple-300 text-purple-700 hover:bg-purple-50 rounded-xl"
+            onClick={() => setStep('email')}
+            className="w-full h-12 border-2 border-slate-200 text-slate-700 hover:bg-slate-50 rounded-2xl font-semibold"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Change Phone Number
+            Change Email Address
           </Button>
         </div>
       </div>
@@ -185,36 +218,43 @@ export const AuthPage = () => {
   );
 
   const renderProfileStep = () => (
-    <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-2xl w-fit mx-auto shadow-lg">
-          <User className="h-8 w-8 text-white" />
+    <div className="space-y-8">
+      <div className="text-center space-y-4">
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-coral-400 to-violet-500 blur-xl opacity-30 rounded-full animate-pulse"></div>
+          <div className="relative bg-gradient-to-r from-coral-400 to-violet-500 p-4 rounded-3xl shadow-2xl">
+            <User className="h-10 w-10 text-white" />
+          </div>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Complete Your Profile</h1>
-        <p className="text-gray-600">Tell us a bit about yourself</p>
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 bg-clip-text text-transparent">
+            Complete Your Profile
+          </h1>
+          <p className="text-lg text-slate-600 font-medium">Tell us a bit about yourself</p>
+        </div>
       </div>
 
-      <div className="space-y-4">
-        <div>
-          <Label htmlFor="fullName" className="text-gray-700 font-medium">Full Name</Label>
+      <div className="space-y-6">
+        <div className="space-y-3">
+          <Label htmlFor="fullName" className="text-slate-700 font-semibold text-base">Full Name</Label>
           <Input
             id="fullName"
             placeholder="Enter your full name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className="mt-2 border-purple-200 focus:border-purple-500 focus:ring-purple-500"
+            className="h-14 text-lg border-2 border-slate-200 focus:border-coral-400 focus:ring-coral-400 rounded-2xl bg-white/80 backdrop-blur-sm shadow-lg"
           />
         </div>
 
-        <div>
-          <Label htmlFor="role" className="text-gray-700 font-medium">I am a</Label>
+        <div className="space-y-3">
+          <Label htmlFor="role" className="text-slate-700 font-semibold text-base">I am a</Label>
           <Select value={role} onValueChange={(value: 'flat_seeker' | 'flat_owner') => setRole(value)}>
-            <SelectTrigger className="mt-2 border-purple-200 focus:border-purple-500 focus:ring-purple-500">
+            <SelectTrigger className="h-14 text-lg border-2 border-slate-200 focus:border-coral-400 focus:ring-coral-400 rounded-2xl bg-white/80 backdrop-blur-sm shadow-lg">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-white border-purple-200">
-              <SelectItem value="flat_seeker">Flat Seeker</SelectItem>
-              <SelectItem value="flat_owner">Flat Owner</SelectItem>
+            <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-slate-200 rounded-2xl shadow-2xl">
+              <SelectItem value="flat_seeker" className="text-lg py-3 rounded-xl">🏠 Flat Seeker</SelectItem>
+              <SelectItem value="flat_owner" className="text-lg py-3 rounded-xl">🔑 Flat Owner</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -222,33 +262,55 @@ export const AuthPage = () => {
         <Button 
           onClick={completeProfile}
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-3 rounded-xl font-semibold shadow-lg"
+          className="w-full h-14 text-lg font-bold bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-200"
         >
-          {isLoading ? "Completing..." : "Complete Profile"}
+          {isLoading ? (
+            <div className="flex items-center space-x-2">
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              <span>Creating Profile...</span>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <Sparkles className="h-5 w-5" />
+              <span>Complete Profile</span>
+            </div>
+          )}
         </Button>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-white/80 backdrop-blur-md shadow-2xl border border-purple-200 rounded-3xl">
-        <CardHeader className="text-center pb-2">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-2 rounded-xl shadow-lg">
-              <Phone className="h-6 w-6 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-coral-50 via-pink-50 to-violet-100 relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-40">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-coral-400 to-pink-400 rounded-full blur-3xl opacity-20 animate-bounce"></div>
+        <div className="absolute top-1/2 right-0 w-80 h-80 bg-gradient-to-br from-violet-400 to-purple-400 rounded-full blur-3xl opacity-20 animate-pulse"></div>
+        <div className="absolute bottom-0 left-1/2 w-72 h-72 bg-gradient-to-br from-mint-400 to-blue-400 rounded-full blur-3xl opacity-20 animate-bounce"></div>
+      </div>
+      
+      <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
+        <Card className="w-full max-w-lg bg-white/80 backdrop-blur-2xl shadow-2xl border-0 rounded-3xl overflow-hidden">
+          <CardHeader className="text-center pb-2 pt-8">
+            <div className="flex items-center justify-center space-x-3 mb-6">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-coral-400 to-violet-500 blur-lg opacity-40 rounded-2xl"></div>
+                <div className="relative bg-gradient-to-r from-coral-400 to-violet-500 p-3 rounded-2xl shadow-xl">
+                  <Sparkles className="h-8 w-8 text-white" />
+                </div>
+              </div>
+              <span className="text-2xl font-bold bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 bg-clip-text text-transparent">
+                FlatMates
+              </span>
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              FlatMates
-            </span>
-          </div>
-        </CardHeader>
-        <CardContent className="pt-2">
-          {step === 'phone' && renderPhoneStep()}
-          {step === 'otp' && renderOTPStep()}
-          {step === 'profile' && renderProfileStep()}
-        </CardContent>
-      </Card>
+          </CardHeader>
+          <CardContent className="p-8 pt-4">
+            {step === 'email' && renderEmailStep()}
+            {step === 'otp' && renderOTPStep()}
+            {step === 'profile' && renderProfileStep()}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

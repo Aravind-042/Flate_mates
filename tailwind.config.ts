@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,12 +62,41 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Custom brand colors
+				coral: {
+					'50': 'hsl(var(--coral-50))',
+					'100': 'hsl(var(--coral-100))',
+					'200': 'hsl(var(--coral-200))',
+					'300': 'hsl(var(--coral-300))',
+					'400': 'hsl(var(--coral-400))',
+					'500': 'hsl(var(--coral-500))',
+					'600': 'hsl(var(--coral-600))',
+				},
+				mint: {
+					'50': 'hsl(var(--mint-50))',
+					'100': 'hsl(var(--mint-100))',
+					'200': 'hsl(var(--mint-200))',
+					'300': 'hsl(var(--mint-300))',
+					'400': 'hsl(var(--mint-400))',
+					'500': 'hsl(var(--mint-500))',
+				},
+				lavender: {
+					'50': 'hsl(var(--lavender-50))',
+					'100': 'hsl(var(--lavender-100))',
+					'200': 'hsl(var(--lavender-200))',
+					'300': 'hsl(var(--lavender-300))',
+					'400': 'hsl(var(--lavender-400))',
+					'500': 'hsl(var(--lavender-500))',
 				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
+			},
+			fontFamily: {
+				sans: ['Inter', 'DM Sans', 'Satoshi', 'system-ui', 'sans-serif'],
 			},
 			keyframes: {
 				'accordion-down': {
@@ -84,11 +114,21 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				float: {
+					'0%, 100%': { transform: 'translateY(0px)' },
+					'50%': { transform: 'translateY(-20px)' }
+				},
+				'pulse-glow': {
+					'0%, 100%': { boxShadow: '0 0 20px hsl(var(--coral-400) / 0.3)' },
+					'50%': { boxShadow: '0 0 40px hsl(var(--coral-400) / 0.6)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'float': 'float 6s ease-in-out infinite',
+				'pulse-glow': 'pulse-glow 2s infinite'
 			}
 		}
 	},
