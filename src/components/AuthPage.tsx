@@ -105,28 +105,30 @@ export const AuthPage = () => {
   const renderPhoneStep = () => (
     <div className="space-y-6">
       <div className="text-center space-y-2">
-        <Phone className="h-12 w-12 mx-auto text-blue-600" />
-        <h1 className="text-2xl font-bold">Welcome to FlatMates</h1>
+        <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-2xl w-fit mx-auto shadow-lg">
+          <Phone className="h-8 w-8 text-white" />
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Welcome to FlatMates</h1>
         <p className="text-gray-600">Enter your phone number to get started</p>
       </div>
 
       <div className="space-y-4">
         <div>
-          <Label htmlFor="phone">Phone Number</Label>
+          <Label htmlFor="phone" className="text-gray-700 font-medium">Phone Number</Label>
           <Input
             id="phone"
             type="tel"
             placeholder="+91 XXXXX XXXXX"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            className="mt-2"
+            className="mt-2 border-purple-200 focus:border-purple-500 focus:ring-purple-500"
           />
         </div>
 
         <Button 
           onClick={sendOTP}
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-blue-600 to-orange-500"
+          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-3 rounded-xl font-semibold shadow-lg"
         >
           {isLoading ? "Sending..." : "Send OTP"}
         </Button>
@@ -137,9 +139,11 @@ export const AuthPage = () => {
   const renderOTPStep = () => (
     <div className="space-y-6">
       <div className="text-center space-y-2">
-        <UserCheck className="h-12 w-12 mx-auto text-blue-600" />
-        <h1 className="text-2xl font-bold">Verify Your Phone</h1>
-        <p className="text-gray-600">
+        <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-2xl w-fit mx-auto shadow-lg">
+          <UserCheck className="h-8 w-8 text-white" />
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Verify Your Phone</h1>
+        <p className="text-gray-600 text-sm sm:text-base">
           Enter the 6-digit code sent to {phoneNumber}
         </p>
       </div>
@@ -148,12 +152,12 @@ export const AuthPage = () => {
         <div className="flex justify-center">
           <InputOTP value={otpValue} onChange={setOtpValue} maxLength={6}>
             <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
+              <InputOTPSlot index={0} className="border-purple-200 focus:border-purple-500" />
+              <InputOTPSlot index={1} className="border-purple-200 focus:border-purple-500" />
+              <InputOTPSlot index={2} className="border-purple-200 focus:border-purple-500" />
+              <InputOTPSlot index={3} className="border-purple-200 focus:border-purple-500" />
+              <InputOTPSlot index={4} className="border-purple-200 focus:border-purple-500" />
+              <InputOTPSlot index={5} className="border-purple-200 focus:border-purple-500" />
             </InputOTPGroup>
           </InputOTP>
         </div>
@@ -162,7 +166,7 @@ export const AuthPage = () => {
           <Button 
             onClick={verifyOTP}
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-blue-600 to-orange-500"
+            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-3 rounded-xl font-semibold shadow-lg"
           >
             {isLoading ? "Verifying..." : "Verify OTP"}
           </Button>
@@ -170,7 +174,7 @@ export const AuthPage = () => {
           <Button 
             variant="outline" 
             onClick={() => setStep('phone')}
-            className="w-full"
+            className="w-full border-purple-300 text-purple-700 hover:bg-purple-50 rounded-xl"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Change Phone Number
@@ -183,30 +187,32 @@ export const AuthPage = () => {
   const renderProfileStep = () => (
     <div className="space-y-6">
       <div className="text-center space-y-2">
-        <User className="h-12 w-12 mx-auto text-blue-600" />
-        <h1 className="text-2xl font-bold">Complete Your Profile</h1>
+        <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-2xl w-fit mx-auto shadow-lg">
+          <User className="h-8 w-8 text-white" />
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Complete Your Profile</h1>
         <p className="text-gray-600">Tell us a bit about yourself</p>
       </div>
 
       <div className="space-y-4">
         <div>
-          <Label htmlFor="fullName">Full Name</Label>
+          <Label htmlFor="fullName" className="text-gray-700 font-medium">Full Name</Label>
           <Input
             id="fullName"
             placeholder="Enter your full name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className="mt-2"
+            className="mt-2 border-purple-200 focus:border-purple-500 focus:ring-purple-500"
           />
         </div>
 
         <div>
-          <Label htmlFor="role">I am a</Label>
+          <Label htmlFor="role" className="text-gray-700 font-medium">I am a</Label>
           <Select value={role} onValueChange={(value: 'flat_seeker' | 'flat_owner') => setRole(value)}>
-            <SelectTrigger className="mt-2">
+            <SelectTrigger className="mt-2 border-purple-200 focus:border-purple-500 focus:ring-purple-500">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white border-purple-200">
               <SelectItem value="flat_seeker">Flat Seeker</SelectItem>
               <SelectItem value="flat_owner">Flat Owner</SelectItem>
             </SelectContent>
@@ -216,7 +222,7 @@ export const AuthPage = () => {
         <Button 
           onClick={completeProfile}
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-blue-600 to-orange-500"
+          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-3 rounded-xl font-semibold shadow-lg"
         >
           {isLoading ? "Completing..." : "Complete Profile"}
         </Button>
@@ -225,19 +231,19 @@ export const AuthPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-100 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md bg-white/80 backdrop-blur-md shadow-2xl border border-purple-200 rounded-3xl">
+        <CardHeader className="text-center pb-2">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <div className="bg-gradient-to-r from-blue-600 to-orange-500 p-2 rounded-lg">
+            <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-2 rounded-xl shadow-lg">
               <Phone className="h-6 w-6 text-white" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">
+            <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               FlatMates
             </span>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-2">
           {step === 'phone' && renderPhoneStep()}
           {step === 'otp' && renderOTPStep()}
           {step === 'profile' && renderProfileStep()}
