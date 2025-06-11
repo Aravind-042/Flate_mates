@@ -1,276 +1,258 @@
 
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Phone, Mail, MapPin, Edit, Settings, Home, Heart } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { 
+  User, 
+  Home, 
+  Settings, 
+  Save,
+  Plus
+} from "lucide-react";
+import { Layout } from "@/components/Layout";
 
 const Profile = () => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState({
-    name: "John Doe",
-    email: "john.doe@example.com",
-    phone: "+91 9876543210",
-    city: "Bangalore",
-    profession: "Software Engineer",
-    bio: "Looking for a clean and peaceful flat in a good neighborhood. Non-smoker, vegetarian."
+  const { user, profile } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [profileData, setProfileData] = useState({
+    full_name: profile?.full_name || '',
+    phone_number: profile?.phone_number || '',
+    city: profile?.city || '',
+    role: profile?.role || 'flat_seeker'
   });
 
-  const myListings = [
-    {
-      id: 1,
-      title: "Modern 2BHK in Koramangala",
-      status: "Active",
-      views: 245,
-      interested: 12
-    },
-    {
-      id: 2,
-      title: "Cozy 1BHK near Metro",
-      status: "Rented",
-      views: 180,
-      interested: 8
-    }
-  ];
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
 
-  const savedFlats = [
-    {
-      id: 1,
-      title: "Spacious 3BHK with Garden",
-      location: "Andheri, Mumbai",
-      rent: 45000
-    },
-    {
-      id: 2,
-      title: "Modern Studio Apartment",
-      location: "HSR Layout, Bangalore",
-      rent: 22000
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update(profileData)
+        .eq('id', user?.id);
+
+      if (error) throw error;
+      
+      toast.success("Profile updated successfully!");
+    } catch (error: any) {
+      toast.error("Error updating profile: " + error.message);
+    } finally {
+      setIsLoading(false);
     }
-  ];
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <a href="/" className="flex items-center space-x-3">
-              <div className="bg-gradient-to-r from-blue-600 to-orange-500 p-2 rounded-lg">
-                <div className="h-6 w-6 bg-white rounded"></div>
-              </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">
-                FlatMates
-              </h1>
-            </a>
-            <nav className="hidden md:flex space-x-6">
-              <a href="/browse" className="text-gray-600 hover:text-blue-600 transition-colors">Browse Flats</a>
-              <a href="/" className="text-gray-600 hover:text-blue-600 transition-colors">List Your Flat</a>
-              <a href="/about" className="text-gray-600 hover:text-blue-600 transition-colors">About</a>
-              <a href="/profile" className="text-blue-600 font-medium">Profile</a>
-            </nav>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Profile Sidebar */}
-          <div className="lg:col-span-1">
-            <Card>
-              <CardHeader className="text-center">
-                <Avatar className="w-24 h-24 mx-auto mb-4">
-                  <AvatarImage src="/placeholder.svg" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <CardTitle className="flex items-center justify-center space-x-2">
-                  <span>{profile.name}</span>
-                  <Button 
-                    size="icon" 
-                    variant="ghost"
-                    onClick={() => setIsEditing(!isEditing)}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                </CardTitle>
-                <Badge variant="secondary">{profile.profession}</Badge>
-              </CardHeader>
-              
-              <CardContent className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <Mail className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm">{profile.email}</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Phone className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm">{profile.phone}</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <MapPin className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm">{profile.city}</span>
-                </div>
-                
-                <div className="pt-4">
-                  <h4 className="font-medium mb-2">About Me</h4>
-                  <p className="text-sm text-gray-600">{profile.bio}</p>
-                </div>
-                
-                <Button className="w-full" variant="outline">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Account Settings
-                </Button>
-              </CardContent>
-            </Card>
+    <Layout>
+      <div className="min-h-screen py-8 px-4">
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 bg-clip-text text-transparent">
+              My Profile
+            </h1>
+            <p className="text-xl text-slate-600">
+              Manage your account and preferences
+            </p>
           </div>
 
-          {/* Main Content */}
-          <div className="lg:col-span-2">
-            <Tabs defaultValue="listings" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="listings" className="flex items-center space-x-2">
-                  <Home className="h-4 w-4" />
-                  <span>My Listings</span>
-                </TabsTrigger>
-                <TabsTrigger value="saved" className="flex items-center space-x-2">
-                  <Heart className="h-4 w-4" />
-                  <span>Saved Flats</span>
-                </TabsTrigger>
-                <TabsTrigger value="edit" className="flex items-center space-x-2">
-                  <User className="h-4 w-4" />
-                  <span>Edit Profile</span>
-                </TabsTrigger>
-              </TabsList>
+          <Tabs defaultValue="profile" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-3 bg-white/80 backdrop-blur-md border-0 rounded-2xl p-1 shadow-lg">
+              <TabsTrigger value="profile" className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-400 data-[state=active]:to-violet-500 data-[state=active]:text-white">
+                <User className="h-4 w-4 mr-2" />
+                Profile
+              </TabsTrigger>
+              <TabsTrigger value="listings" className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-400 data-[state=active]:to-violet-500 data-[state=active]:text-white">
+                <Home className="h-4 w-4 mr-2" />
+                Listings
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-400 data-[state=active]:to-violet-500 data-[state=active]:text-white">
+                <Settings className="h-4 w-4 mr-2" />
+                Settings
+              </TabsTrigger>
+            </TabsList>
 
-              <TabsContent value="listings" className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-xl font-semibold">My Flat Listings</h3>
-                  <Button>
-                    <a href="/">Add New Listing</a>
-                  </Button>
-                </div>
-                
-                {myListings.map((listing) => (
-                  <Card key={listing.id}>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-semibold">{listing.title}</h4>
-                          <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
-                            <span>{listing.views} views</span>
-                            <span>{listing.interested} interested</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-3">
-                          <Badge 
-                            variant={listing.status === 'Active' ? 'default' : 'secondary'}
-                          >
-                            {listing.status}
-                          </Badge>
-                          <Button variant="outline" size="sm">Edit</Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </TabsContent>
-
-              <TabsContent value="saved" className="space-y-4">
-                <h3 className="text-xl font-semibold">Saved Flats</h3>
-                
-                {savedFlats.map((flat) => (
-                  <Card key={flat.id}>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-semibold">{flat.title}</h4>
-                          <p className="text-sm text-gray-600">{flat.location}</p>
-                          <p className="text-lg font-bold text-blue-600 mt-1">
-                            ₹{flat.rent.toLocaleString()}/month
-                          </p>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button variant="outline" size="sm">View Details</Button>
-                          <Button variant="outline" size="sm">
-                            <Heart className="h-4 w-4 text-red-500" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </TabsContent>
-
-              <TabsContent value="edit" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Edit Profile Information</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium mb-2">Full Name</label>
-                        <Input 
-                          value={profile.name}
-                          onChange={(e) => setProfile({...profile, name: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">Email</label>
-                        <Input 
-                          type="email"
-                          value={profile.email}
-                          onChange={(e) => setProfile({...profile, email: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">Phone</label>
-                        <Input 
-                          value={profile.phone}
-                          onChange={(e) => setProfile({...profile, phone: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">City</label>
-                        <Input 
-                          value={profile.city}
-                          onChange={(e) => setProfile({...profile, city: e.target.value})}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-2">Profession</label>
-                        <Input 
-                          value={profile.profession}
-                          onChange={(e) => setProfile({...profile, profession: e.target.value})}
-                        />
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Bio</label>
-                      <textarea 
-                        className="w-full p-3 border border-gray-300 rounded-md"
-                        rows={4}
-                        value={profile.bio}
-                        onChange={(e) => setProfile({...profile, bio: e.target.value})}
+            <TabsContent value="profile">
+              <Card className="bg-white/80 backdrop-blur-md border-0 rounded-3xl shadow-xl">
+                <CardHeader>
+                  <CardTitle className="text-2xl font-bold text-slate-800">
+                    Profile Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleUpdateProfile} className="space-y-6">
+                    <div className="space-y-3">
+                      <Label htmlFor="full_name" className="text-slate-700 font-semibold">
+                        Full Name
+                      </Label>
+                      <Input
+                        id="full_name"
+                        value={profileData.full_name}
+                        onChange={(e) => setProfileData({ ...profileData, full_name: e.target.value })}
+                        className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
                       />
                     </div>
-                    
-                    <div className="flex space-x-4">
-                      <Button className="bg-gradient-to-r from-blue-600 to-orange-500">
-                        Save Changes
-                      </Button>
-                      <Button variant="outline">Cancel</Button>
+
+                    <div className="space-y-3">
+                      <Label htmlFor="phone_number" className="text-slate-700 font-semibold">
+                        Phone Number
+                      </Label>
+                      <Input
+                        id="phone_number"
+                        value={profileData.phone_number}
+                        onChange={(e) => setProfileData({ ...profileData, phone_number: e.target.value })}
+                        className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
+                      />
                     </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </div>
+
+                    <div className="space-y-3">
+                      <Label htmlFor="city" className="text-slate-700 font-semibold">
+                        City
+                      </Label>
+                      <Input
+                        id="city"
+                        value={profileData.city}
+                        onChange={(e) => setProfileData({ ...profileData, city: e.target.value })}
+                        placeholder="Enter your city"
+                        className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
+                      />
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label htmlFor="role" className="text-slate-700 font-semibold">
+                        Role
+                      </Label>
+                      <Select 
+                        value={profileData.role} 
+                        onValueChange={(value: 'flat_seeker' | 'flat_owner') => 
+                          setProfileData({ ...profileData, role: value })
+                        }
+                      >
+                        <SelectTrigger className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-slate-200 rounded-xl">
+                          <SelectItem value="flat_seeker">🏠 Flat Seeker</SelectItem>
+                          <SelectItem value="flat_owner">🔑 Flat Owner</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <Button 
+                      type="submit" 
+                      disabled={isLoading}
+                      className="w-full h-12 bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl font-semibold"
+                    >
+                      {isLoading ? (
+                        <div className="flex items-center space-x-2">
+                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                          <span>Saving...</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center space-x-2">
+                          <Save className="h-4 w-4" />
+                          <span>Save Changes</span>
+                        </div>
+                      )}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="listings">
+              <Card className="bg-white/80 backdrop-blur-md border-0 rounded-3xl shadow-xl">
+                <CardHeader>
+                  <div className="flex justify-between items-center">
+                    <CardTitle className="text-2xl font-bold text-slate-800">
+                      My Listings
+                    </CardTitle>
+                    {profile?.role === 'flat_owner' && (
+                      <Button className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create Listing
+                      </Button>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {profile?.role === 'flat_seeker' ? (
+                    <div className="text-center py-12">
+                      <Home className="h-16 w-16 mx-auto mb-4 text-slate-400" />
+                      <h3 className="text-xl font-semibold text-slate-700 mb-2">
+                        Switch to Flat Owner
+                      </h3>
+                      <p className="text-slate-600 mb-4">
+                        Change your role to "Flat Owner" in the Profile tab to create listings.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <Home className="h-16 w-16 mx-auto mb-4 text-slate-400" />
+                      <h3 className="text-xl font-semibold text-slate-700 mb-2">
+                        No listings yet
+                      </h3>
+                      <p className="text-slate-600 mb-4">
+                        Create your first listing to start finding flatmates.
+                      </p>
+                      <Button className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create Your First Listing
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="settings">
+              <Card className="bg-white/80 backdrop-blur-md border-0 rounded-3xl shadow-xl">
+                <CardHeader>
+                  <CardTitle className="text-2xl font-bold text-slate-800">
+                    Account Settings
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                      <div>
+                        <h4 className="font-semibold text-slate-800">Email</h4>
+                        <p className="text-slate-600">{user?.email}</p>
+                      </div>
+                      <Button variant="outline" className="border-2 border-slate-200 rounded-xl">
+                        Change Email
+                      </Button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                      <div>
+                        <h4 className="font-semibold text-slate-800">Password</h4>
+                        <p className="text-slate-600">••••••••</p>
+                      </div>
+                      <Button variant="outline" className="border-2 border-slate-200 rounded-xl">
+                        Change Password
+                      </Button>
+                    </div>
+
+                    <div className="pt-6 border-t border-slate-200">
+                      <Button variant="destructive" className="w-full rounded-xl">
+                        Delete Account
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 
