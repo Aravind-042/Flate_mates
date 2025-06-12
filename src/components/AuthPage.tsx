@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,6 +28,8 @@ export const AuthPage = () => {
 
     setIsLoading(true);
     try {
+      console.log('Sending OTP with metadata:', { fullName, role });
+      
       const { error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
@@ -40,11 +41,16 @@ export const AuthPage = () => {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('OTP send error:', error);
+        throw error;
+      }
       
+      console.log('OTP sent successfully');
       toast.success("OTP sent to your email!");
       setStep('otp');
     } catch (error: any) {
+      console.error('Error sending OTP:', error);
       toast.error(error.message || "Failed to send OTP");
     } finally {
       setIsLoading(false);
@@ -59,17 +65,42 @@ export const AuthPage = () => {
 
     setIsLoading(true);
     try {
+      console.log('Verifying OTP for email:', email);
+      
       const { error } = await supabase.auth.verifyOtp({
         email: email,
         token: otpValue,
         type: 'email'
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('OTP verification error:', error);
+        throw error;
+      }
 
+      console.log('OTP verified successfully');
       toast.success("Email verified successfully!");
-      setStep('profile');
+      
+      // Check if user has a profile
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        console.log('User authenticated:', user.id);
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+        
+        if (profile && profile.full_name) {
+          console.log('Profile exists, redirecting to main app');
+          window.location.href = '/';
+        } else {
+          console.log('Profile incomplete, showing profile step');
+          setStep('profile');
+        }
+      }
     } catch (error: any) {
+      console.error('Error verifying OTP:', error);
       toast.error(error.message || "Invalid OTP");
     } finally {
       setIsLoading(false);
@@ -84,19 +115,31 @@ export const AuthPage = () => {
 
     setIsLoading(true);
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error("No authenticated user found");
+      }
+
+      console.log('Updating profile for user:', user.id, { fullName, role });
+      
       const { error } = await supabase
         .from('profiles')
         .update({
           full_name: fullName,
           role: role
         })
-        .eq('id', (await supabase.auth.getUser()).data.user?.id);
+        .eq('id', user.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Profile update error:', error);
+        throw error;
+      }
 
+      console.log('Profile updated successfully');
       toast.success("Profile completed successfully!");
       window.location.href = '/';
     } catch (error: any) {
+      console.error('Error completing profile:', error);
       toast.error(error.message || "Failed to complete profile");
     } finally {
       setIsLoading(false);
@@ -121,6 +164,30 @@ export const AuthPage = () => {
       </div>
 
       <div className="space-y-6">
+        <div className="space-y-3">
+          <Label htmlFor="fullName" className="text-slate-700 font-semibold text-base">Full Name</Label>
+          <Input
+            id="fullName"
+            placeholder="Enter your full name"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            className="h-14 text-lg border-2 border-slate-200 focus:border-coral-400 focus:ring-coral-400 rounded-2xl bg-white/80 backdrop-blur-sm shadow-lg"
+          />
+        </div>
+
+        <div className="space-y-3">
+          <Label htmlFor="role" className="text-slate-700 font-semibold text-base">I am a</Label>
+          <Select value={role} onValueChange={(value: 'flat_seeker' | 'flat_owner') => setRole(value)}>
+            <SelectTrigger className="h-14 text-lg border-2 border-slate-200 focus:border-coral-400 focus:ring-coral-400 rounded-2xl bg-white/80 backdrop-blur-sm shadow-lg">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-slate-200 rounded-2xl shadow-2xl">
+              <SelectItem value="flat_seeker" className="text-lg py-3 rounded-xl">🏠 Flat Seeker</SelectItem>
+              <SelectItem value="flat_owner" className="text-lg py-3 rounded-xl">🔑 Flat Owner</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
         <div className="space-y-3">
           <Label htmlFor="email" className="text-slate-700 font-semibold text-base">Email Address</Label>
           <Input
@@ -236,9 +303,9 @@ export const AuthPage = () => {
 
       <div className="space-y-6">
         <div className="space-y-3">
-          <Label htmlFor="fullName" className="text-slate-700 font-semibold text-base">Full Name</Label>
+          <Label htmlFor="fullNameComplete" className="text-slate-700 font-semibold text-base">Full Name</Label>
           <Input
-            id="fullName"
+            id="fullNameComplete"
             placeholder="Enter your full name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
@@ -247,7 +314,7 @@ export const AuthPage = () => {
         </div>
 
         <div className="space-y-3">
-          <Label htmlFor="role" className="text-slate-700 font-semibold text-base">I am a</Label>
+          <Label htmlFor="roleComplete" className="text-slate-700 font-semibold text-base">I am a</Label>
           <Select value={role} onValueChange={(value: 'flat_seeker' | 'flat_owner') => setRole(value)}>
             <SelectTrigger className="h-14 text-lg border-2 border-slate-200 focus:border-coral-400 focus:ring-coral-400 rounded-2xl bg-white/80 backdrop-blur-sm shadow-lg">
               <SelectValue />
