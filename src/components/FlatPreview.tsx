@@ -1,8 +1,7 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Bed, Bath, Car, Wifi, Users, Phone, Mail } from "lucide-react";
-import type { FlatListing } from "@/pages/Index";
+import type { FlatListing } from "@/types/flat";
 
 interface FlatPreviewProps {
   data: FlatListing;

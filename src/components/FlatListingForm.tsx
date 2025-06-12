@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ImageUpload } from "@/components/ImageUpload";
 import { AmenitiesSelector } from "@/components/AmenitiesSelector";
-import type { FlatListing } from "@/pages/Index";
+import type { FlatListing } from "@/types/flat";
 
 interface FlatListingFormProps {
   data: FlatListing;
