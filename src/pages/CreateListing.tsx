@@ -62,10 +62,9 @@ const CreateListing = () => {
       if (!user) {
         setCurrentStep('signup');
       } else {
-        // User is logged in, proceed with listing creation
-        // This would normally submit the listing to the database
-        console.log('Creating listing:', listingData);
-        navigate('/profile');
+        // This case should not happen since the publish button in PreviewSection 
+        // handles the actual publishing for authenticated users
+        console.log('Authenticated user trying to proceed from preview - this should be handled by PreviewSection');
       }
     }
   };

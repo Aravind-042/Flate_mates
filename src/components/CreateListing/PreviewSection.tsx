@@ -20,6 +20,13 @@ export const PreviewSection = ({ listingData, onBack, userId }: PreviewSectionPr
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
+    // If user is not authenticated, don't try to submit to database
+    if (!userId) {
+      console.log('Non-authenticated user attempting to publish - this should trigger signup flow');
+      toast.error("Please sign up to publish your listing");
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
@@ -48,6 +55,8 @@ export const PreviewSection = ({ listingData, onBack, userId }: PreviewSectionPr
         status: 'active' as 'active' | 'inactive' | 'rented' | 'expired'
       };
 
+      console.log('Submitting listing data:', dbListingData);
+
       const { data, error } = await supabase
         .from('flat_listings')
         .insert(dbListingData)
@@ -59,6 +68,7 @@ export const PreviewSection = ({ listingData, onBack, userId }: PreviewSectionPr
         throw error;
       }
 
+      console.log('Listing created successfully:', data);
       toast.success("Listing created successfully!");
       navigate('/profile');
     } catch (error: any) {
@@ -91,14 +101,16 @@ export const PreviewSection = ({ listingData, onBack, userId }: PreviewSectionPr
             </Button>
             <Button
               onClick={handleSubmit}
-              disabled={isSubmitting}
-              className="flex-1 bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white rounded-xl"
+              disabled={isSubmitting || !userId}
+              className="flex-1 bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white rounded-xl disabled:opacity-50"
             >
               {isSubmitting ? (
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                   <span>Publishing...</span>
                 </div>
+              ) : !userId ? (
+                <span>Sign Up to Publish</span>
               ) : (
                 <div className="flex items-center space-x-2">
                   <Save className="h-4 w-4" />
