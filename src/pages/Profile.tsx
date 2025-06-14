@@ -18,9 +18,11 @@ import {
   Plus
 } from "lucide-react";
 import { Layout } from "@/components/Layout";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [profileData, setProfileData] = useState({
     full_name: profile?.full_name || '',
@@ -229,7 +231,10 @@ const Profile = () => {
                       My Listings
                     </CardTitle>
                     {(profile?.role === 'flat_owner' || profile?.role === 'both') && (
-                      <Button className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl">
+                      <Button 
+                        onClick={() => navigate('/create-listing')}
+                        className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl"
+                      >
                         <Plus className="h-4 w-4 mr-2" />
                         Create Listing
                       </Button>
@@ -256,7 +261,10 @@ const Profile = () => {
                       <p className="text-slate-600 mb-4">
                         Create your first listing to start finding flatmates.
                       </p>
-                      <Button className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl">
+                      <Button 
+                        onClick={() => navigate('/create-listing')}
+                        className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl"
+                      >
                         <Plus className="h-4 w-4 mr-2" />
                         Create Your First Listing
                       </Button>

@@ -1,109 +1,126 @@
 
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   Home, 
   Search, 
   User, 
   LogOut, 
   Menu, 
-  X, 
-  Sparkles 
+  X,
+  Plus
 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 
 export const Navigation = () => {
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleSignOut = async () => {
-    try {
-      await supabase.auth.signOut();
-      toast.success("Signed out successfully!");
-    } catch (error: any) {
-      toast.error("Error signing out: " + error.message);
-    }
+    await supabase.auth.signOut();
+    navigate("/");
   };
 
   const navItems = [
-    { href: "/", label: "Home", icon: Home },
-    { href: "/browse", label: "Browse", icon: Search },
-    { href: "/profile", label: "Profile", icon: User },
+    { to: "/", label: "Home", icon: Home },
+    { to: "/browse", label: "Browse", icon: Search },
   ];
+
+  // Add create listing link for eligible users
+  if (user && (profile?.role === 'flat_owner' || profile?.role === 'both')) {
+    navItems.push({ 
+      to: "/create-listing", 
+      label: "Create Listing", 
+      icon: Plus 
+    });
+  }
 
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+    <nav className="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Enhanced Logo */}
-          <div className="flex items-center space-x-3">
-            <div className="relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 blur-lg opacity-50 rounded-2xl group-hover:opacity-70 transition-opacity duration-300"></div>
-              <div className="relative bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 p-2.5 rounded-2xl shadow-xl transform group-hover:scale-105 transition-all duration-300">
-                <Sparkles className="h-6 w-6 text-white animate-pulse" />
-              </div>
+          {/* Logo */}
+          <Link 
+            to="/" 
+            className="flex items-center space-x-2"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-orange-500 rounded-lg flex items-center justify-center">
+              <Home className="h-5 w-5 text-white" />
             </div>
-            <Link to="/" className="flex items-center space-x-1">
-              <span className="text-xl font-bold bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 bg-clip-text text-transparent">
-                Flat
-              </span>
-              <span className="text-xl font-bold bg-gradient-to-r from-violet-500 via-purple-500 to-coral-400 bg-clip-text text-transparent">
-                Mates
-              </span>
-            </Link>
-          </div>
+            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">
+              FlatMate
+            </span>
+          </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => {
-              const Icon = item.icon;
+              const IconComponent = item.icon;
               return (
                 <Link
-                  key={item.href}
-                  to={item.href}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
-                    isActive(item.href)
-                      ? "bg-gradient-to-r from-coral-400 to-violet-500 text-white shadow-lg"
-                      : "text-slate-600 hover:text-coral-500 hover:bg-slate-50"
+                  key={item.to}
+                  to={item.to}
+                  className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-colors ${
+                    isActive(item.to)
+                      ? "bg-blue-100 text-blue-700"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                   }`}
                 >
-                  <Icon className="h-4 w-4" />
+                  <IconComponent className="h-4 w-4" />
                   <span>{item.label}</span>
                 </Link>
               );
             })}
-            
-            {user && (
-              <Button 
-                onClick={handleSignOut}
-                variant="outline"
-                size="sm"
-                className="border-2 border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Sign Out
-              </Button>
+          </div>
+
+          {/* User Menu */}
+          <div className="hidden md:flex items-center space-x-4">
+            {user ? (
+              <>
+                <Link to="/profile">
+                  <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+                    <User className="h-4 w-4" />
+                    <span>Profile</span>
+                  </Button>
+                </Link>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={handleSignOut}
+                  className="flex items-center space-x-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Sign Out</span>
+                </Button>
+              </>
+            ) : (
+              <Link to="/">
+                <Button className="bg-gradient-to-r from-blue-600 to-orange-500 text-white">
+                  Sign In
+                </Button>
+              </Link>
             )}
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile Menu Button */}
           <div className="md:hidden">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-slate-600"
+              className="p-2"
             >
               {isMobileMenuOpen ? (
-                <X className="h-6 w-6" />
+                <X className="h-5 w-5" />
               ) : (
-                <Menu className="h-6 w-6" />
+                <Menu className="h-5 w-5" />
               )}
             </Button>
           </div>
@@ -111,36 +128,58 @@ export const Navigation = () => {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-white/95 backdrop-blur-md rounded-2xl mt-2 border border-slate-200 shadow-xl">
+          <div className="md:hidden py-4 border-t border-gray-200">
+            <div className="space-y-2">
               {navItems.map((item) => {
-                const Icon = item.icon;
+                const IconComponent = item.icon;
                 return (
                   <Link
-                    key={item.href}
-                    to={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center space-x-3 px-3 py-3 rounded-xl text-base font-medium transition-all duration-200 ${
-                      isActive(item.href)
-                        ? "bg-gradient-to-r from-coral-400 to-violet-500 text-white shadow-lg"
-                        : "text-slate-600 hover:text-coral-500 hover:bg-slate-50"
+                    key={item.to}
+                    to={item.to}
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
+                      isActive(item.to)
+                        ? "bg-blue-100 text-blue-700"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                     }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    <Icon className="h-5 w-5" />
+                    <IconComponent className="h-4 w-4" />
                     <span>{item.label}</span>
                   </Link>
                 );
               })}
               
-              {user && (
-                <Button 
-                  onClick={handleSignOut}
-                  variant="outline"
-                  className="w-full justify-start border-2 border-slate-200 text-slate-700 hover:bg-slate-50 rounded-xl mt-2"
+              {user ? (
+                <>
+                  <Link
+                    to="/profile"
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <User className="h-4 w-4" />
+                    <span>Profile</span>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleSignOut();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors w-full text-left"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Sign Out</span>
+                  </button>
+                </>
+              ) : (
+                <Link
+                  to="/"
+                  className="block px-3 py-2"
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <LogOut className="h-4 w-4 mr-3" />
-                  Sign Out
-                </Button>
+                  <Button className="w-full bg-gradient-to-r from-blue-600 to-orange-500 text-white">
+                    Sign In
+                  </Button>
+                </Link>
               )}
             </div>
           </div>
