@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -50,13 +49,6 @@ const CreateListing = () => {
     createdAt: new Date().toISOString()
   });
 
-  // REDIRECT if not logged in, but wait for loading to finish.
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate("/");
-    }
-  }, [loading, user, navigate]);
-
   const handleDataChange = (updates: Partial<FlatListing>) => {
     setListingData(prev => ({ ...prev, ...updates }));
   };
@@ -88,7 +80,7 @@ const CreateListing = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen py-8 px-4 flex flex-col overflow-auto"> {/* enable vertical scrolling for all steps */}
+      <div className="min-h-screen py-8 px-4 flex flex-col overflow-auto">
         <div className="max-w-6xl mx-auto flex-1 flex flex-col">
           <CreateListingHeader currentStep={currentStep} />
 
