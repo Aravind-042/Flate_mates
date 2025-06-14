@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,7 +28,9 @@ export const AuthPage = () => {
 
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      console.log('Attempting sign in for:', email);
+      
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: email,
         password: password,
       });
@@ -39,6 +40,7 @@ export const AuthPage = () => {
         throw error;
       }
       
+      console.log('Sign in successful:', data.user?.id);
       toast.success("Welcome back!");
     } catch (error: any) {
       console.error('Error signing in:', error);
@@ -61,9 +63,15 @@ export const AuthPage = () => {
 
     setIsLoading(true);
     try {
+      console.log('Attempting sign up with data:', {
+        email,
+        full_name: fullName,
+        role: role
+      });
+
       const redirectUrl = `${window.location.origin}/`;
       
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: email,
         password: password,
         options: {
@@ -76,14 +84,34 @@ export const AuthPage = () => {
       });
 
       if (error) {
-        console.error('Sign up error:', error);
+        console.error('Sign up error details:', {
+          message: error.message,
+          status: error.status,
+          name: error.name
+        });
         throw error;
       }
+      
+      console.log('Sign up response:', {
+        user_id: data.user?.id,
+        user_email: data.user?.email,
+        session_exists: !!data.session
+      });
       
       toast.success("Account created successfully! Please check your email to verify your account.");
     } catch (error: any) {
       console.error('Error signing up:', error);
-      toast.error(error.message || "Failed to create account");
+      
+      // Provide more specific error messages
+      if (error.message?.includes('User already registered')) {
+        toast.error("An account with this email already exists. Please sign in instead.");
+      } else if (error.message?.includes('Invalid email')) {
+        toast.error("Please enter a valid email address.");
+      } else if (error.message?.includes('Password')) {
+        toast.error("Password must be at least 6 characters long.");
+      } else {
+        toast.error(error.message || "Failed to create account. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
