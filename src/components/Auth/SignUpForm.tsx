@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
@@ -16,7 +15,16 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState<'flat_seeker' | 'flat_owner'>('flat_seeker');
+  // --- Default to flat_owner if user is signing up after starting listing flow:
+  const initialRole: 'flat_seeker' | 'flat_owner' = (() => {
+    try {
+      if (typeof window !== "undefined" && localStorage.getItem('pendingListingData')) {
+        return "flat_owner";
+      }
+    } catch (_) {}
+    return "flat_seeker";
+  })();
+  const [role, setRole] = useState<'flat_seeker' | 'flat_owner'>(initialRole);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
