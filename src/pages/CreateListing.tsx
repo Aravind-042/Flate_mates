@@ -81,8 +81,8 @@ const CreateListing = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen py-8 px-4 overflow-auto"> {/* allow scrolling if content is tall */}
-        <div className="max-w-6xl mx-auto">
+      <div className="min-h-screen py-8 px-4 flex flex-col overflow-auto"> {/* enable vertical scrolling for all steps */}
+        <div className="max-w-6xl mx-auto flex-1 flex flex-col">
           <CreateListingHeader currentStep={currentStep} />
 
           <MainListingLayout
@@ -105,3 +105,4 @@ const CreateListing = () => {
 };
 
 export default CreateListing;
+
