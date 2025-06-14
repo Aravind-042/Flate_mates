@@ -374,6 +374,7 @@ export type Database = {
           phone_number: string
           profession: string | null
           profile_picture_url: string | null
+          role: Database["public"]["Enums"]["user_role"]
           updated_at: string | null
           verification_documents: string[] | null
         }
@@ -389,6 +390,7 @@ export type Database = {
           phone_number?: string
           profession?: string | null
           profile_picture_url?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string | null
           verification_documents?: string[] | null
         }
@@ -404,6 +406,7 @@ export type Database = {
           phone_number?: string
           profession?: string | null
           profile_picture_url?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string | null
           verification_documents?: string[] | null
         }
