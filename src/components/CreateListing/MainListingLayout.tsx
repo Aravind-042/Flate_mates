@@ -16,10 +16,9 @@ interface MainListingLayoutProps {
 }
 
 /**
- * Responsive, balanced split:
- * - On large screens, form and preview each use 1/2 of the max-w-6xl.
- * - Preview's card is taller and fills its column for a dashboard feel.
- * - On mobile, stacks vertically and takes full width on each.
+ * Responsive, more balanced split:
+ * - On large screens, form uses ~58% width and preview uses ~42% (7:5 ratio).
+ * - On mobile, stacks vertically.
  */
 export const MainListingLayout = ({
   currentStep,
@@ -56,14 +55,14 @@ export const MainListingLayout = ({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 h-full min-h-[70vh]"> 
+    <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-4 md:gap-8 h-full min-h-[70vh] w-full max-w-6xl mx-auto">
       {/* Left: Form/Preview/Signup Section */}
-      <div className="flex flex-col min-h-[50vh]">
+      <div className="flex flex-col min-h-[50vh] w-full max-w-full">
         {renderCurrentStep()}
       </div>
       {/* Right: Live Preview - Hidden during signup step */}
       {currentStep !== 'signup' && (
-        <div className="lg:sticky lg:top-8 h-full min-h-[350px] flex flex-col">
+        <div className="lg:sticky lg:top-8 h-full min-h-[350px] flex flex-col w-full max-w-full">
           <Card className="glass-card flex flex-col h-full min-h-[350px]">
             <CardHeader>
               <CardTitle className="text-xl font-bold text-charcoal">
