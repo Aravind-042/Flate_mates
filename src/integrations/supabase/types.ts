@@ -549,7 +549,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_sample_listings_for_user: {
+        Args: { user_id: string }
+        Returns: number
+      }
     }
     Enums: {
       gender_preference: "male" | "female" | "any"
