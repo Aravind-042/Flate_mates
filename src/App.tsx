@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -11,6 +10,7 @@ import Profile from "./pages/Profile";
 import CreateListing from "./pages/CreateListing";
 import NotFound from "./pages/NotFound";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { AuthPage } from "@/components/AuthPage";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +31,7 @@ function App() {
               </ProtectedRoute>
             } />
             <Route path="/create-listing" element={<CreateListing />} />
+            <Route path="/auth" element={<AuthPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

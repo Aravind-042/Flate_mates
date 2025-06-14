@@ -92,7 +92,7 @@ export const Navigation = () => {
                 </Button>
               </>
             ) : (
-              <Link to="/">
+              <Link to="/auth">
                 <Button
                   className="bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white"
                 >
@@ -165,7 +165,7 @@ export const Navigation = () => {
                 </>
               ) : (
                 <Link
-                  to="/"
+                  to="/auth"
                   className="block px-3 py-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
