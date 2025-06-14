@@ -13,7 +13,11 @@ export const SignupPrompt = ({ onBack }: SignupPromptProps) => {
   const [showAuthPage, setShowAuthPage] = useState(false);
 
   if (showAuthPage) {
-    return <AuthPage />;
+    return (
+      <div className="fixed inset-0 z-50 bg-cool-gray">
+        <AuthPage />
+      </div>
+    );
   }
 
   return (
