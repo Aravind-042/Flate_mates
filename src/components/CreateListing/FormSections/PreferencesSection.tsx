@@ -5,15 +5,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { FormSectionProps } from "./types";
 
-export const PreferencesSection = ({ data, onChange }: FormSectionProps) => {
+interface Props extends FormSectionProps {
+  errors?: Record<string, string>;
+}
+
+export const PreferencesSection = ({ data, onChange, errors = {} }: Props) => {
   const professionOptions = ['IT Professional', 'Student', 'Working Professional', 'Freelancer', 'Doctor', 'Teacher'];
 
   return (
     <div className="space-y-6">
       <div>
-        <Label>Preferred Gender</Label>
+        <Label>
+          Preferred Gender <span className="text-destructive">*</span>
+        </Label>
         <Select value={data.preferences.gender} onValueChange={(value) => onChange('preferences.gender', value)}>
-          <SelectTrigger className="mt-2">
+          <SelectTrigger className={`mt-2 ${errors['preferences.gender'] ? 'border-red-500' : ''}`}>
             <SelectValue placeholder="Select preference" />
           </SelectTrigger>
           <SelectContent>
@@ -22,6 +28,7 @@ export const PreferencesSection = ({ data, onChange }: FormSectionProps) => {
             <SelectItem value="female">Female</SelectItem>
           </SelectContent>
         </Select>
+        {errors['preferences.gender'] && <p className="text-destructive text-xs mt-1">{errors['preferences.gender']}</p>}
       </div>
       <div>
         <Label>Preferred Profession</Label>
