@@ -9,35 +9,47 @@ interface AuthDialogProps {
 }
 
 /**
- * AuthDialog: Improved to eliminate window scrollbars.
- * - The outer DialogContent is now fixed and overflow-hidden.
- * - Only the inner content (the white card) can scroll if needed.
- * - Maximum width/height enforced, always centered, never stretches too large.
- * - min-w removed for better responsiveness on small screens.
+ * AuthDialog: updated to guarantee no window scrollbar,
+ * fixed, elegant modal/card (AuthPage), 
+ * scroll only inside the card if content overflows.
  */
 export function AuthDialog({ open, onOpenChange, signupRoleIntent }: AuthDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="
-          max-w-full sm:max-w-xl md:max-w-2xl w-[90vw] 
-          max-h-[98vh] flex items-center justify-center bg-transparent border-none shadow-none p-0
-          fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-        "
-        style={{ minWidth: 0, overflow: "hidden" }}
+        className={`
+          p-0 bg-transparent border-none shadow-none 
+          flex items-center justify-center 
+          fixed top-0 left-0 right-0 bottom-0 
+          m-0 z-[9999]
+        `}
+        style={{
+          overflow: "hidden" // No scroll on dialog container
+        }}
       >
         <div
           className="
-            rounded-2xl bg-white/95 shadow-2xl 
-            overflow-y-auto
+            w-full max-w-[420px] min-w-[300px] 
+            max-h-[90vh] rounded-2xl bg-white/95 shadow-2xl
             flex flex-col
-            max-h-[90vh]
-            w-full
-            min-w-0
+            items-center
+            overflow-hidden
           "
-          style={{ /* no min-width for full mobile support */ }}
         >
-          <AuthPage signupRoleIntent={signupRoleIntent} />
+          <div
+            className="
+              w-full flex-1 p-8 flex flex-col
+              overflow-y-auto
+              scrollbar-none
+              "
+            style={{
+              maxHeight: '90vh',
+              minHeight: "360px",
+              // Avoid extra scrollbars, and always plenty of padding around
+            }}
+          >
+            <AuthPage signupRoleIntent={signupRoleIntent} />
+          </div>
         </div>
       </DialogContent>
     </Dialog>
