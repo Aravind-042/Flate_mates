@@ -41,16 +41,21 @@ export const Navigation = () => {
     <nav className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+          {/* Enhanced Logo */}
           <div className="flex items-center space-x-3">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-coral-400 to-violet-500 blur-lg opacity-40 rounded-2xl"></div>
-              <div className="relative bg-gradient-to-r from-coral-400 to-violet-500 p-2 rounded-2xl shadow-xl">
-                <Sparkles className="h-6 w-6 text-white" />
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 blur-lg opacity-50 rounded-2xl group-hover:opacity-70 transition-opacity duration-300"></div>
+              <div className="relative bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 p-2.5 rounded-2xl shadow-xl transform group-hover:scale-105 transition-all duration-300">
+                <Sparkles className="h-6 w-6 text-white animate-pulse" />
               </div>
             </div>
-            <Link to="/" className="text-xl font-bold bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 bg-clip-text text-transparent">
-              FlatMates
+            <Link to="/" className="flex items-center space-x-1">
+              <span className="text-xl font-bold bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 bg-clip-text text-transparent">
+                Flat
+              </span>
+              <span className="text-xl font-bold bg-gradient-to-r from-violet-500 via-purple-500 to-coral-400 bg-clip-text text-transparent">
+                Mates
+              </span>
             </Link>
           </div>
 
