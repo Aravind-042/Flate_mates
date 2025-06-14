@@ -2,8 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { UserPlus, CheckCircle, Home } from "lucide-react";
-import { AuthPage } from "@/components/AuthPage";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AuthDialog } from "@/components/Auth/AuthDialog";
 
 // Props for navigation back
 interface SignupPromptProps {
@@ -11,15 +11,9 @@ interface SignupPromptProps {
 }
 
 export const SignupPrompt = ({ onBack }: SignupPromptProps) => {
-  const [showAuthPage, setShowAuthPage] = useState(false);
-
-  if (showAuthPage) {
-    // Render the full Auth page with scrollable AuthLayout for a consistent experience
-    return <AuthPage />;
-  }
+  const [showDialog, setShowDialog] = useState(false);
 
   return (
-    // Outer wrapper to allow scrolling if content is tall (mobile)
     <div className="max-h-[80vh] overflow-y-auto flex flex-col">
       <Card className="w-full glass-card flex-1 flex flex-col">
         <CardHeader className="text-center">
@@ -59,7 +53,7 @@ export const SignupPrompt = ({ onBack }: SignupPromptProps) => {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Button
-                onClick={() => setShowAuthPage(true)}
+                onClick={() => setShowDialog(true)}
                 className="flex-1 bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white"
                 size="lg"
               >
@@ -83,7 +77,8 @@ export const SignupPrompt = ({ onBack }: SignupPromptProps) => {
           </div>
         </CardContent>
       </Card>
+      {/* Centered Auth Modal */}
+      <AuthDialog open={showDialog} onOpenChange={setShowDialog} />
     </div>
   );
 };
-
