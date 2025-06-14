@@ -155,8 +155,8 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id: string
-          phone_number?: string
-          role?: Database["public"]["Enums"]["user_role"]
+          phone_number: string
+          role: Database["public"]["Enums"]["user_role"]
           updated_at?: string
         }
         Update: {
