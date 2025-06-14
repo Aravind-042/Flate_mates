@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import type { Database } from "@/integrations/supabase/types";
 import type { FlatListing } from "@/types/flat";
 
+// --- Profile types
 type UserRole = Database["public"]["Enums"]["user_role"];
 
 interface Profile {
@@ -32,36 +33,31 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Fetch user profile data
   const fetchProfile = async (userId: string) => {
     try {
-      console.log('Fetching profile for user:', userId);
       const { data: profileData, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
-        .single();
-      
+        .maybeSingle();
       if (error) {
         console.error('Error fetching profile:', error);
         return;
       }
-      
-      console.log('Profile fetched successfully:', profileData);
       setProfile(profileData as Profile);
     } catch (error) {
       console.error('Error in fetchProfile:', error);
     }
   };
 
+  // Publish any pending listing after sign up
   const publishPendingListing = async (userId: string) => {
     try {
       const pendingData = localStorage.getItem('pendingListingData');
       if (!pendingData) return;
 
       const listingData: FlatListing = JSON.parse(pendingData);
-      console.log('Publishing pending listing for user:', userId);
-
-      // Map the frontend data structure to the database structure
       const dbListingData = {
         owner_id: userId,
         title: listingData.title,
@@ -97,15 +93,9 @@ export const useAuth = () => {
         toast.error("Failed to publish your listing: " + error.message);
         return;
       }
-
-      console.log('Pending listing published successfully:', data);
       localStorage.removeItem('pendingListingData');
       toast.success("Your listing has been published successfully!");
-      
-      // Navigate to profile after a short delay to allow the toast to be seen
-      setTimeout(() => {
-        navigate('/profile');
-      }, 2000);
+      setTimeout(() => navigate('/profile'), 2000);
     } catch (error) {
       console.error('Error in publishPendingListing:', error);
       toast.error("Failed to publish your listing");
@@ -113,63 +103,58 @@ export const useAuth = () => {
   };
 
   useEffect(() => {
-    // Set up auth state listener
+    // --- Set up Sync and Robust Auth Event Handling
+
+    // 1. Auth state listener - MUST be fully synchronous
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth state change:', event, session?.user?.id);
+      (event, session) => {
+        // Only synchronous state updates here!
         setSession(session);
         setUser(session?.user ?? null);
-        
+
+        // Async data fetches deferred with setTimeout
         if (session?.user) {
-          // Use setTimeout to avoid potential recursion issues
           setTimeout(() => {
-            fetchProfile(session.user.id);
+            fetchProfile(session.user.id); // load profile async
           }, 0);
 
-          // Check for pending listing after successful authentication
           if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-            setTimeout(() => {
-              publishPendingListing(session.user.id);
-            }, 1000);
+            setTimeout(() => publishPendingListing(session.user.id), 1000);
           }
         } else {
           setProfile(null);
         }
-        
+
         setLoading(false);
       }
     );
 
-    // Check for existing session
-    const getInitialSession = async () => {
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) {
-          console.error('Error getting session:', error);
-        } else if (session) {
-          console.log('Initial session found:', session.user?.id);
-          setSession(session);
-          setUser(session.user);
-          if (session.user) {
-            await fetchProfile(session.user.id);
-          }
-        }
-      } catch (error) {
-        console.error('Error in getInitialSession:', error);
-      } finally {
-        setLoading(false);
+    // 2. Initial session state fetch (after setting up listener)
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        console.error('Error getting session:', error);
       }
+      setSession(session);
+      setUser(session?.user ?? null);
+      if (session?.user) {
+        fetchProfile(session.user.id);
+      }
+      setLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
     };
-
-    getInitialSession();
-
-    return () => subscription.unsubscribe();
   }, []);
 
+  // -- Supabase sign out function
   const signOut = async () => {
     try {
       await supabase.auth.signOut();
       setProfile(null);
+      setUser(null);
+      setSession(null);
+      navigate("/");
     } catch (error) {
       console.error('Error signing out:', error);
     }
