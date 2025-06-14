@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
@@ -6,16 +5,19 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface SignInFormProps {
   onSwitchToSignUp: () => void;
+  onSuccess?: () => void;
 }
 
-export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
+export const SignInForm = ({ onSwitchToSignUp, onSuccess }: SignInFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSignIn = async () => {
     if (!email || !password) {
@@ -39,6 +41,14 @@ export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
       
       console.log('Sign in successful:', data.user?.id);
       toast.success("Welcome back!");
+      
+      // Handle successful sign in
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        // If no onSuccess callback, navigate to home
+        navigate('/');
+      }
     } catch (error: any) {
       console.error('Error signing in:', error);
       toast.error(error.message || "Failed to sign in");

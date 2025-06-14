@@ -14,6 +14,10 @@ interface AuthDialogProps {
  * scroll only inside the card if content overflows.
  */
 export function AuthDialog({ open, onOpenChange, signupRoleIntent }: AuthDialogProps) {
+  const handleAuthSuccess = () => {
+    onOpenChange(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -48,7 +52,10 @@ export function AuthDialog({ open, onOpenChange, signupRoleIntent }: AuthDialogP
               // Avoid extra scrollbars, and always plenty of padding around
             }}
           >
-            <AuthPage signupRoleIntent={signupRoleIntent} />
+            <AuthPage 
+              signupRoleIntent={signupRoleIntent} 
+              onAuthSuccess={handleAuthSuccess}
+            />
           </div>
         </div>
       </DialogContent>
