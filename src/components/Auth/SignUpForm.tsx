@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
@@ -11,9 +10,10 @@ import { Mail, User, Lock, Sparkles, Eye, EyeOff, Home } from "lucide-react";
 interface SignUpFormProps {
   onSwitchToSignIn: () => void;
   signupRoleIntentProp?: "flat_owner" | "flat_seeker";
+  onSuccess?: () => void;
 }
 
-export const SignUpForm = ({ onSwitchToSignIn, signupRoleIntentProp }: SignUpFormProps) => {
+export const SignUpForm = ({ onSwitchToSignIn, signupRoleIntentProp, onSuccess }: SignUpFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -81,6 +81,11 @@ export const SignUpForm = ({ onSwitchToSignIn, signupRoleIntentProp }: SignUpFor
       });
       
       toast.success("Account created successfully! Please check your email to verify your account.");
+      
+      // Handle successful sign up
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error: any) {
       console.error('Error signing up:', error);
       
