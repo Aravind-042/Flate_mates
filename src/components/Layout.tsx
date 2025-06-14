@@ -7,7 +7,7 @@ interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-coral-50 via-pink-50 to-violet-100">
+    <div className="min-h-screen">
       <Navigation />
       <main className="relative z-10">
         {children}

@@ -1,5 +1,4 @@
 
-import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -10,92 +9,87 @@ import {
   Heart,
   Shield,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  Zap,
+  Users,
+  MapPin
 } from "lucide-react";
 import { Layout } from "@/components/Layout";
 
 const Index = () => {
-  const { user, profile } = useAuth();
-
   const features = [
     {
-      icon: Search,
-      title: "Smart Matching",
-      description: "Find flatmates based on your preferences and lifestyle"
+      icon: Zap,
+      title: "Instant Matching",
+      description: "AI-powered compatibility scoring finds your perfect flatmate in seconds",
+      gradient: "from-purple-haze to-neon-pink"
     },
     {
       icon: Shield,
-      title: "Verified Profiles",
-      description: "All users are verified for your safety and security"
+      title: "Safe & Verified",
+      description: "Every profile is verified with social media integration for your peace of mind",
+      gradient: "from-electric-blue to-cyber-lime"
     },
     {
-      icon: Heart,
-      title: "Perfect Compatibility",
-      description: "Advanced filters to find your ideal living companion"
+      icon: Users,
+      title: "Community Vibes",
+      description: "Join interest-based groups and find flatmates who share your lifestyle",
+      gradient: "from-sunset-orange to-neon-pink"
     }
   ];
 
   const stats = [
-    { number: "10K+", label: "Happy Users" },
-    { number: "5K+", label: "Successful Matches" },
-    { number: "50+", label: "Cities Covered" }
+    { number: "50K+", label: "Gen Z Users", icon: "🚀" },
+    { number: "25K+", label: "Perfect Matches", icon: "💝" },
+    { number: "100+", label: "Cities", icon: "🌍" }
   ];
 
   return (
     <Layout>
       <div className="relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-40">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-coral-400 to-pink-400 rounded-full blur-3xl opacity-20 animate-bounce"></div>
-          <div className="absolute top-1/2 right-0 w-80 h-80 bg-gradient-to-br from-violet-400 to-purple-400 rounded-full blur-3xl opacity-20 animate-pulse"></div>
-          <div className="absolute bottom-0 left-1/2 w-72 h-72 bg-gradient-to-br from-mint-400 to-blue-400 rounded-full blur-3xl opacity-20 animate-bounce"></div>
+        {/* Animated Background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-haze/20 to-neon-pink/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute top-1/2 -left-40 w-96 h-96 bg-gradient-to-br from-electric-blue/20 to-cyber-lime/20 rounded-full blur-3xl animate-bounce"></div>
+          <div className="absolute -bottom-40 right-1/3 w-72 h-72 bg-gradient-to-br from-sunset-orange/20 to-neon-pink/20 rounded-full blur-3xl float"></div>
         </div>
 
         {/* Hero Section */}
         <section className="relative py-20 px-4 text-center">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             <div className="mb-8">
               <div className="relative inline-block">
-                <div className="absolute inset-0 bg-gradient-to-r from-coral-400 to-violet-500 blur-2xl opacity-30 rounded-full animate-pulse"></div>
-                <div className="relative bg-gradient-to-r from-coral-400 to-violet-500 p-6 rounded-3xl shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-haze to-neon-pink blur-2xl opacity-40 rounded-full animate-pulse"></div>
+                <div className="relative bg-gradient-to-r from-purple-haze to-neon-pink p-6 rounded-3xl shadow-2xl elevation-4">
                   <Home className="h-16 w-16 text-white" />
                 </div>
               </div>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 bg-clip-text text-transparent">
-              Find Your Perfect
-              <span className="block">Flatmate Adventure</span>
+            <h1 className="text-6xl md:text-8xl font-black mb-6 hero-gradient leading-tight">
+              Find Your
+              <span className="block">Flatmate Tribe</span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-2xl mx-auto font-medium">
-              Connect with like-minded people and discover your ideal shared living experience in the city you love.
+            <p className="text-xl md:text-2xl text-slate-600 mb-12 max-w-3xl mx-auto font-medium leading-relaxed">
+              The coolest way to discover your perfect flatmate. Swipe, match, and move in together. 
+              <span className="hero-gradient font-bold"> It's giving main character energy! ✨</span>
             </p>
 
-            {user ? (
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Link to="/browse">
-                  <Button className="h-14 px-8 text-lg font-bold bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200">
-                    <Search className="h-5 w-5 mr-2" />
-                    Browse Listings
-                    <ArrowRight className="h-5 w-5 ml-2" />
-                  </Button>
-                </Link>
-                
-                {profile?.role === 'flat_owner' && (
-                  <Link to="/profile">
-                    <Button variant="outline" className="h-14 px-8 text-lg font-semibold border-2 border-slate-300 text-slate-700 hover:bg-slate-50 rounded-2xl">
-                      <UserPlus className="h-5 w-5 mr-2" />
-                      Create Listing
-                    </Button>
-                  </Link>
-                )}
-              </div>
-            ) : (
-              <p className="text-lg text-slate-600">
-                Welcome! You're already signed in and ready to explore.
-              </p>
-            )}
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <Link to="/browse">
+                <Button className="btn-primary h-16 px-10 text-xl font-black rounded-3xl">
+                  <Search className="h-6 w-6 mr-3" />
+                  Start Exploring
+                  <ArrowRight className="h-6 w-6 ml-3" />
+                </Button>
+              </Link>
+              
+              <Button variant="outline" className="h-16 px-10 text-xl font-bold border-2 border-purple-haze/30 text-purple-haze hover:bg-purple-haze/10 rounded-3xl backdrop-blur-md">
+                <Heart className="h-6 w-6 mr-3" />
+                How It Works
+              </Button>
+            </div>
           </div>
         </section>
 
@@ -104,12 +98,13 @@ const Index = () => {
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-3 gap-8">
               {stats.map((stat, index) => (
-                <Card key={index} className="bg-white/80 backdrop-blur-md border-0 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02]">
+                <Card key={index} className="card-modern group cursor-pointer">
                   <CardContent className="p-8 text-center">
-                    <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-coral-400 to-violet-500 bg-clip-text text-transparent mb-2">
+                    <div className="text-6xl mb-4">{stat.icon}</div>
+                    <div className="text-4xl md:text-5xl font-black hero-gradient mb-2">
                       {stat.number}
                     </div>
-                    <div className="text-slate-600 font-semibold text-lg">
+                    <div className="text-slate-600 font-bold text-lg">
                       {stat.label}
                     </div>
                   </CardContent>
@@ -123,30 +118,31 @@ const Index = () => {
         <section className="relative py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 bg-clip-text text-transparent">
-                Why Choose FlatMates?
+              <h2 className="text-5xl md:text-6xl font-black mb-6 hero-gradient">
+                Why We're Different
               </h2>
-              <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-                We make finding the perfect flatmate simple, safe, and enjoyable.
+              <p className="text-xl text-slate-600 max-w-2xl mx-auto font-medium">
+                Not your basic flatmate finder. We're serving main character energy with every match! 💅
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid lg:grid-cols-3 gap-8">
               {features.map((feature, index) => {
                 const Icon = feature.icon;
                 return (
-                  <Card key={index} className="bg-white/80 backdrop-blur-md border-0 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] group">
-                    <CardContent className="p-8 text-center">
+                  <Card key={index} className="card-modern group cursor-pointer overflow-hidden relative">
+                    <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-5 group-hover:opacity-10 transition-all duration-300`}></div>
+                    <CardContent className="p-8 text-center relative z-10">
                       <div className="relative mb-6">
-                        <div className="absolute inset-0 bg-gradient-to-r from-coral-400 to-violet-500 blur-xl opacity-30 rounded-full group-hover:opacity-50 transition-opacity"></div>
-                        <div className="relative bg-gradient-to-r from-coral-400 to-violet-500 p-4 rounded-2xl shadow-xl inline-block">
+                        <div className={`absolute inset-0 bg-gradient-to-r ${feature.gradient} blur-xl opacity-30 rounded-full group-hover:opacity-50 transition-opacity`}></div>
+                        <div className={`relative bg-gradient-to-r ${feature.gradient} p-4 rounded-2xl shadow-xl inline-block`}>
                           <Icon className="h-8 w-8 text-white" />
                         </div>
                       </div>
-                      <h3 className="text-2xl font-bold text-slate-800 mb-4">
+                      <h3 className="text-2xl font-black text-slate-800 mb-4">
                         {feature.title}
                       </h3>
-                      <p className="text-slate-600 leading-relaxed">
+                      <p className="text-slate-600 leading-relaxed font-medium">
                         {feature.description}
                       </p>
                     </CardContent>
@@ -160,23 +156,26 @@ const Index = () => {
         {/* CTA Section */}
         <section className="relative py-20 px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <Card className="bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 border-0 rounded-3xl shadow-2xl overflow-hidden">
-              <CardContent className="p-12">
+            <Card className="card-modern overflow-hidden relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-haze via-neon-pink to-electric-blue"></div>
+              <CardContent className="p-12 relative z-10">
                 <div className="text-white">
                   <Sparkles className="h-12 w-12 mx-auto mb-6 animate-pulse" />
-                  <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                    Ready to Find Your Flatmate?
+                  <h2 className="text-4xl md:text-5xl font-black mb-6">
+                    Ready to Find Your People?
                   </h2>
-                  <p className="text-xl mb-8 opacity-90">
-                    Join thousands of happy users who found their perfect living companion.
+                  <p className="text-xl mb-8 opacity-90 font-medium">
+                    Join the flatmate revolution. No cap, it's about to be iconic! 🔥
                   </p>
-                  <Link to="/browse">
-                    <Button className="h-14 px-8 text-lg font-bold bg-white text-coral-500 hover:bg-slate-50 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200">
-                      <Search className="h-5 w-5 mr-2" />
-                      Start Your Journey
-                      <ArrowRight className="h-5 w-5 ml-2" />
-                    </Button>
-                  </Link>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Link to="/browse">
+                      <Button className="h-14 px-8 text-lg font-black bg-white text-purple-haze hover:bg-slate-50 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-200">
+                        <Search className="h-5 w-5 mr-2" />
+                        Let's Go Bestie!
+                        <ArrowRight className="h-5 w-5 ml-2" />
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               </CardContent>
             </Card>
