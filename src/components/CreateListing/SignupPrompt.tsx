@@ -1,10 +1,11 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { AuthPage } from "@/components/AuthPage";
 import { useState } from "react";
 import { UserPlus, CheckCircle, Home } from "lucide-react";
+import { AuthPage } from "@/components/AuthPage";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+// Props for navigation back
 interface SignupPromptProps {
   onBack: () => void;
 }
@@ -13,15 +14,12 @@ export const SignupPrompt = ({ onBack }: SignupPromptProps) => {
   const [showAuthPage, setShowAuthPage] = useState(false);
 
   if (showAuthPage) {
-    return (
-      <div className="fixed inset-0 z-50 bg-cool-gray">
-        <AuthPage />
-      </div>
-    );
+    // Render the full Auth page with scrollable AuthLayout for a consistent experience
+    return <AuthPage />;
   }
 
   return (
-    // Outer wrapper to allow scrolling if content is tall (for mobile!)
+    // Outer wrapper to allow scrolling if content is tall (mobile)
     <div className="max-h-[80vh] overflow-y-auto flex flex-col">
       <Card className="w-full glass-card flex-1 flex flex-col">
         <CardHeader className="text-center">
