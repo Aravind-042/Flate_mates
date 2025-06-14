@@ -38,6 +38,7 @@ export const MainListingLayout = ({
           <PreviewSection
             listingData={listingData}
             onBack={onBack}
+            onNext={onNext}
             userId={userId}
           />
         );

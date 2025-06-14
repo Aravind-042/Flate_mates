@@ -2,7 +2,10 @@
 import { useEffect, useState } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import type { Database } from "@/integrations/supabase/types";
+import type { FlatListing } from "@/types/flat";
 
 type UserRole = Database["public"]["Enums"]["user_role"];
 
@@ -27,6 +30,7 @@ export const useAuth = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchProfile = async (userId: string) => {
     try {
@@ -49,6 +53,65 @@ export const useAuth = () => {
     }
   };
 
+  const publishPendingListing = async (userId: string) => {
+    try {
+      const pendingData = localStorage.getItem('pendingListingData');
+      if (!pendingData) return;
+
+      const listingData: FlatListing = JSON.parse(pendingData);
+      console.log('Publishing pending listing for user:', userId);
+
+      // Map the frontend data structure to the database structure
+      const dbListingData = {
+        owner_id: userId,
+        title: listingData.title,
+        description: listingData.description,
+        property_type: listingData.property.type as 'apartment' | 'independent_house' | 'villa' | 'pg' | 'shared_room' | 'studio',
+        bedrooms: listingData.property.bedrooms,
+        bathrooms: listingData.property.bathrooms,
+        is_furnished: listingData.property.furnished,
+        parking_available: listingData.property.parking,
+        monthly_rent: listingData.rent.amount,
+        security_deposit: listingData.rent.deposit,
+        rent_includes: listingData.rent.includes,
+        amenities: listingData.amenities,
+        preferred_gender: listingData.preferences.gender as 'male' | 'female' | 'any',
+        preferred_professions: listingData.preferences.profession,
+        lifestyle_preferences: listingData.preferences.additionalRequirements ? [listingData.preferences.additionalRequirements] : [],
+        contact_phone: listingData.contactPreferences.call,
+        contact_whatsapp: listingData.contactPreferences.whatsapp,
+        contact_email: listingData.contactPreferences.email,
+        images: listingData.images,
+        address_line1: listingData.location.address || `${listingData.location.area}, ${listingData.location.city}`,
+        status: 'active' as 'active' | 'inactive' | 'rented' | 'expired'
+      };
+
+      const { data, error } = await supabase
+        .from('flat_listings')
+        .insert(dbListingData)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error publishing pending listing:', error);
+        toast.error("Failed to publish your listing: " + error.message);
+        return;
+      }
+
+      console.log('Pending listing published successfully:', data);
+      localStorage.removeItem('pendingListingData');
+      toast.success("Your listing has been published successfully!");
+      
+      // Navigate to profile after a short delay to allow the toast to be seen
+      setTimeout(() => {
+        navigate('/profile');
+      }, 2000);
+    } catch (error) {
+      console.error('Error in publishPendingListing:', error);
+      toast.error("Failed to publish your listing");
+    }
+  };
+
   useEffect(() => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -62,6 +125,13 @@ export const useAuth = () => {
           setTimeout(() => {
             fetchProfile(session.user.id);
           }, 0);
+
+          // Check for pending listing after successful authentication
+          if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+            setTimeout(() => {
+              publishPendingListing(session.user.id);
+            }, 1000);
+          }
         } else {
           setProfile(null);
         }

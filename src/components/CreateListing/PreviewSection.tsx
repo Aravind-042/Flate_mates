@@ -12,63 +12,72 @@ import { ArrowLeft, Save } from "lucide-react";
 interface PreviewSectionProps {
   listingData: FlatListing;
   onBack: () => void;
+  onNext: () => void;
   userId: string;
 }
 
-export const PreviewSection = ({ listingData, onBack, userId }: PreviewSectionProps) => {
+export const PreviewSection = ({ listingData, onBack, onNext, userId }: PreviewSectionProps) => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async () => {
-    // If user is not authenticated, don't try to submit to database
-    if (!userId) {
-      console.log('Non-authenticated user attempting to publish - this should trigger signup flow');
-      toast.error("Please sign up to publish your listing");
-      return;
+  const publishListing = async (data: FlatListing, ownerId: string) => {
+    // Map the frontend data structure to the database structure
+    const dbListingData = {
+      owner_id: ownerId,
+      title: data.title,
+      description: data.description,
+      property_type: data.property.type as 'apartment' | 'independent_house' | 'villa' | 'pg' | 'shared_room' | 'studio',
+      bedrooms: data.property.bedrooms,
+      bathrooms: data.property.bathrooms,
+      is_furnished: data.property.furnished,
+      parking_available: data.property.parking,
+      monthly_rent: data.rent.amount,
+      security_deposit: data.rent.deposit,
+      rent_includes: data.rent.includes,
+      amenities: data.amenities,
+      preferred_gender: data.preferences.gender as 'male' | 'female' | 'any',
+      preferred_professions: data.preferences.profession,
+      lifestyle_preferences: data.preferences.additionalRequirements ? [data.preferences.additionalRequirements] : [],
+      contact_phone: data.contactPreferences.call,
+      contact_whatsapp: data.contactPreferences.whatsapp,
+      contact_email: data.contactPreferences.email,
+      images: data.images,
+      address_line1: data.location.address || `${data.location.area}, ${data.location.city}`,
+      status: 'active' as 'active' | 'inactive' | 'rented' | 'expired'
+    };
+
+    console.log('Submitting listing data:', dbListingData);
+
+    const { data: result, error } = await supabase
+      .from('flat_listings')
+      .insert(dbListingData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating listing:', error);
+      throw error;
     }
 
+    console.log('Listing created successfully:', result);
+    return result;
+  };
+
+  const handleSubmit = async () => {
     setIsSubmitting(true);
     
     try {
-      // Map the frontend data structure to the database structure
-      const dbListingData = {
-        owner_id: userId,
-        title: listingData.title,
-        description: listingData.description,
-        property_type: listingData.property.type as 'apartment' | 'independent_house' | 'villa' | 'pg' | 'shared_room' | 'studio',
-        bedrooms: listingData.property.bedrooms,
-        bathrooms: listingData.property.bathrooms,
-        is_furnished: listingData.property.furnished,
-        parking_available: listingData.property.parking,
-        monthly_rent: listingData.rent.amount,
-        security_deposit: listingData.rent.deposit,
-        rent_includes: listingData.rent.includes,
-        amenities: listingData.amenities,
-        preferred_gender: listingData.preferences.gender as 'male' | 'female' | 'any',
-        preferred_professions: listingData.preferences.profession,
-        lifestyle_preferences: listingData.preferences.additionalRequirements ? [listingData.preferences.additionalRequirements] : [],
-        contact_phone: listingData.contactPreferences.call,
-        contact_whatsapp: listingData.contactPreferences.whatsapp,
-        contact_email: listingData.contactPreferences.email,
-        images: listingData.images,
-        address_line1: listingData.location.address || `${listingData.location.area}, ${listingData.location.city}`,
-        status: 'active' as 'active' | 'inactive' | 'rented' | 'expired'
-      };
-
-      console.log('Submitting listing data:', dbListingData);
-
-      const { data, error } = await supabase
-        .from('flat_listings')
-        .insert(dbListingData)
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error creating listing:', error);
-        throw error;
+      if (!userId) {
+        // Save listing data to localStorage for non-authenticated users
+        console.log('Saving listing data for non-authenticated user');
+        localStorage.setItem('pendingListingData', JSON.stringify(listingData));
+        toast.success("Listing details saved! Please sign up to publish.");
+        onNext(); // Move to signup step
+        return;
       }
 
-      console.log('Listing created successfully:', data);
+      // For authenticated users, publish directly
+      await publishListing(listingData, userId);
       toast.success("Listing created successfully!");
       navigate('/profile');
     } catch (error: any) {
@@ -101,16 +110,19 @@ export const PreviewSection = ({ listingData, onBack, userId }: PreviewSectionPr
             </Button>
             <Button
               onClick={handleSubmit}
-              disabled={isSubmitting || !userId}
+              disabled={isSubmitting}
               className="flex-1 bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white rounded-xl disabled:opacity-50"
             >
               {isSubmitting ? (
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  <span>Publishing...</span>
+                  <span>Saving...</span>
                 </div>
               ) : !userId ? (
-                <span>Sign Up to Publish</span>
+                <div className="flex items-center space-x-2">
+                  <Save className="h-4 w-4" />
+                  <span>Save & Sign Up</span>
+                </div>
               ) : (
                 <div className="flex items-center space-x-2">
                   <Save className="h-4 w-4" />
