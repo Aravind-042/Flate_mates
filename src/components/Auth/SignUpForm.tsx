@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
@@ -9,14 +10,16 @@ import { Mail, User, Lock, Sparkles, Eye, EyeOff, Home } from "lucide-react";
 
 interface SignUpFormProps {
   onSwitchToSignIn: () => void;
+  signupRoleIntentProp?: "flat_owner" | "flat_seeker";
 }
 
-export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
+export const SignUpForm = ({ onSwitchToSignIn, signupRoleIntentProp }: SignUpFormProps) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  // --- Default to flat_owner if user is signing up after starting listing flow:
+  // --- We use a prop to override the role for special flows (e.g. from listing). Fallback to localStorage for backward compatibility
   const initialRole: 'flat_seeker' | 'flat_owner' = (() => {
+    if (signupRoleIntentProp) return signupRoleIntentProp;
     try {
       if (typeof window !== "undefined" && localStorage.getItem('pendingListingData')) {
         return "flat_owner";
@@ -24,6 +27,7 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
     } catch (_) {}
     return "flat_seeker";
   })();
+
   const [role, setRole] = useState<'flat_seeker' | 'flat_owner'>(initialRole);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -220,7 +224,8 @@ export const SignUpForm = ({ onSwitchToSignIn }: SignUpFormProps) => {
           <Button 
             variant="ghost" 
             onClick={onSwitchToSignIn}
-            className="text-charcoal hover:text-deep-blue font-semibold text-lg"
+            className="text-charcoal hover:text-deep-blue font-semibold text-lg hover:bg-transparent focus:bg-transparent active:bg-transparent transition-none"
+            style={{ background: "none" }}
           >
             Already have an account? <span className="text-deep-blue ml-2 underline">Sign In</span>
           </Button>

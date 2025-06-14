@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Layout } from "@/components/Layout";
@@ -9,7 +9,7 @@ import { BackToProfileButton } from "@/components/CreateListing/BackToProfileBut
 import type { FlatListing } from "@/types/flat";
 
 const CreateListing = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<'form' | 'preview' | 'signup'>('form');
   
@@ -49,6 +49,13 @@ const CreateListing = () => {
     ownerId: user?.id || '',
     createdAt: new Date().toISOString()
   });
+
+  // REDIRECT if not logged in, but wait for loading to finish.
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/");
+    }
+  }, [loading, user, navigate]);
 
   const handleDataChange = (updates: Partial<FlatListing>) => {
     setListingData(prev => ({ ...prev, ...updates }));
@@ -105,4 +112,3 @@ const CreateListing = () => {
 };
 
 export default CreateListing;
-

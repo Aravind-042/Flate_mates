@@ -77,8 +77,12 @@ export const SignupPrompt = ({ onBack }: SignupPromptProps) => {
           </div>
         </CardContent>
       </Card>
-      {/* Centered Auth Modal */}
-      <AuthDialog open={showDialog} onOpenChange={setShowDialog} />
+      {/* Centered Auth Modal with signupRoleIntent="flat_owner" */}
+      <AuthDialog
+        open={showDialog}
+        onOpenChange={setShowDialog}
+        signupRoleIntent="flat_owner"
+      />
     </div>
   );
 };

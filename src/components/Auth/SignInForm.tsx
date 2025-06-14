@@ -132,7 +132,8 @@ export const SignInForm = ({ onSwitchToSignUp }: SignInFormProps) => {
           <Button 
             variant="ghost" 
             onClick={onSwitchToSignUp}
-            className="text-charcoal hover:text-deep-blue font-semibold text-lg"
+            className="text-charcoal hover:text-deep-blue font-semibold text-lg hover:bg-transparent focus:bg-transparent active:bg-transparent transition-none"
+            style={{ background: "none" }}
           >
             Don't have an account? <span className="text-deep-blue ml-2 underline">Sign Up</span>
           </Button>
