@@ -12,9 +12,7 @@ import {
   Bed, 
   Bath, 
   Car, 
-  Wifi, 
   Search,
-  Filter,
   Heart
 } from "lucide-react";
 import { Layout } from "@/components/Layout";
@@ -23,21 +21,24 @@ import { toast } from "sonner";
 interface FlatListing {
   id: string;
   title: string;
-  description: string;
+  description: string | null;
   property_type: string;
   bedrooms: number;
   bathrooms: number;
-  rent_amount: number;
-  rent_deposit: number;
-  furnished: boolean;
-  parking: boolean;
-  amenities: string[];
-  location_city: string;
-  location_area: string;
-  location_address: string;
-  images: string[];
+  monthly_rent: number;
+  security_deposit: number | null;
+  is_furnished: boolean | null;
+  parking_available: boolean | null;
+  amenities: string[] | null;
+  address_line1: string;
+  address_line2: string | null;
+  images: string[] | null;
   owner_id: string;
   created_at: string;
+  locations?: {
+    city: string;
+    area: string;
+  };
 }
 
 const Browse = () => {
@@ -49,8 +50,14 @@ const Browse = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('flat_listings')
-        .select('*')
-        .eq('is_active', true)
+        .select(`
+          *,
+          locations (
+            city,
+            area
+          )
+        `)
+        .eq('status', 'active')
         .order('created_at', { ascending: false });
       
       if (error) {
@@ -64,12 +71,13 @@ const Browse = () => {
 
   const filteredListings = listings?.filter(listing => {
     const matchesSearch = listing.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         listing.location_area.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCity = !selectedCity || listing.location_city.toLowerCase() === selectedCity.toLowerCase();
+                         listing.locations?.area?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         listing.address_line1.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCity = !selectedCity || listing.locations?.city?.toLowerCase() === selectedCity.toLowerCase();
     return matchesSearch && matchesCity;
   }) || [];
 
-  const cities = Array.from(new Set(listings?.map(listing => listing.location_city) || []));
+  const cities = Array.from(new Set(listings?.map(listing => listing.locations?.city).filter(Boolean) || []));
 
   if (error) {
     toast.error("Failed to load listings");
@@ -172,7 +180,7 @@ const Browse = () => {
                         {listing.title}
                       </CardTitle>
                       <Badge variant="secondary" className="bg-coral-100 text-coral-700 border-0">
-                        {listing.property_type}
+                        {listing.property_type.replace('_', ' ')}
                       </Badge>
                     </div>
                   </CardHeader>
@@ -180,7 +188,11 @@ const Browse = () => {
                   <CardContent className="pt-0">
                     <div className="flex items-center text-slate-600 mb-3">
                       <MapPin className="h-4 w-4 mr-1" />
-                      <span className="text-sm">{listing.location_area}, {listing.location_city}</span>
+                      <span className="text-sm">
+                        {listing.locations?.area && listing.locations?.city 
+                          ? `${listing.locations.area}, ${listing.locations.city}`
+                          : listing.address_line1}
+                      </span>
                     </div>
                     
                     {listing.description && (
@@ -201,7 +213,7 @@ const Browse = () => {
                           <Bath className="h-4 w-4 mr-1" />
                           <span>{listing.bathrooms}</span>
                         </div>
-                        {listing.parking && (
+                        {listing.parking_available && (
                           <div className="flex items-center">
                             <Car className="h-4 w-4 mr-1" />
                           </div>
@@ -212,7 +224,7 @@ const Browse = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-2xl font-bold text-slate-800">
-                          ₹{listing.rent_amount.toLocaleString()}
+                          ₹{listing.monthly_rent.toLocaleString()}
                         </div>
                         <div className="text-sm text-slate-600">per month</div>
                       </div>

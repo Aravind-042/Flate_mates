@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { 
@@ -25,7 +26,10 @@ const Profile = () => {
     full_name: profile?.full_name || '',
     phone_number: profile?.phone_number || '',
     city: profile?.city || '',
-    role: profile?.role || 'flat_seeker'
+    role: profile?.role || 'flat_seeker',
+    bio: profile?.bio || '',
+    age: profile?.age || '',
+    profession: profile?.profession || ''
   });
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
@@ -33,9 +37,14 @@ const Profile = () => {
     setIsLoading(true);
 
     try {
+      const updateData = {
+        ...profileData,
+        age: profileData.age ? parseInt(profileData.age.toString()) : null
+      };
+
       const { error } = await supabase
         .from('profiles')
-        .update(profileData)
+        .update(updateData)
         .eq('id', user?.id);
 
       if (error) throw error;
@@ -87,61 +96,107 @@ const Profile = () => {
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleUpdateProfile} className="space-y-6">
-                    <div className="space-y-3">
-                      <Label htmlFor="full_name" className="text-slate-700 font-semibold">
-                        Full Name
-                      </Label>
-                      <Input
-                        id="full_name"
-                        value={profileData.full_name}
-                        onChange={(e) => setProfileData({ ...profileData, full_name: e.target.value })}
-                        className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
-                      />
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-3">
+                        <Label htmlFor="full_name" className="text-slate-700 font-semibold">
+                          Full Name
+                        </Label>
+                        <Input
+                          id="full_name"
+                          value={profileData.full_name}
+                          onChange={(e) => setProfileData({ ...profileData, full_name: e.target.value })}
+                          className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
+                        />
+                      </div>
+
+                      <div className="space-y-3">
+                        <Label htmlFor="phone_number" className="text-slate-700 font-semibold">
+                          Phone Number
+                        </Label>
+                        <Input
+                          id="phone_number"
+                          value={profileData.phone_number}
+                          onChange={(e) => setProfileData({ ...profileData, phone_number: e.target.value })}
+                          className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
+                        />
+                      </div>
+
+                      <div className="space-y-3">
+                        <Label htmlFor="city" className="text-slate-700 font-semibold">
+                          City
+                        </Label>
+                        <Input
+                          id="city"
+                          value={profileData.city}
+                          onChange={(e) => setProfileData({ ...profileData, city: e.target.value })}
+                          placeholder="Enter your city"
+                          className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
+                        />
+                      </div>
+
+                      <div className="space-y-3">
+                        <Label htmlFor="role" className="text-slate-700 font-semibold">
+                          Role
+                        </Label>
+                        <Select 
+                          value={profileData.role} 
+                          onValueChange={(value: 'flat_seeker' | 'flat_owner' | 'both') => 
+                            setProfileData({ ...profileData, role: value })
+                          }
+                        >
+                          <SelectTrigger className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-slate-200 rounded-xl">
+                            <SelectItem value="flat_seeker">🏠 Flat Seeker</SelectItem>
+                            <SelectItem value="flat_owner">🔑 Flat Owner</SelectItem>
+                            <SelectItem value="both">🏠🔑 Both</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="space-y-3">
+                        <Label htmlFor="age" className="text-slate-700 font-semibold">
+                          Age
+                        </Label>
+                        <Input
+                          id="age"
+                          type="number"
+                          min="18"
+                          max="100"
+                          value={profileData.age}
+                          onChange={(e) => setProfileData({ ...profileData, age: e.target.value })}
+                          placeholder="Enter your age"
+                          className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
+                        />
+                      </div>
+
+                      <div className="space-y-3">
+                        <Label htmlFor="profession" className="text-slate-700 font-semibold">
+                          Profession
+                        </Label>
+                        <Input
+                          id="profession"
+                          value={profileData.profession}
+                          onChange={(e) => setProfileData({ ...profileData, profession: e.target.value })}
+                          placeholder="Enter your profession"
+                          className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
+                        />
+                      </div>
                     </div>
 
                     <div className="space-y-3">
-                      <Label htmlFor="phone_number" className="text-slate-700 font-semibold">
-                        Phone Number
+                      <Label htmlFor="bio" className="text-slate-700 font-semibold">
+                        Bio
                       </Label>
-                      <Input
-                        id="phone_number"
-                        value={profileData.phone_number}
-                        onChange={(e) => setProfileData({ ...profileData, phone_number: e.target.value })}
-                        className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
+                      <Textarea
+                        id="bio"
+                        value={profileData.bio}
+                        onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
+                        placeholder="Tell us about yourself..."
+                        className="border-2 border-slate-200 focus:border-coral-400 rounded-xl resize-none"
+                        rows={4}
                       />
-                    </div>
-
-                    <div className="space-y-3">
-                      <Label htmlFor="city" className="text-slate-700 font-semibold">
-                        City
-                      </Label>
-                      <Input
-                        id="city"
-                        value={profileData.city}
-                        onChange={(e) => setProfileData({ ...profileData, city: e.target.value })}
-                        placeholder="Enter your city"
-                        className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
-                      />
-                    </div>
-
-                    <div className="space-y-3">
-                      <Label htmlFor="role" className="text-slate-700 font-semibold">
-                        Role
-                      </Label>
-                      <Select 
-                        value={profileData.role} 
-                        onValueChange={(value: 'flat_seeker' | 'flat_owner') => 
-                          setProfileData({ ...profileData, role: value })
-                        }
-                      >
-                        <SelectTrigger className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-slate-200 rounded-xl">
-                          <SelectItem value="flat_seeker">🏠 Flat Seeker</SelectItem>
-                          <SelectItem value="flat_owner">🔑 Flat Owner</SelectItem>
-                        </SelectContent>
-                      </Select>
                     </div>
 
                     <Button 
@@ -173,7 +228,7 @@ const Profile = () => {
                     <CardTitle className="text-2xl font-bold text-slate-800">
                       My Listings
                     </CardTitle>
-                    {profile?.role === 'flat_owner' && (
+                    {(profile?.role === 'flat_owner' || profile?.role === 'both') && (
                       <Button className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl">
                         <Plus className="h-4 w-4 mr-2" />
                         Create Listing
@@ -189,7 +244,7 @@ const Profile = () => {
                         Switch to Flat Owner
                       </h3>
                       <p className="text-slate-600 mb-4">
-                        Change your role to "Flat Owner" in the Profile tab to create listings.
+                        Change your role to "Flat Owner" or "Both" in the Profile tab to create listings.
                       </p>
                     </div>
                   ) : (
