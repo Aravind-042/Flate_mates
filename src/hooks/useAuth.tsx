@@ -4,7 +4,7 @@ import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 
-type UserRole = Database['public']['Enums']['user_role'];
+type UserRole = 'flat_seeker' | 'flat_owner' | 'both';
 
 interface Profile {
   id: string;
@@ -43,7 +43,12 @@ export const useAuth = () => {
       }
       
       console.log('Profile fetched successfully:', profileData);
-      setProfile(profileData);
+      // Map the database role to our extended type
+      const mappedProfile: Profile = {
+        ...profileData,
+        role: (profileData.role || 'flat_seeker') as UserRole
+      };
+      setProfile(mappedProfile);
     } catch (error) {
       console.error('Error in fetchProfile:', error);
     }

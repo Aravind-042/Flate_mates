@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,7 +27,7 @@ const Profile = () => {
     full_name: profile?.full_name || '',
     phone_number: profile?.phone_number || '',
     city: profile?.city || '',
-    role: profile?.role || 'flat_seeker',
+    role: profile?.role || 'flat_seeker' as 'flat_seeker' | 'flat_owner',
     bio: profile?.bio || '',
     age: profile?.age || '',
     profession: profile?.profession || ''
@@ -142,7 +141,7 @@ const Profile = () => {
                         </Label>
                         <Select 
                           value={profileData.role} 
-                          onValueChange={(value: 'flat_seeker' | 'flat_owner' | 'both') => 
+                          onValueChange={(value: 'flat_seeker' | 'flat_owner') => 
                             setProfileData({ ...profileData, role: value })
                           }
                         >
@@ -152,7 +151,6 @@ const Profile = () => {
                           <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-slate-200 rounded-xl">
                             <SelectItem value="flat_seeker">🏠 Flat Seeker</SelectItem>
                             <SelectItem value="flat_owner">🔑 Flat Owner</SelectItem>
-                            <SelectItem value="both">🏠🔑 Both</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -230,7 +228,7 @@ const Profile = () => {
                     <CardTitle className="text-2xl font-bold text-slate-800">
                       My Listings
                     </CardTitle>
-                    {(profile?.role === 'flat_owner' || profile?.role === 'both') && (
+                    {profile?.role === 'flat_owner' && (
                       <Button 
                         onClick={() => navigate('/create-listing')}
                         className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl"
@@ -249,7 +247,7 @@ const Profile = () => {
                         Switch to Flat Owner
                       </h3>
                       <p className="text-slate-600 mb-4">
-                        Change your role to "Flat Owner" or "Both" in the Profile tab to create listings.
+                        Change your role to "Flat Owner" in the Profile tab to create listings.
                       </p>
                     </div>
                   ) : (

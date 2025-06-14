@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -52,8 +51,7 @@ const CreateListing = () => {
     },
     images: [],
     ownerId: user?.id || '',
-    createdAt: new Date().toISOString(),
-    status: 'active'
+    createdAt: new Date().toISOString()
   });
 
   // Check if user has permission to create listings
@@ -124,7 +122,7 @@ const CreateListing = () => {
         owner_id: user.id,
         title: listingData.title,
         description: listingData.description,
-        property_type: listingData.property.type,
+        property_type: listingData.property.type as 'apartment' | 'independent_house' | 'villa' | 'pg' | 'shared_room' | 'studio',
         bedrooms: listingData.property.bedrooms,
         bathrooms: listingData.property.bathrooms,
         is_furnished: listingData.property.furnished,
@@ -133,7 +131,7 @@ const CreateListing = () => {
         security_deposit: listingData.rent.deposit,
         rent_includes: listingData.rent.includes,
         amenities: listingData.amenities,
-        preferred_gender: listingData.preferences.gender,
+        preferred_gender: listingData.preferences.gender as 'male' | 'female' | 'any',
         preferred_professions: listingData.preferences.profession,
         lifestyle_preferences: listingData.preferences.additionalRequirements ? [listingData.preferences.additionalRequirements] : [],
         contact_phone: listingData.contactPreferences.call,
@@ -141,12 +139,12 @@ const CreateListing = () => {
         contact_email: listingData.contactPreferences.email,
         images: listingData.images,
         address_line1: listingData.location.address || `${listingData.location.area}, ${listingData.location.city}`,
-        status: 'active'
+        status: 'active' as 'active' | 'inactive' | 'rented' | 'expired'
       };
 
       const { data, error } = await supabase
         .from('flat_listings')
-        .insert([dbListingData])
+        .insert(dbListingData)
         .select()
         .single();
 
