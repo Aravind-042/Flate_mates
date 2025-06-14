@@ -81,7 +81,7 @@ const CreateListing = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen py-8 px-4">
+      <div className="min-h-screen py-8 px-4 overflow-auto"> {/* allow scrolling if content is tall */}
         <div className="max-w-6xl mx-auto">
           <CreateListingHeader currentStep={currentStep} />
 

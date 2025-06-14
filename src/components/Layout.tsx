@@ -1,15 +1,14 @@
 
+import React from "react";
 import { Navigation } from "./Navigation";
 
-interface LayoutProps {
-  children: React.ReactNode;
-}
-
-export const Layout = ({ children }: LayoutProps) => {
+// Main layout that wraps all primary pages with navigation and scrolling.
+// Ensures content is always vertically scrollable and fills min screen height.
+export const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="min-h-screen bg-cool-gray">
+    <div className="min-h-screen flex flex-col bg-cool-gray overflow-auto">
       <Navigation />
-      <main className="relative z-10">
+      <main className="flex-1 w-full mx-auto p-0">
         {children}
       </main>
     </div>
