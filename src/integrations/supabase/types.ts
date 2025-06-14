@@ -374,7 +374,6 @@ export type Database = {
           phone_number: string
           profession: string | null
           profile_picture_url: string | null
-          role: Database["public"]["Enums"]["user_role"]
           updated_at: string | null
           verification_documents: string[] | null
         }
@@ -390,7 +389,6 @@ export type Database = {
           phone_number?: string
           profession?: string | null
           profile_picture_url?: string | null
-          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string | null
           verification_documents?: string[] | null
         }
@@ -406,7 +404,6 @@ export type Database = {
           phone_number?: string
           profession?: string | null
           profile_picture_url?: string | null
-          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string | null
           verification_documents?: string[] | null
         }
@@ -549,10 +546,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_current_user_role: {
-        Args: Record<PropertyKey, never>
-        Returns: Database["public"]["Enums"]["user_role"]
-      }
+      [_ in never]: never
     }
     Enums: {
       gender_preference: "male" | "female" | "any"
@@ -570,7 +564,7 @@ export type Database = {
         | "rejected"
         | "withdrawn"
         | "expired"
-      user_role: "flat_seeker" | "flat_owner" | "both"
+      user_role: "flat_seeker" | "flat_owner"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -703,7 +697,7 @@ export const Constants = {
         "withdrawn",
         "expired",
       ],
-      user_role: ["flat_seeker", "flat_owner", "both"],
+      user_role: ["flat_seeker", "flat_owner"],
     },
   },
 } as const
