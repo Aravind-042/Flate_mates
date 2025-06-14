@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -30,8 +29,8 @@ export const Navigation = () => {
     { to: "/browse", label: "Browse", icon: Search },
   ];
 
-  // Add create listing link for eligible users
-  if (user && (profile?.role === 'flat_owner' || profile?.role === 'both')) {
+  // Add create listing link for flat owners only
+  if (user && profile?.role === 'flat_owner') {
     navItems.push({ 
       to: "/create-listing", 
       label: "Create Listing", 
