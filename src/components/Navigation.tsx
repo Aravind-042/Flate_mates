@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -94,7 +93,9 @@ export const Navigation = () => {
               </>
             ) : (
               <Link to="/">
-                <Button className="bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white">
+                <Button
+                  className="bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white"
+                >
                   Sign In
                 </Button>
               </Link>
