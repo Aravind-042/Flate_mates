@@ -10,15 +10,17 @@ interface AuthLayoutProps {
 
 export const AuthLayout = ({ children }: AuthLayoutProps) => {
   return (
-    <div className="min-h-screen bg-cool-gray relative overflow-hidden">
+    // Remove 'overflow-hidden' to permit scrolling if content is taller than the viewport.
+    <div className="min-h-screen bg-cool-gray relative">
       {/* Enhanced Background Pattern */}
-      <div className="absolute inset-0 opacity-40">
+      <div className="absolute inset-0 opacity-40 pointer-events-none">
         <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-deep-blue to-orange rounded-full blur-3xl opacity-20 animate-bounce"></div>
         <div className="absolute top-1/2 right-0 w-80 h-80 bg-gradient-to-br from-orange to-emerald rounded-full blur-3xl opacity-20 animate-pulse"></div>
         <div className="absolute bottom-0 left-1/2 w-72 h-72 bg-gradient-to-br from-emerald to-deep-blue rounded-full blur-3xl opacity-20 animate-bounce"></div>
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-orange to-deep-blue rounded-full blur-3xl opacity-15 animate-pulse"></div>
       </div>
       
+      {/* Spill over content when needed, allow scroll on long forms */}
       <div className="relative z-10 flex items-center justify-center min-h-screen p-6">
         <div className="w-full max-w-2xl mx-auto">
           {/* Brand Header */}
@@ -38,7 +40,8 @@ export const AuthLayout = ({ children }: AuthLayoutProps) => {
             <AuthFeatures />
           </div>
 
-          <Card className="bg-white/90 backdrop-blur-2xl shadow-2xl border-0 rounded-3xl overflow-hidden mx-auto">
+          {/* Let Card grow beyond viewport; handle scrolling at the window level */}
+          <Card className="bg-white/90 backdrop-blur-2xl shadow-2xl border-0 rounded-3xl overflow-visible mx-auto">
             <CardContent className="p-10">
               {children}
             </CardContent>
@@ -48,3 +51,4 @@ export const AuthLayout = ({ children }: AuthLayoutProps) => {
     </div>
   );
 };
+
