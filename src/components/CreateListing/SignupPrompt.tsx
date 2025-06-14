@@ -14,8 +14,8 @@ export const SignupPrompt = ({ onBack }: SignupPromptProps) => {
   const [showDialog, setShowDialog] = useState(false);
 
   return (
-    <div className="max-h-[80vh] overflow-y-auto flex flex-col">
-      <Card className="w-full glass-card flex-1 flex flex-col">
+    <div className="overflow-visible flex flex-col items-center justify-center min-h-[50vh]">
+      <Card className="w-full max-w-lg glass-card flex-1 flex flex-col mx-auto rounded-2xl shadow-2xl">
         <CardHeader className="text-center">
           <div className="mx-auto w-16 h-16 bg-gradient-to-r from-deep-blue to-orange rounded-full flex items-center justify-center mb-4">
             <CheckCircle className="h-8 w-8 text-white" />
