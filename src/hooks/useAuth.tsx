@@ -2,12 +2,15 @@
 import { useEffect, useState } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
+
+type UserRole = Database['public']['Enums']['user_role'];
 
 interface Profile {
   id: string;
   phone_number: string;
   full_name: string | null;
-  role: 'flat_seeker' | 'flat_owner';
+  role: UserRole;
   city: string | null;
   created_at: string;
   updated_at: string;
