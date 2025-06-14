@@ -1,0 +1,43 @@
+
+@layer components {
+  /* Enhanced color utilities */
+  .text-deep-blue { color: hsl(var(--deep-blue)); }
+  .text-orange { color: hsl(var(--orange)); }
+  .text-emerald { color: hsl(var(--emerald)); }
+  .text-charcoal { color: hsl(var(--charcoal)); }
+  .bg-deep-blue { background-color: hsl(var(--deep-blue)); }
+  .bg-orange { background-color: hsl(var(--orange)); }
+  .bg-emerald { background-color: hsl(var(--emerald)); }
+  .bg-cool-gray { background-color: hsl(var(--cool-gray)); }
+  .border-light-slate { border-color: hsl(var(--light-slate)); }
+  .hover\:bg-darker-blue:hover { background-color: hsl(var(--darker-blue)); }
+  .hover\:bg-orange-darker:hover { background-color: hsl(var(--orange-darker)); }
+
+  /* Enhanced button styles */
+  .btn-gradient {
+    @apply bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-200 transform hover:scale-[1.02];
+  }
+
+  /* Card glassmorphism effect */
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-2xl border border-light-slate rounded-3xl shadow-2xl;
+  }
+
+  /* Modern responsive text sizing */
+  .text-responsive-xl {
+    @apply text-3xl sm:text-4xl lg:text-5xl xl:text-6xl;
+  }
+
+  .text-responsive-lg {
+    @apply text-xl sm:text-2xl lg:text-3xl;
+  }
+
+  .text-responsive-base {
+    @apply text-base sm:text-lg lg:text-xl;
+  }
+
+  /* Hero gradient text */
+  .hero-text-gradient {
+    @apply bg-gradient-to-r from-deep-blue via-orange to-emerald bg-clip-text text-transparent;
+  }
+}
