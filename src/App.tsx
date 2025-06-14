@@ -10,6 +10,7 @@ import Browse from "./pages/Browse";
 import Profile from "./pages/Profile";
 import CreateListing from "./pages/CreateListing";
 import NotFound from "./pages/NotFound";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -24,7 +25,11 @@ function App() {
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<About />} />
             <Route path="/browse" element={<Browse />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } />
             <Route path="/create-listing" element={<CreateListing />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

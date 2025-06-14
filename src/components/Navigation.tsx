@@ -28,16 +28,8 @@ export const Navigation = () => {
   const navItems = [
     { to: "/", label: "Home", icon: Home },
     { to: "/browse", label: "Browse", icon: Search },
+    { to: "/create-listing", label: "Create Listing", icon: Plus }, // Now available to all users
   ];
-
-  // Add create listing link for flat owners only
-  if (user && profile?.role === 'flat_owner') {
-    navItems.push({ 
-      to: "/create-listing", 
-      label: "Create Listing", 
-      icon: Plus 
-    });
-  }
 
   const isActive = (path: string) => location.pathname === path;
 

@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Layout } from "@/components/Layout";
-import { AccessRestricted } from "@/components/CreateListing/AccessRestricted";
 import { CreateListingHeader } from "@/components/CreateListing/CreateListingHeader";
 import { MainListingLayout } from "@/components/CreateListing/MainListingLayout";
 import { BackToProfileButton } from "@/components/CreateListing/BackToProfileButton";
@@ -12,7 +11,7 @@ import type { FlatListing } from "@/types/flat";
 const CreateListing = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState<'form' | 'preview'>('form');
+  const [currentStep, setCurrentStep] = useState<'form' | 'preview' | 'signup'>('form');
   
   const [listingData, setListingData] = useState<FlatListing>({
     id: '',
@@ -51,28 +50,33 @@ const CreateListing = () => {
     createdAt: new Date().toISOString()
   });
 
-  // Check if user has permission to create listings
-  if (profile?.role === 'flat_seeker') {
-    return (
-      <Layout>
-        <AccessRestricted />
-      </Layout>
-    );
-  }
-
   const handleDataChange = (updates: Partial<FlatListing>) => {
     setListingData(prev => ({ ...prev, ...updates }));
   };
 
   const handleNext = () => {
-    setCurrentStep('preview');
+    if (currentStep === 'form') {
+      setCurrentStep('preview');
+    } else if (currentStep === 'preview') {
+      // If user is not logged in, show signup step
+      if (!user) {
+        setCurrentStep('signup');
+      } else {
+        // User is logged in, proceed with listing creation
+        // This would normally submit the listing to the database
+        console.log('Creating listing:', listingData);
+        navigate('/profile');
+      }
+    }
   };
 
   const handleBack = () => {
-    if (currentStep === 'preview') {
+    if (currentStep === 'signup') {
+      setCurrentStep('preview');
+    } else if (currentStep === 'preview') {
       setCurrentStep('form');
     } else {
-      navigate('/profile');
+      navigate('/');
     }
   };
 
