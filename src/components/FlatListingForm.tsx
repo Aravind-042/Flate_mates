@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -64,23 +65,23 @@ export const FlatListingForm = ({ data, onChange, onNext }: FlatListingFormProps
         return (
           <div className="space-y-6">
             <div>
-              <Label htmlFor="title">Listing Title</Label>
+              <Label htmlFor="title" className="text-charcoal">Listing Title</Label>
               <Input
                 id="title"
                 placeholder="e.g., Spacious 2BHK in Prime Location"
                 value={data.title}
                 onChange={(e) => handleInputChange('title', e.target.value)}
-                className="mt-2"
+                className="mt-2 border-light-slate focus:border-deep-blue focus:ring-deep-blue"
               />
             </div>
             <div>
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description" className="text-charcoal">Description</Label>
               <Textarea
                 id="description"
                 placeholder="Describe your flat, surroundings, and what makes it special..."
                 value={data.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
-                className="mt-2 min-h-[120px]"
+                className="mt-2 min-h-[120px] border-light-slate focus:border-deep-blue focus:ring-deep-blue"
               />
             </div>
           </div>
@@ -90,33 +91,33 @@ export const FlatListingForm = ({ data, onChange, onNext }: FlatListingFormProps
         return (
           <div className="space-y-6">
             <div>
-              <Label htmlFor="city">City</Label>
+              <Label htmlFor="city" className="text-charcoal">City</Label>
               <Input
                 id="city"
                 placeholder="e.g., Mumbai, Delhi, Bangalore"
                 value={data.location.city}
                 onChange={(e) => handleInputChange('location.city', e.target.value)}
-                className="mt-2"
+                className="mt-2 border-light-slate focus:border-deep-blue focus:ring-deep-blue"
               />
             </div>
             <div>
-              <Label htmlFor="area">Area/Locality</Label>
+              <Label htmlFor="area" className="text-charcoal">Area/Locality</Label>
               <Input
                 id="area"
                 placeholder="e.g., Koramangala, Andheri West"
                 value={data.location.area}
                 onChange={(e) => handleInputChange('location.area', e.target.value)}
-                className="mt-2"
+                className="mt-2 border-light-slate focus:border-deep-blue focus:ring-deep-blue"
               />
             </div>
             <div>
-              <Label htmlFor="address">Address (Optional)</Label>
+              <Label htmlFor="address" className="text-charcoal">Address (Optional)</Label>
               <Textarea
                 id="address"
                 placeholder="Building name, street address (will be shared only after acceptance)"
                 value={data.location.address}
                 onChange={(e) => handleInputChange('location.address', e.target.value)}
-                className="mt-2"
+                className="mt-2 border-light-slate focus:border-deep-blue focus:ring-deep-blue"
               />
             </div>
           </div>
@@ -301,14 +302,14 @@ export const FlatListingForm = ({ data, onChange, onNext }: FlatListingFormProps
         return (
           <div className="space-y-6">
             <div>
-              <Label>Property Images</Label>
+              <Label className="text-charcoal">Property Images</Label>
               <ImageUpload
                 images={data.images}
                 onChange={(images) => handleInputChange('images', images)}
               />
             </div>
             <div>
-              <Label>Contact Preferences</Label>
+              <Label className="text-charcoal">Contact Preferences</Label>
               <div className="mt-2 space-y-2">
                 <div className="flex items-center space-x-2">
                   <Checkbox
@@ -316,7 +317,7 @@ export const FlatListingForm = ({ data, onChange, onNext }: FlatListingFormProps
                     checked={data.contactPreferences.whatsapp}
                     onCheckedChange={(checked) => handleInputChange('contactPreferences.whatsapp', checked)}
                   />
-                  <Label htmlFor="whatsapp">WhatsApp</Label>
+                  <Label htmlFor="whatsapp" className="text-charcoal">WhatsApp</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox
@@ -324,7 +325,7 @@ export const FlatListingForm = ({ data, onChange, onNext }: FlatListingFormProps
                     checked={data.contactPreferences.call}
                     onCheckedChange={(checked) => handleInputChange('contactPreferences.call', checked)}
                   />
-                  <Label htmlFor="call">Phone Call</Label>
+                  <Label htmlFor="call" className="text-charcoal">Phone Call</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Checkbox
@@ -332,7 +333,7 @@ export const FlatListingForm = ({ data, onChange, onNext }: FlatListingFormProps
                     checked={data.contactPreferences.email}
                     onCheckedChange={(checked) => handleInputChange('contactPreferences.email', checked)}
                   />
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email" className="text-charcoal">Email</Label>
                 </div>
               </div>
             </div>
@@ -345,17 +346,17 @@ export const FlatListingForm = ({ data, onChange, onNext }: FlatListingFormProps
   };
 
   return (
-    <Card className="w-full">
+    <Card className="w-full glass-card">
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
+        <CardTitle className="flex items-center justify-between text-charcoal">
           <span>{sections[currentSection]}</span>
           <span className="text-sm text-gray-500">
             {currentSection + 1} of {sections.length}
           </span>
         </CardTitle>
-        <div className="w-full bg-gray-200 rounded-full h-2">
+        <div className="w-full bg-light-slate rounded-full h-2">
           <div 
-            className="bg-gradient-to-r from-blue-600 to-orange-500 h-2 rounded-full transition-all duration-300"
+            className="bg-gradient-to-r from-deep-blue to-orange h-2 rounded-full transition-all duration-300"
             style={{ width: `${((currentSection + 1) / sections.length) * 100}%` }}
           ></div>
         </div>
@@ -369,12 +370,13 @@ export const FlatListingForm = ({ data, onChange, onNext }: FlatListingFormProps
               variant="outline"
               onClick={handlePrevious}
               disabled={currentSection === 0}
+              className="border-light-slate text-charcoal hover:text-deep-blue hover:border-deep-blue"
             >
               Previous
             </Button>
             <Button
               onClick={handleNext}
-              className="bg-gradient-to-r from-blue-600 to-orange-500 text-white"
+              className="bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white"
             >
               {currentSection === sections.length - 1 ? 'Preview Listing' : 'Next'}
             </Button>

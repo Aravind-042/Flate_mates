@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -60,26 +61,26 @@ const CreateListing = () => {
       <Layout>
         <div className="min-h-screen py-8 px-4">
           <div className="max-w-2xl mx-auto text-center">
-            <Card className="bg-white/80 backdrop-blur-md border-0 rounded-3xl shadow-xl">
+            <Card className="glass-card">
               <CardContent className="p-8">
-                <h1 className="text-2xl font-bold text-slate-800 mb-4">
+                <h1 className="text-2xl font-bold text-charcoal mb-4">
                   Access Restricted
                 </h1>
-                <p className="text-slate-600 mb-6">
+                <p className="text-gray-600 mb-6">
                   You need to be a "Flat Owner" or have "Both" roles to create listings.
                   Please update your role in your profile settings.
                 </p>
                 <div className="space-y-4">
                   <Button
                     onClick={() => navigate('/profile')}
-                    className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl"
+                    className="bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white rounded-xl"
                   >
                     Go to Profile Settings
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => navigate('/browse')}
-                    className="border-2 border-slate-200 rounded-xl"
+                    className="border-2 border-light-slate rounded-xl text-charcoal hover:text-deep-blue"
                   >
                     Browse Listings Instead
                   </Button>
@@ -169,10 +170,10 @@ const CreateListing = () => {
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 hero-text-gradient">
               Create New Listing
             </h1>
-            <p className="text-xl text-slate-600">
+            <p className="text-xl text-gray-600">
               {currentStep === 'form' ? 'Fill in your property details' : 'Review and publish your listing'}
             </p>
           </div>
@@ -187,9 +188,9 @@ const CreateListing = () => {
                   onNext={handleNext}
                 />
               ) : (
-                <Card className="bg-white/80 backdrop-blur-md border-0 rounded-3xl shadow-xl">
+                <Card className="glass-card">
                   <CardHeader>
-                    <CardTitle className="text-2xl font-bold text-slate-800">
+                    <CardTitle className="text-2xl font-bold text-charcoal">
                       Listing Preview
                     </CardTitle>
                   </CardHeader>
@@ -201,7 +202,7 @@ const CreateListing = () => {
                         <Button
                           variant="outline"
                           onClick={handleBack}
-                          className="flex-1 border-2 border-slate-200 rounded-xl"
+                          className="flex-1 border-2 border-light-slate rounded-xl text-charcoal hover:text-deep-blue"
                         >
                           <ArrowLeft className="h-4 w-4 mr-2" />
                           Back to Edit
@@ -209,7 +210,7 @@ const CreateListing = () => {
                         <Button
                           onClick={handleSubmit}
                           disabled={isSubmitting}
-                          className="flex-1 bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl"
+                          className="flex-1 bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white rounded-xl"
                         >
                           {isSubmitting ? (
                             <div className="flex items-center space-x-2">
@@ -232,9 +233,9 @@ const CreateListing = () => {
 
             {/* Live Preview Section */}
             <div className="lg:sticky lg:top-8 h-fit">
-              <Card className="bg-white/80 backdrop-blur-md border-0 rounded-3xl shadow-xl">
+              <Card className="glass-card">
                 <CardHeader>
-                  <CardTitle className="text-xl font-bold text-slate-800">
+                  <CardTitle className="text-xl font-bold text-charcoal">
                     Live Preview
                   </CardTitle>
                 </CardHeader>
@@ -251,7 +252,7 @@ const CreateListing = () => {
               <Button
                 variant="outline"
                 onClick={handleBack}
-                className="border-2 border-slate-200 rounded-xl"
+                className="border-2 border-light-slate rounded-xl text-charcoal hover:text-deep-blue"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Profile

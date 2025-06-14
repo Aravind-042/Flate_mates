@@ -64,31 +64,14 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				// Custom brand colors
-				coral: {
-					'50': 'hsl(var(--coral-50))',
-					'100': 'hsl(var(--coral-100))',
-					'200': 'hsl(var(--coral-200))',
-					'300': 'hsl(var(--coral-300))',
-					'400': 'hsl(var(--coral-400))',
-					'500': 'hsl(var(--coral-500))',
-					'600': 'hsl(var(--coral-600))',
-				},
-				mint: {
-					'50': 'hsl(var(--mint-50))',
-					'100': 'hsl(var(--mint-100))',
-					'200': 'hsl(var(--mint-200))',
-					'300': 'hsl(var(--mint-300))',
-					'400': 'hsl(var(--mint-400))',
-					'500': 'hsl(var(--mint-500))',
-				},
-				lavender: {
-					'50': 'hsl(var(--lavender-50))',
-					'100': 'hsl(var(--lavender-100))',
-					'200': 'hsl(var(--lavender-200))',
-					'300': 'hsl(var(--lavender-300))',
-					'400': 'hsl(var(--lavender-400))',
-					'500': 'hsl(var(--lavender-500))',
-				}
+				'deep-blue': 'hsl(var(--deep-blue))',
+				'orange': 'hsl(var(--orange))',
+				'emerald': 'hsl(var(--emerald))',
+				'cool-gray': 'hsl(var(--cool-gray))',
+				'charcoal': 'hsl(var(--charcoal))',
+				'light-slate': 'hsl(var(--light-slate))',
+				'darker-blue': 'hsl(var(--darker-blue))',
+				'orange-darker': 'hsl(var(--orange-darker))',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -120,8 +103,8 @@ export default {
 					'50%': { transform: 'translateY(-20px)' }
 				},
 				'pulse-glow': {
-					'0%, 100%': { boxShadow: '0 0 20px hsl(var(--coral-400) / 0.3)' },
-					'50%': { boxShadow: '0 0 40px hsl(var(--coral-400) / 0.6)' }
+					'0%, 100%': { boxShadow: '0 0 20px hsl(var(--deep-blue) / 0.3)' },
+					'50%': { boxShadow: '0 0 40px hsl(var(--deep-blue) / 0.6)' }
 				}
 			},
 			animation: {

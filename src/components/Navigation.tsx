@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -41,7 +42,7 @@ export const Navigation = () => {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+    <nav className="bg-white/90 backdrop-blur-md border-b border-light-slate sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -50,10 +51,10 @@ export const Navigation = () => {
             className="flex items-center space-x-2"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-orange-500 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-deep-blue to-orange rounded-lg flex items-center justify-center">
               <Home className="h-5 w-5 text-white" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">
+            <span className="text-xl font-bold bg-gradient-to-r from-deep-blue to-orange bg-clip-text text-transparent">
               FlatMate
             </span>
           </Link>
@@ -68,8 +69,8 @@ export const Navigation = () => {
                   to={item.to}
                   className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-colors ${
                     isActive(item.to)
-                      ? "bg-blue-100 text-blue-700"
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                      ? "bg-blue-100 text-deep-blue"
+                      : "text-charcoal hover:text-deep-blue hover:bg-gray-100"
                   }`}
                 >
                   <IconComponent className="h-4 w-4" />
@@ -84,7 +85,7 @@ export const Navigation = () => {
             {user ? (
               <>
                 <Link to="/profile">
-                  <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+                  <Button variant="ghost" size="sm" className="flex items-center space-x-2 text-charcoal hover:text-deep-blue">
                     <User className="h-4 w-4" />
                     <span>Profile</span>
                   </Button>
@@ -101,7 +102,7 @@ export const Navigation = () => {
               </>
             ) : (
               <Link to="/">
-                <Button className="bg-gradient-to-r from-blue-600 to-orange-500 text-white">
+                <Button className="bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white">
                   Sign In
                 </Button>
               </Link>
@@ -114,7 +115,7 @@ export const Navigation = () => {
               variant="ghost"
               size="sm"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2"
+              className="p-2 text-charcoal"
             >
               {isMobileMenuOpen ? (
                 <X className="h-5 w-5" />
@@ -127,7 +128,7 @@ export const Navigation = () => {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200">
+          <div className="md:hidden py-4 border-t border-light-slate">
             <div className="space-y-2">
               {navItems.map((item) => {
                 const IconComponent = item.icon;
@@ -137,8 +138,8 @@ export const Navigation = () => {
                     to={item.to}
                     className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
                       isActive(item.to)
-                        ? "bg-blue-100 text-blue-700"
-                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                        ? "bg-blue-100 text-deep-blue"
+                        : "text-charcoal hover:text-deep-blue hover:bg-gray-100"
                     }`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
@@ -152,7 +153,7 @@ export const Navigation = () => {
                 <>
                   <Link
                     to="/profile"
-                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg text-charcoal hover:text-deep-blue hover:bg-gray-100 transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <User className="h-4 w-4" />
@@ -175,7 +176,7 @@ export const Navigation = () => {
                   className="block px-3 py-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  <Button className="w-full bg-gradient-to-r from-blue-600 to-orange-500 text-white">
+                  <Button className="w-full bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white">
                     Sign In
                   </Button>
                 </Link>
