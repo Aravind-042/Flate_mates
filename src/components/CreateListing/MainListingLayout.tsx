@@ -16,8 +16,8 @@ interface MainListingLayoutProps {
 }
 
 /**
- * Responsive, more balanced split:
- * - On large screens, form uses ~58% width and preview uses ~42% (7:5 ratio).
+ * Responsive split:
+ * - On large screens, form uses ~45% width and preview uses ~55% (5:6 ratio).
  * - On mobile, stacks vertically.
  */
 export const MainListingLayout = ({
@@ -55,7 +55,7 @@ export const MainListingLayout = ({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-4 md:gap-8 h-full min-h-[70vh] w-full max-w-6xl mx-auto">
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-4 md:gap-8 h-full min-h-[70vh] w-full max-w-6xl mx-auto">
       {/* Left: Form/Preview/Signup Section */}
       <div className="flex flex-col min-h-[50vh] w-full max-w-full">
         {renderCurrentStep()}
