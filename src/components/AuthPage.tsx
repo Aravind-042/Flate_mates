@@ -127,22 +127,22 @@ export const AuthPage = () => {
     <div className="space-y-8">
       <div className="text-center space-y-6">
         <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-coral-400 to-violet-500 blur-2xl opacity-30 rounded-full animate-pulse"></div>
-          <div className="relative bg-gradient-to-r from-coral-400 to-violet-500 p-5 rounded-3xl shadow-2xl inline-block">
+          <div className="absolute inset-0 bg-gradient-to-r from-deep-blue to-orange blur-2xl opacity-30 rounded-full animate-pulse"></div>
+          <div className="relative bg-gradient-to-r from-deep-blue to-orange p-5 rounded-3xl shadow-2xl inline-block">
             <Lock className="h-12 w-12 text-white" />
           </div>
         </div>
         <div className="space-y-3">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-deep-blue via-orange to-emerald bg-clip-text text-transparent">
             Welcome Back
           </h1>
-          <p className="text-xl text-slate-600 font-medium">Continue your flatmate journey</p>
+          <p className="text-xl text-charcoal font-medium">Continue your flatmate journey</p>
         </div>
       </div>
 
       <div className="space-y-6">
         <div className="space-y-4">
-          <Label htmlFor="email" className="text-slate-700 font-semibold text-lg flex items-center gap-2">
+          <Label htmlFor="email" className="text-charcoal font-semibold text-lg flex items-center gap-2">
             <Mail className="h-4 w-4" />
             Email Address
           </Label>
@@ -152,12 +152,12 @@ export const AuthPage = () => {
             placeholder="your.email@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="h-16 text-lg border-2 border-slate-200 focus:border-coral-400 focus:ring-coral-400 rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg transition-all duration-200 hover:shadow-xl"
+            className="h-16 text-lg border-2 border-light-slate focus:border-deep-blue focus:ring-deep-blue rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg transition-all duration-200 hover:shadow-xl"
           />
         </div>
 
         <div className="space-y-4">
-          <Label htmlFor="password" className="text-slate-700 font-semibold text-lg flex items-center gap-2">
+          <Label htmlFor="password" className="text-charcoal font-semibold text-lg flex items-center gap-2">
             <Lock className="h-4 w-4" />
             Password
           </Label>
@@ -168,7 +168,7 @@ export const AuthPage = () => {
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="h-16 text-lg border-2 border-slate-200 focus:border-coral-400 focus:ring-coral-400 rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg pr-14 transition-all duration-200 hover:shadow-xl"
+              className="h-16 text-lg border-2 border-light-slate focus:border-deep-blue focus:ring-deep-blue rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg pr-14 transition-all duration-200 hover:shadow-xl"
             />
             <Button
               type="button"
@@ -189,7 +189,7 @@ export const AuthPage = () => {
         <Button 
           onClick={handleSignIn}
           disabled={isLoading}
-          className="w-full h-16 text-xl font-bold bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-200"
+          className="w-full h-16 text-xl font-bold bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-200"
         >
           {isLoading ? (
             <div className="flex items-center space-x-3">
@@ -208,9 +208,9 @@ export const AuthPage = () => {
           <Button 
             variant="ghost" 
             onClick={() => setMode('signup')}
-            className="text-slate-600 hover:text-coral-500 font-semibold text-lg"
+            className="text-charcoal hover:text-deep-blue font-semibold text-lg"
           >
-            Don't have an account? <span className="text-coral-500 ml-2 underline">Sign Up</span>
+            Don't have an account? <span className="text-deep-blue ml-2 underline">Sign Up</span>
           </Button>
         </div>
       </div>
@@ -221,22 +221,22 @@ export const AuthPage = () => {
     <div className="space-y-8">
       <div className="text-center space-y-6">
         <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-coral-400 to-violet-500 blur-2xl opacity-30 rounded-full animate-pulse"></div>
-          <div className="relative bg-gradient-to-r from-coral-400 to-violet-500 p-5 rounded-3xl shadow-2xl inline-block">
+          <div className="absolute inset-0 bg-gradient-to-r from-deep-blue to-orange blur-2xl opacity-30 rounded-full animate-pulse"></div>
+          <div className="relative bg-gradient-to-r from-deep-blue to-orange p-5 rounded-3xl shadow-2xl inline-block">
             <User className="h-12 w-12 text-white" />
           </div>
         </div>
         <div className="space-y-3">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-deep-blue via-orange to-emerald bg-clip-text text-transparent">
             Join FlatMates
           </h1>
-          <p className="text-xl text-slate-600 font-medium">Create your account and find your perfect flatmate</p>
+          <p className="text-xl text-charcoal font-medium">Create your account and find your perfect flatmate</p>
         </div>
       </div>
 
       <div className="space-y-6">
         <div className="space-y-4">
-          <Label htmlFor="fullNameSignup" className="text-slate-700 font-semibold text-lg flex items-center gap-2">
+          <Label htmlFor="fullNameSignup" className="text-charcoal font-semibold text-lg flex items-center gap-2">
             <User className="h-4 w-4" />
             Full Name
           </Label>
@@ -245,27 +245,27 @@ export const AuthPage = () => {
             placeholder="Enter your full name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            className="h-16 text-lg border-2 border-slate-200 focus:border-coral-400 focus:ring-coral-400 rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg transition-all duration-200 hover:shadow-xl"
+            className="h-16 text-lg border-2 border-light-slate focus:border-deep-blue focus:ring-deep-blue rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg transition-all duration-200 hover:shadow-xl"
           />
         </div>
 
         <div className="space-y-4">
-          <Label htmlFor="roleSignup" className="text-slate-700 font-semibold text-lg flex items-center gap-2">
+          <Label htmlFor="roleSignup" className="text-charcoal font-semibold text-lg flex items-center gap-2">
             <Home className="h-4 w-4" />
             I am a
           </Label>
           <Select value={role} onValueChange={(value: 'flat_seeker' | 'flat_owner') => setRole(value)}>
-            <SelectTrigger className="h-16 text-lg border-2 border-slate-200 focus:border-coral-400 focus:ring-coral-400 rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg transition-all duration-200 hover:shadow-xl">
+            <SelectTrigger className="h-16 text-lg border-2 border-light-slate focus:border-deep-blue focus:ring-deep-blue rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg transition-all duration-200 hover:shadow-xl">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-slate-200 rounded-2xl shadow-2xl">
-              <SelectItem value="flat_seeker" className="text-lg py-4 rounded-xl hover:bg-coral-50">
+            <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-light-slate rounded-2xl shadow-2xl">
+              <SelectItem value="flat_seeker" className="text-lg py-4 rounded-xl hover:bg-blue-50">
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">🏠</span>
                   <span>Flat Seeker</span>
                 </div>
               </SelectItem>
-              <SelectItem value="flat_owner" className="text-lg py-4 rounded-xl hover:bg-coral-50">
+              <SelectItem value="flat_owner" className="text-lg py-4 rounded-xl hover:bg-blue-50">
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">🔑</span>
                   <span>Flat Owner</span>
@@ -276,7 +276,7 @@ export const AuthPage = () => {
         </div>
 
         <div className="space-y-4">
-          <Label htmlFor="emailSignup" className="text-slate-700 font-semibold text-lg flex items-center gap-2">
+          <Label htmlFor="emailSignup" className="text-charcoal font-semibold text-lg flex items-center gap-2">
             <Mail className="h-4 w-4" />
             Email Address
           </Label>
@@ -286,12 +286,12 @@ export const AuthPage = () => {
             placeholder="your.email@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="h-16 text-lg border-2 border-slate-200 focus:border-coral-400 focus:ring-coral-400 rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg transition-all duration-200 hover:shadow-xl"
+            className="h-16 text-lg border-2 border-light-slate focus:border-deep-blue focus:ring-deep-blue rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg transition-all duration-200 hover:shadow-xl"
           />
         </div>
 
         <div className="space-y-4">
-          <Label htmlFor="passwordSignup" className="text-slate-700 font-semibold text-lg flex items-center gap-2">
+          <Label htmlFor="passwordSignup" className="text-charcoal font-semibold text-lg flex items-center gap-2">
             <Lock className="h-4 w-4" />
             Password
           </Label>
@@ -302,7 +302,7 @@ export const AuthPage = () => {
               placeholder="Create a strong password (min 6 characters)"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="h-16 text-lg border-2 border-slate-200 focus:border-coral-400 focus:ring-coral-400 rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg pr-14 transition-all duration-200 hover:shadow-xl"
+              className="h-16 text-lg border-2 border-light-slate focus:border-deep-blue focus:ring-deep-blue rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg pr-14 transition-all duration-200 hover:shadow-xl"
             />
             <Button
               type="button"
@@ -323,7 +323,7 @@ export const AuthPage = () => {
         <Button 
           onClick={handleSignUp}
           disabled={isLoading}
-          className="w-full h-16 text-xl font-bold bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-200"
+          className="w-full h-16 text-xl font-bold bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-[1.02] transition-all duration-200"
         >
           {isLoading ? (
             <div className="flex items-center space-x-3">
@@ -342,9 +342,9 @@ export const AuthPage = () => {
           <Button 
             variant="ghost" 
             onClick={() => setMode('signin')}
-            className="text-slate-600 hover:text-coral-500 font-semibold text-lg"
+            className="text-charcoal hover:text-deep-blue font-semibold text-lg"
           >
-            Already have an account? <span className="text-coral-500 ml-2 underline">Sign In</span>
+            Already have an account? <span className="text-deep-blue ml-2 underline">Sign Up</span>
           </Button>
         </div>
       </div>
@@ -352,27 +352,27 @@ export const AuthPage = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-coral-50 via-pink-50 to-violet-100 relative overflow-hidden">
+    <div className="min-h-screen bg-cool-gray relative overflow-hidden">
       {/* Enhanced Background Pattern */}
       <div className="absolute inset-0 opacity-40">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-coral-400 to-pink-400 rounded-full blur-3xl opacity-20 animate-bounce"></div>
-        <div className="absolute top-1/2 right-0 w-80 h-80 bg-gradient-to-br from-violet-400 to-purple-400 rounded-full blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute bottom-0 left-1/2 w-72 h-72 bg-gradient-to-br from-mint-400 to-blue-400 rounded-full blur-3xl opacity-20 animate-bounce"></div>
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full blur-3xl opacity-15 animate-pulse"></div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-deep-blue to-orange rounded-full blur-3xl opacity-20 animate-bounce"></div>
+        <div className="absolute top-1/2 right-0 w-80 h-80 bg-gradient-to-br from-orange to-emerald rounded-full blur-3xl opacity-20 animate-pulse"></div>
+        <div className="absolute bottom-0 left-1/2 w-72 h-72 bg-gradient-to-br from-emerald to-deep-blue rounded-full blur-3xl opacity-20 animate-bounce"></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-orange to-deep-blue rounded-full blur-3xl opacity-15 animate-pulse"></div>
       </div>
       
       <div className="relative z-10 flex items-center justify-center min-h-screen p-6">
-        <div className="w-full max-w-2xl">
+        <div className="w-full max-w-2xl mx-auto">
           {/* Brand Header */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center space-x-4 mb-6">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-coral-400 to-violet-500 blur-lg opacity-40 rounded-3xl"></div>
-                <div className="relative bg-gradient-to-r from-coral-400 to-violet-500 p-4 rounded-3xl shadow-2xl">
-                  <Sparkles className="h-10 w-10 text-white" />
+                <div className="absolute inset-0 bg-gradient-to-r from-deep-blue to-orange blur-lg opacity-40 rounded-3xl"></div>
+                <div className="relative bg-gradient-to-r from-deep-blue to-orange p-4 rounded-3xl shadow-2xl">
+                  <Home className="h-10 w-10 text-white" />
                 </div>
               </div>
-              <span className="text-3xl font-bold bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 bg-clip-text text-transparent">
+              <span className="text-3xl font-bold bg-gradient-to-r from-deep-blue via-orange to-emerald bg-clip-text text-transparent">
                 FlatMates
               </span>
             </div>
@@ -383,15 +383,15 @@ export const AuthPage = () => {
                 const Icon = feature.icon;
                 return (
                   <div key={index} className="flex items-center gap-2 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-white/50">
-                    <Icon className="h-4 w-4 text-coral-500" />
-                    <span className="text-sm font-medium text-slate-700">{feature.text}</span>
+                    <Icon className="h-4 w-4 text-deep-blue" />
+                    <span className="text-sm font-medium text-charcoal">{feature.text}</span>
                   </div>
                 );
               })}
             </div>
           </div>
 
-          <Card className="bg-white/90 backdrop-blur-2xl shadow-2xl border-0 rounded-3xl overflow-hidden">
+          <Card className="bg-white/90 backdrop-blur-2xl shadow-2xl border-0 rounded-3xl overflow-hidden mx-auto">
             <CardContent className="p-10">
               {mode === 'signin' ? renderSignIn() : renderSignUp()}
             </CardContent>
