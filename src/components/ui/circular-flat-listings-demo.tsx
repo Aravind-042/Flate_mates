@@ -12,9 +12,9 @@ export const CircularFlatListingsDemo = ({ listings = [] }: CircularFlatListings
   }
 
   return (
-    <section className="py-12">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-charcoal">
+    <section className="py-8">
+      <div className="text-center mb-2">
+        <h2 className="text-3xl md:text-4xl font-bold mb-2 text-charcoal">
           Featured Properties
         </h2>
         <p className="text-lg text-charcoal max-w-2xl mx-auto">

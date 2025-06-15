@@ -1,3 +1,4 @@
+
 import { SearchBar } from "@/components/ui/search-bar";
 import { FeatureStepsDemo } from "@/components/ui/feature-steps-demo";
 interface HeroSectionProps {
@@ -15,11 +16,9 @@ export const HeroSection = ({
       {/* Feature Steps Section - Now at the top */}
       <FeatureStepsDemo />
       
-      <div className="max-w-4xl mx-auto text-center mb-8">
-        
-
-        {/* Enhanced Search Bar */}
-        <div className="max-w-lg mx-auto mb-4 sm:mb-6 px-4">
+      {/* Decreased mb-8 to mb-2 for less spacing after search */}
+      <div className="max-w-4xl mx-auto text-center mb-2">
+        <div className="max-w-lg mx-auto mb-2 sm:mb-3 px-4">
           <SearchBar placeholder="Search by area or city..." onSearch={handleSearch} />
         </div>
       </div>
