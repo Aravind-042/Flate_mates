@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -144,9 +143,38 @@ const Browse = () => {
           <EmptyState />
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredListings.map((listing) => (
-              <ListingCard key={listing.id} listing={listing} onCardClick={handleFlatClick} />
-            ))}
+            {filteredListings.map((listing) => {
+              // Flatten normalized FlatListing to match ListingCard's expected props
+              const cardListing = {
+                id: listing.id,
+                title: listing.title,
+                description: listing.description ?? "",
+                property_type: listing.property.type,
+                bedrooms: listing.property.bedrooms,
+                bathrooms: listing.property.bathrooms,
+                monthly_rent: listing.rent.amount,
+                security_deposit: listing.rent.deposit ?? 0,
+                is_furnished: listing.property.furnished,
+                parking_available: listing.property.parking,
+                amenities: listing.amenities ?? [],
+                address_line1: listing.location.address,
+                address_line2: "",
+                images: listing.images ?? [],
+                owner_id: listing.ownerId ?? "",
+                created_at: listing.createdAt ?? "",
+                locations: {
+                  city: listing.location.city,
+                  area: listing.location.area
+                },
+              };
+              return (
+                <ListingCard
+                  key={cardListing.id}
+                  listing={cardListing}
+                  onCardClick={handleFlatClick}
+                />
+              );
+            })}
           </div>
         )}
       </div>
