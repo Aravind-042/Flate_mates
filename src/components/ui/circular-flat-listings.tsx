@@ -1,4 +1,3 @@
-
 "use client";
 import React, {
   useEffect,
@@ -142,8 +141,8 @@ export const CircularFlatListings = ({
 
   // Compute transforms for each image
   function getImageStyle(index: number): React.CSSProperties {
-    const gap = calculateGap(containerWidth);
-    const maxStickUp = gap * 0.8;
+    const gap = calculateGap(containerWidth * 0.7); // make carousel more compact
+    const maxStickUp = gap * 0.6; // slightly smaller stickup
     const isActive = index === activeIndex;
     const isLeft = (activeIndex - 1 + listingsLength) % listingsLength === index;
     const isRight = (activeIndex + 1) % listingsLength === index;
@@ -153,7 +152,7 @@ export const CircularFlatListings = ({
         zIndex: 3,
         opacity: 1,
         pointerEvents: "auto",
-        transform: `translateX(0px) translateY(0px) scale(1) rotateY(0deg)`,
+        transform: `translateX(0px) translateY(0px) scale(0.92) rotateY(0deg)`, // scale down active
         transition: "all 0.8s cubic-bezier(.4,2,.3,1)",
       };
     }
@@ -162,7 +161,7 @@ export const CircularFlatListings = ({
         zIndex: 2,
         opacity: 1,
         pointerEvents: "auto",
-        transform: `translateX(-${gap}px) translateY(-${maxStickUp}px) scale(0.85) rotateY(15deg)`,
+        transform: `translateX(-${gap}px) translateY(-${maxStickUp}px) scale(0.78) rotateY(14deg)`,
         transition: "all 0.8s cubic-bezier(.4,2,.3,1)",
       };
     }
@@ -171,7 +170,7 @@ export const CircularFlatListings = ({
         zIndex: 2,
         opacity: 1,
         pointerEvents: "auto",
-        transform: `translateX(${gap}px) translateY(-${maxStickUp}px) scale(0.85) rotateY(-15deg)`,
+        transform: `translateX(${gap}px) translateY(-${maxStickUp}px) scale(0.78) rotateY(-14deg)`,
         transition: "all 0.8s cubic-bezier(.4,2,.3,1)",
       };
     }
@@ -209,7 +208,7 @@ export const CircularFlatListings = ({
                 />
               ) : (
                 <div className="listing-image-placeholder">
-                  <MapPin className="h-16 w-16 text-coral-400" />
+                  <MapPin className="h-12 w-12 text-coral-400" />
                 </div>
               )}
               <Badge 
@@ -327,37 +326,37 @@ export const CircularFlatListings = ({
         __html: `
         .flat-listings-container {
           width: 100%;
-          max-width: 56rem;
-          padding: 2rem;
-          border-radius: 1rem;
-          margin: 2rem 0;
+          max-width: 38rem;
+          padding: 1rem 0.5rem;
+          border-radius: 0.75rem;
+          margin: 1rem 0 0.5rem 0;
         }
         .flat-listings-grid {
           display: grid;
-          gap: 5rem;
+          gap: 2.3rem;
         }
         .image-container {
           position: relative;
           width: 100%;
-          height: 24rem;
-          perspective: 1000px;
+          height: 14rem;
+          perspective: 850px;
         }
         .listing-image-card {
           position: absolute;
           width: 100%;
           height: 100%;
-          border-radius: 1.5rem;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+          border-radius: 1rem;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.11);
           overflow: hidden;
         }
         .listing-image {
           width: 100%;
-          height: 70%;
+          height: 64%;
           object-fit: cover;
         }
         .listing-image-placeholder {
           width: 100%;
-          height: 70%;
+          height: 64%;
           background: linear-gradient(135deg, #fef3f2 0%, #f3e8ff 100%);
           display: flex;
           align-items: center;
@@ -365,13 +364,13 @@ export const CircularFlatListings = ({
         }
         .property-type-badge {
           position: absolute;
-          top: 1rem;
-          right: 1rem;
-          background: rgba(255, 255, 255, 0.9);
+          top: 0.5rem;
+          right: 0.5rem;
+          background: rgba(255, 255, 255, 0.93);
           color: #059669;
           border: none;
-          font-size: 0.75rem;
-          padding: 0.25rem 0.5rem;
+          font-size: 0.66rem;
+          padding: 0.15rem 0.4rem;
         }
         .flat-listings-content {
           display: flex;
@@ -380,21 +379,21 @@ export const CircularFlatListings = ({
         }
         .listing-title {
           font-weight: bold;
-          font-size: 1.5rem;
-          margin-bottom: 0.5rem;
-          line-height: 1.3;
+          font-size: 1.03rem;
+          margin-bottom: 0.2rem;
+          line-height: 1.25;
         }
         .listing-location {
           display: flex;
           align-items: center;
-          margin-bottom: 1rem;
-          font-size: 0.925rem;
+          margin-bottom: 0.55rem;
+          font-size: 0.82rem;
         }
         .listing-details {
           display: flex;
-          gap: 1rem;
-          margin-bottom: 1rem;
-          font-size: 0.875rem;
+          gap: 0.6rem;
+          margin-bottom: 0.6rem;
+          font-size: 0.74rem;
         }
         .detail-item {
           display: flex;
@@ -402,30 +401,30 @@ export const CircularFlatListings = ({
         }
         .listing-description {
           line-height: 1.6;
-          margin-bottom: 1.5rem;
-          font-size: 1rem;
+          margin-bottom: 1.0rem;
+          font-size: 0.81rem;
         }
         .listing-price {
-          font-size: 1.75rem;
+          font-size: 1.1rem;
           font-weight: bold;
-          margin-bottom: 1.5rem;
+          margin-bottom: 0.9rem;
         }
         .price-period {
-          font-size: 1rem;
+          font-size: 0.84rem;
           font-weight: normal;
           opacity: 0.8;
         }
         .listing-action {
-          margin-bottom: 2rem;
+          margin-bottom: 1.1rem;
         }
         .arrow-buttons {
           display: flex;
-          gap: 1.5rem;
-          padding-top: 3rem;
+          gap: 0.7rem;
+          padding-top: 1.2rem;
         }
         .arrow-button {
-          width: 2.7rem;
-          height: 2.7rem;
+          width: 2.0rem;
+          height: 2.0rem;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -440,6 +439,9 @@ export const CircularFlatListings = ({
           }
           .arrow-buttons {
             padding-top: 0;
+          }
+          .flat-listings-container {
+            padding: 1.2rem 1.6rem;
           }
         }
         `
