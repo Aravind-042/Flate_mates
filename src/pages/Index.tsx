@@ -5,10 +5,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/Layout";
 import { BackgroundPattern } from "@/components/Home/BackgroundPattern";
 import { HeroSection } from "@/components/Home/HeroSection";
-import { FeaturedListingsSection } from "@/components/Home/FeaturedListingsSection";
 import { FeaturesSection } from "@/components/Home/FeaturesSection";
 import { CTASection } from "@/components/Home/CTASection";
 import { CircularTestimonialsDemo } from "@/components/ui/demo";
+import { CircularFlatListingsDemo } from "@/components/ui/circular-flat-listings-demo";
 import { toast } from "sonner";
 
 interface FlatListing {
@@ -77,11 +77,12 @@ const Index = () => {
       <div className="relative overflow-hidden">
         <BackgroundPattern />
         <HeroSection searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <FeaturedListingsSection 
-          listings={listings} 
-          isLoading={isLoading} 
-          filteredListings={filteredListings} 
-        />
+        
+        {/* Circular Flat Listings */}
+        {!isLoading && listings && listings.length > 0 && (
+          <CircularFlatListingsDemo listings={filteredListings.length > 0 ? filteredListings : listings} />
+        )}
+        
         <CircularTestimonialsDemo />
         <FeaturesSection />
         <CTASection />
