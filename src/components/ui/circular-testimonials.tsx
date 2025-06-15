@@ -273,7 +273,8 @@ export const CircularTestimonials = ({
           </div>
         </div>
       </div>
-      <style>{`
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .testimonial-container {
           width: 100%;
           max-width: 56rem;
@@ -339,7 +340,8 @@ export const CircularTestimonials = ({
             padding-top: 0;
           }
         }
-      `}</style>
+        `
+      }} />
     </div>
   );
 };
