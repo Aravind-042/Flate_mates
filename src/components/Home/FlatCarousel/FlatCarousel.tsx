@@ -60,7 +60,7 @@ export const FlatCarousel = memo(
       return visibleIndices;
     };
 
-    // Calculate scale and opacity based on position
+    // Calculate scale and opacity based on position - improved for readability
     const getScaleAndOpacity = (index: number, rotationValue: number, visibleIndices: number[]) => {
       if (!visibleIndices.includes(index)) {
         return { scale: 0, opacity: 0 };
@@ -72,11 +72,11 @@ export const FlatCarousel = memo(
       const normalizedAngle = ((angle + 180) % 360) - 180;
       // Calculate how close the tile is to the front center (0 degrees)
       const distanceFromCenter = Math.abs(normalizedAngle) / 180;
-      // Scale from 1.2 (front center) to 0.7 (back)
-      const scale = 1.2 - (distanceFromCenter * 0.5);
-      // Opacity from 1 (front) to 0.6 (back)
-      const opacity = 1 - (distanceFromCenter * 0.4);
-      return { scale: Math.max(scale, 0.7), opacity: Math.max(opacity, 0.6) };
+      // Improved scaling: from 1.1 (front center) to 0.9 (back) for better readability
+      const scale = 1.1 - (distanceFromCenter * 0.2);
+      // Improved opacity: from 1 (front) to 0.8 (back) for better readability
+      const opacity = 1 - (distanceFromCenter * 0.2);
+      return { scale: Math.max(scale, 0.9), opacity: Math.max(opacity, 0.8) };
     };
 
     const visibleIndices = getVisibleTiles(rotation.get());
@@ -140,7 +140,7 @@ export const FlatCarousel = memo(
                 }}
                 onClick={() => handleClick(listing, i)}
               >
-                <Card className="w-full h-full bg-white/90 backdrop-blur-md border-0 rounded-2xl shadow-xl overflow-hidden transition-all duration-300">
+                <Card className="w-full h-full bg-white/95 backdrop-blur-md border-0 rounded-2xl shadow-xl overflow-hidden transition-all duration-300">
                   <div className="relative h-1/2">
                     {listing.images && listing.images.length > 0 ? (
                       <motion.img
@@ -153,48 +153,48 @@ export const FlatCarousel = memo(
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-coral-100 to-violet-100 flex items-center justify-center">
-                        <span className="text-coral-500 text-sm">No Image</span>
+                        <span className="text-coral-500 text-sm font-medium">No Image</span>
                       </div>
                     )}
                     <Badge 
                       variant="secondary" 
-                      className="absolute top-2 right-2 bg-coral-100 text-coral-700 border-0 text-xs"
+                      className="absolute top-2 right-2 bg-coral-100 text-coral-700 border-0 text-xs font-semibold"
                     >
                       {listing.property_type.replace('_', ' ')}
                     </Badge>
                   </div>
-                  <CardContent className="p-3 h-1/2 flex flex-col justify-between">
+                  <CardContent className="p-4 h-1/2 flex flex-col justify-between">
                     <div>
-                      <h3 className="font-bold text-sm text-charcoal line-clamp-1 mb-1">
+                      <h3 className="font-bold text-base text-charcoal line-clamp-1 mb-2">
                         {listing.title}
                       </h3>
-                      <div className="flex items-center text-xs text-charcoal mb-2">
-                        <MapPin className="h-3 w-3 mr-1" />
+                      <div className="flex items-center text-sm text-charcoal mb-3">
+                        <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
                         <span className="truncate">
                           {listing.locations?.area && listing.locations?.city 
                             ? `${listing.locations.area}, ${listing.locations.city}`
                             : listing.address_line1}
                         </span>
                       </div>
-                      <div className="flex items-center space-x-2 text-xs text-charcoal mb-2">
+                      <div className="flex items-center space-x-3 text-sm text-charcoal mb-3">
                         <div className="flex items-center">
-                          <Bed className="h-3 w-3 mr-1" />
-                          <span>{listing.bedrooms}</span>
+                          <Bed className="h-4 w-4 mr-1" />
+                          <span className="font-medium">{listing.bedrooms}</span>
                         </div>
                         <div className="flex items-center">
-                          <Bath className="h-3 w-3 mr-1" />
-                          <span>{listing.bathrooms}</span>
+                          <Bath className="h-4 w-4 mr-1" />
+                          <span className="font-medium">{listing.bathrooms}</span>
                         </div>
                         {listing.parking_available && (
-                          <Car className="h-3 w-3" />
+                          <Car className="h-4 w-4" />
                         )}
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-lg font-bold text-charcoal">
+                      <div className="text-xl font-bold text-charcoal">
                         ₹{listing.monthly_rent.toLocaleString()}
                       </div>
-                      <div className="text-xs text-charcoal">per month</div>
+                      <div className="text-sm text-charcoal font-medium">per month</div>
                     </div>
                   </CardContent>
                 </Card>
