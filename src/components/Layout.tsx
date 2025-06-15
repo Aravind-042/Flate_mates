@@ -3,11 +3,10 @@ import React from "react";
 import { NavBarDemo } from "./ui/tubelight-navbar-demo";
 import { Boxes } from "@/components/ui/background-boxes";
 
-// Main layout that wraps all primary pages with navigation and scrolling.
-// Ensures content is always vertically scrollable and fills min screen height.
+// Main layout for all pages - enforce consistent background and navigation.
 export const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="min-h-screen flex flex-col bg-cool-gray overflow-auto relative">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-white via-coral-50 to-violet-50 overflow-auto relative">
       {/* Full-page animated background */}
       <div className="fixed inset-0 w-full h-full z-0 pointer-events-none select-none">
         <Boxes className="opacity-80" />

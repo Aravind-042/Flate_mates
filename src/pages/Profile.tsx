@@ -53,7 +53,7 @@ const Profile = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen py-4 px-2 sm:px-4 bg-gradient-to-br from-white via-coral-50 to-violet-50">
+      <div className="min-h-screen py-4 px-2 sm:px-4">
         <div className="max-w-4xl mx-auto">
           {/* Animated Profile Header with Avatar */}
           <ProfileHeader
@@ -63,20 +63,20 @@ const Profile = () => {
           />
 
           <Tabs defaultValue="profile" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3 bg-white/80 backdrop-blur-md border-0 rounded-2xl p-1 shadow-lg">
-              <TabsTrigger value="profile" className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-400 data-[state=active]:to-violet-500 data-[state=active]:text-white">
+            <TabsList className="grid w-full grid-cols-3 bg-white/90 backdrop-blur-md border-0 rounded-2xl p-1 shadow-lg">
+              <TabsTrigger value="profile" className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-600 data-[state=active]:to-violet-600 data-[state=active]:text-white data-[state=inactive]:text-slate-500 font-semibold">
                 <span className="flex items-center gap-2">
-                  <span className="w-5 h-5 rounded bg-white text-coral-400 flex items-center justify-center"></span>
+                  <span className="w-5 h-5 rounded bg-white text-coral-400 flex items-center justify-center font-bold">P</span>
                   Profile
                 </span>
               </TabsTrigger>
-              <TabsTrigger value="listings" className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-400 data-[state=active]:to-violet-500 data-[state=active]:text-white">
+              <TabsTrigger value="listings" className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-600 data-[state=active]:to-violet-600 data-[state=active]:text-white data-[state=inactive]:text-slate-500 font-semibold">
                 <span className="flex items-center gap-2">
                   <span className="w-5 h-5 rounded bg-white text-coral-400 flex items-center justify-center"><Home className="h-4 w-4" /></span>
                   Listings
                 </span>
               </TabsTrigger>
-              <TabsTrigger value="settings" className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-400 data-[state=active]:to-violet-500 data-[state=active]:text-white">
+              <TabsTrigger value="settings" className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-600 data-[state=active]:to-violet-600 data-[state=active]:text-white data-[state=inactive]:text-slate-500 font-semibold">
                 <span className="flex items-center gap-2">
                   <span className="w-5 h-5 rounded bg-white text-coral-400 flex items-center justify-center"><Settings className="h-4 w-4" /></span>
                   Settings
