@@ -56,31 +56,5 @@ export const CircularTestimonialsDemo = () => (
         />
       </div>
     </div>
-
-    {/* Dark testimonials section */}
-    <div className="bg-[#060507] p-16 rounded-lg min-h-[300px] flex flex-wrap gap-6 items-center justify-center relative">
-      <div
-        className="items-center justify-center relative flex"
-        style={{ maxWidth: "1024px" }}
-      >
-        <CircularTestimonials
-          testimonials={testimonials}
-          autoplay={true}
-          colors={{
-            name: "#f7f7ff",
-            designation: "#e1e1e1",
-            testimony: "#f1f1f7",
-            arrowBackground: "#0582CA",
-            arrowForeground: "#141414",
-            arrowHoverBackground: "#f7f7ff",
-          }}
-          fontSizes={{
-            name: "28px",
-            designation: "20px",
-            quote: "20px",
-          }}
-        />
-      </div>
-    </div>
   </section>
 );
