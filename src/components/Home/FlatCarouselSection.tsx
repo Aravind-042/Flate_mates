@@ -1,4 +1,3 @@
-
 import { memo, useState } from "react";
 import {
   AnimatePresence,
@@ -7,7 +6,7 @@ import {
   useMotionValue,
   useTransform,
 } from "framer-motion";
-import { useMediaQuery } from "@/components/ui/3d-carousel";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Bed, Bath, Car } from "lucide-react";
