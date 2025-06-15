@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/Layout";
 import { BackgroundPattern } from "@/components/Home/BackgroundPattern";
-import { Hero } from "@/components/ui/animated-hero";
+import { HeroSection } from "@/components/Home/HeroSection";
 import { CircularTestimonialsDemo } from "@/components/ui/demo";
 import { CircularFlatListingsDemo } from "@/components/ui/circular-flat-listings-demo";
 import { toast } from "sonner";
@@ -74,7 +74,7 @@ const Index = () => {
     <Layout>
       <div className="relative overflow-hidden">
         <BackgroundPattern />
-        <Hero />
+        <HeroSection searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         
         {/* Circular Flat Listings */}
         {!isLoading && listings && listings.length > 0 && (
