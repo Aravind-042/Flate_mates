@@ -16,9 +16,10 @@ interface MainListingLayoutProps {
 }
 
 /**
- * Responsive split:
- * - On large screens, form uses ~45% width and preview uses ~55% (5:6 ratio).
- * - On mobile, stacks vertically.
+ * Enhanced responsive layout:
+ * - Mobile: stacks vertically with optimized spacing
+ * - Tablet: improved column ratios
+ * - Desktop: maintains side-by-side layout with better proportions
  */
 export const MainListingLayout = ({
   currentStep,
@@ -55,23 +56,24 @@ export const MainListingLayout = ({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-4 md:gap-8 h-full min-h-[70vh] w-full max-w-6xl mx-auto">
+    <div className="grid grid-cols-1 xl:grid-cols-[1fr_1.2fr] gap-4 sm:gap-6 lg:gap-8 h-full min-h-[70vh] w-full max-w-7xl mx-auto px-4 sm:px-6">
       {/* Left: Form/Preview/Signup Section */}
-      <div className="flex flex-col min-h-[50vh] w-full max-w-full">
+      <div className="flex flex-col min-h-[50vh] w-full max-w-full order-2 xl:order-1">
         {renderCurrentStep()}
       </div>
-      {/* Right: Live Preview - Hidden during signup step */}
+      
+      {/* Right: Live Preview - Hidden during signup step, shows above form on mobile */}
       {currentStep !== 'signup' && (
-        <div className="lg:sticky lg:top-8 h-full min-h-[350px] flex flex-col w-full max-w-full">
-          <Card className="glass-card flex flex-col h-full min-h-[350px]">
-            <CardHeader>
-              <CardTitle className="text-xl font-bold text-charcoal">
+        <div className="xl:sticky xl:top-8 h-full min-h-[300px] sm:min-h-[350px] flex flex-col w-full max-w-full order-1 xl:order-2">
+          <Card className="glass-card flex flex-col h-full min-h-[300px] sm:min-h-[350px]">
+            <CardHeader className="pb-3 sm:pb-4">
+              <CardTitle className="text-lg sm:text-xl font-bold text-charcoal">
                 Live Preview
               </CardTitle>
             </CardHeader>
-            <CardContent className="flex-1 flex flex-col min-h-0">
-              {/* Fill available vertical space, enable internal scroll on overflow */}
-              <div className="flex-1 min-h-0 max-h-[70vh] overflow-y-auto">
+            <CardContent className="flex-1 flex flex-col min-h-0 pt-0">
+              {/* Mobile: fixed height with scroll, Desktop: fill available space */}
+              <div className="flex-1 min-h-0 max-h-[40vh] xl:max-h-[70vh] overflow-y-auto">
                 <FlatPreview data={listingData} />
               </div>
             </CardContent>
