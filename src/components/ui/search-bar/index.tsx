@@ -38,14 +38,14 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
       <motion.form
         onSubmit={handleSubmit}
         className="relative flex items-center justify-center w-full mx-auto"
-        initial={{ width: "320px" }}
-        animate={{ width: isFocused ? "400px" : "320px", scale: isFocused ? 1.02 : 1 }}
+        initial={{ width: "300px" }}
+        animate={{ width: isFocused ? "380px" : "300px", scale: isFocused ? 1.02 : 1 }}
         transition={ANIMATION_CONFIG.FORM_TRANSITION}
         onMouseMove={handleMouseMove}
       >
         <motion.div
           className={cn(
-            "flex items-center w-full rounded-full border relative overflow-hidden backdrop-blur-md h-12 sm:h-14",
+            "flex items-center w-full rounded-full border relative overflow-hidden backdrop-blur-md h-10 sm:h-11",
             isFocused ? "border-transparent shadow-xl" : "border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/50"
           )}
           animate={{
@@ -99,7 +99,7 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
           )}
 
           <motion.div 
-            className="pl-5 sm:pl-6 py-3 sm:py-4 flex items-center justify-center"
+            className="pl-3 sm:pl-4 py-2 sm:py-2.5 flex items-center justify-center"
             animate={{
               rotate: isAnimating ? [0, -15, 15, -10, 10, 0] : 0,
               scale: isAnimating ? [1, 1.3, 1] : 1,
@@ -107,7 +107,7 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
             transition={{ duration: 0.6, ease: "easeInOut" }}
           >
             <Search
-              size={20}
+              size={18}
               strokeWidth={isFocused ? 2.5 : 2}
               className={cn(
                 "transition-all duration-300",

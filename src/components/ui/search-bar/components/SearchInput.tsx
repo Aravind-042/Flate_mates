@@ -21,7 +21,7 @@ const SearchInput = ({
       onFocus={onFocus}
       onBlur={onBlur}
       className={cn(
-        "w-full py-3 sm:py-4 pl-2 pr-4 bg-transparent outline-none placeholder:text-gray-500 dark:placeholder:text-gray-400 font-medium text-base sm:text-lg relative z-10",
+        "w-full py-2 sm:py-2.5 pl-1 pr-3 bg-transparent outline-none placeholder:text-gray-500 dark:placeholder:text-gray-400 font-medium text-sm sm:text-base relative z-10",
         isFocused ? "text-gray-800 dark:text-white tracking-wide" : "text-gray-600 dark:text-gray-300"
       )}
     />

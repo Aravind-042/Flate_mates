@@ -17,7 +17,7 @@ const SearchButton = ({ searchQuery, isAnimating }: SearchButtonProps) => {
             boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.5)",
           }}
           whileTap={{ scale: 0.95 }}
-          className="px-4 sm:px-5 py-2 mr-2 sm:mr-3 text-sm font-medium rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white backdrop-blur-sm transition-all shadow-lg"
+          className="px-3 sm:px-4 py-1.5 mr-1.5 sm:mr-2 text-xs sm:text-sm font-medium rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white backdrop-blur-sm transition-all shadow-lg"
         >
           Search
         </motion.button>
