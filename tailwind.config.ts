@@ -72,6 +72,19 @@ export default {
 				'light-slate': 'hsl(var(--light-slate))',
 				'darker-blue': 'hsl(var(--darker-blue))',
 				'orange-darker': 'hsl(var(--orange-darker))',
+				// Purple variants for search bar
+				purple: {
+					50: 'rgb(250 245 255)',
+					400: 'rgb(168 85 247)',
+					500: 'rgb(147 51 234)',
+					600: 'rgb(147 51 234)',
+					700: 'rgb(126 34 206)',
+					900: 'rgb(88 28 135)',
+				},
+				pink: {
+					400: 'rgb(244 114 182)',
+					500: 'rgb(236 72 153)',
+				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -80,6 +93,13 @@ export default {
 			},
 			fontFamily: {
 				sans: ['Inter', 'DM Sans', 'Satoshi', 'system-ui', 'sans-serif'],
+			},
+			zIndex: {
+				'-5': '-5',
+				'-10': '-10'
+			},
+			backdropBlur: {
+				'2xl': '40px'
 			},
 			keyframes: {
 				'accordion-down': {
