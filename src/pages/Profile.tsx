@@ -1,10 +1,10 @@
+
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
@@ -27,7 +27,6 @@ const Profile = () => {
     full_name: profile?.full_name || '',
     phone_number: profile?.phone_number || '',
     city: profile?.city || '',
-    role: profile?.role || 'flat_seeker' as 'flat_seeker' | 'flat_owner',
     bio: profile?.bio || '',
     age: profile?.age || '',
     profession: profile?.profession || ''
@@ -136,26 +135,6 @@ const Profile = () => {
                       </div>
 
                       <div className="space-y-3">
-                        <Label htmlFor="role" className="text-slate-700 font-semibold">
-                          Role
-                        </Label>
-                        <Select 
-                          value={profileData.role} 
-                          onValueChange={(value: 'flat_seeker' | 'flat_owner') => 
-                            setProfileData({ ...profileData, role: value })
-                          }
-                        >
-                          <SelectTrigger className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent className="bg-white/95 backdrop-blur-md border-2 border-slate-200 rounded-xl">
-                            <SelectItem value="flat_seeker">🏠 Flat Seeker</SelectItem>
-                            <SelectItem value="flat_owner">🔑 Flat Owner</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="space-y-3">
                         <Label htmlFor="age" className="text-slate-700 font-semibold">
                           Age
                         </Label>
@@ -171,7 +150,7 @@ const Profile = () => {
                         />
                       </div>
 
-                      <div className="space-y-3">
+                      <div className="space-y-3 md:col-span-2">
                         <Label htmlFor="profession" className="text-slate-700 font-semibold">
                           Profession
                         </Label>
@@ -228,46 +207,32 @@ const Profile = () => {
                     <CardTitle className="text-2xl font-bold text-slate-800">
                       My Listings
                     </CardTitle>
-                    {profile?.role === 'flat_owner' && (
-                      <Button 
-                        onClick={() => navigate('/create-listing')}
-                        className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl"
-                      >
-                        <Plus className="h-4 w-4 mr-2" />
-                        Create Listing
-                      </Button>
-                    )}
+                    <Button 
+                      onClick={() => navigate('/create-listing')}
+                      className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Create Listing
+                    </Button>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  {profile?.role === 'flat_seeker' ? (
-                    <div className="text-center py-12">
-                      <Home className="h-16 w-16 mx-auto mb-4 text-slate-400" />
-                      <h3 className="text-xl font-semibold text-slate-700 mb-2">
-                        Switch to Flat Owner
-                      </h3>
-                      <p className="text-slate-600 mb-4">
-                        Change your role to "Flat Owner" in the Profile tab to create listings.
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="text-center py-12">
-                      <Home className="h-16 w-16 mx-auto mb-4 text-slate-400" />
-                      <h3 className="text-xl font-semibold text-slate-700 mb-2">
-                        No listings yet
-                      </h3>
-                      <p className="text-slate-600 mb-4">
-                        Create your first listing to start finding flatmates.
-                      </p>
-                      <Button 
-                        onClick={() => navigate('/create-listing')}
-                        className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl"
-                      >
-                        <Plus className="h-4 w-4 mr-2" />
-                        Create Your First Listing
-                      </Button>
-                    </div>
-                  )}
+                  <div className="text-center py-12">
+                    <Home className="h-16 w-16 mx-auto mb-4 text-slate-400" />
+                    <h3 className="text-xl font-semibold text-slate-700 mb-2">
+                      No listings yet
+                    </h3>
+                    <p className="text-slate-600 mb-4">
+                      Create your first listing to start finding flatmates.
+                    </p>
+                    <Button 
+                      onClick={() => navigate('/create-listing')}
+                      className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Create Your First Listing
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>

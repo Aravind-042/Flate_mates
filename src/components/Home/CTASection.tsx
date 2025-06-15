@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 
 export const CTASection = () => {
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
 
   const handleCreateListingClick = () => {
     if (!user) {
@@ -30,7 +30,7 @@ export const CTASection = () => {
               </p>
               
               <div className="flex justify-center">
-                {user && profile?.role === 'flat_owner' ? (
+                {user ? (
                   <Link to="/create-listing">
                     <NeonButton 
                       variant="ghost" 
