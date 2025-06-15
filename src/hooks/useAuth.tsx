@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -34,19 +35,35 @@ export const useAuth = () => {
   const [isPublishingPending, setIsPublishingPending] = useState(false);
   const navigate = useNavigate();
 
-  // Fetch user profile data
-  const fetchProfile = async (userId: string) => {
+  // Fetch user profile data with better error handling
+  const fetchProfile = async (userId: string, retryCount = 0) => {
     try {
+      console.log('Fetching profile for user:', userId);
       const { data: profileData, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .maybeSingle();
+      
       if (error) {
         console.error('Error fetching profile:', error);
+        
+        // If profile doesn't exist and this is a new user, try to create it
+        if (error.code === 'PGRST116' && retryCount === 0) {
+          console.log('Profile not found, user might be new. Waiting for trigger...');
+          // Wait a bit for the trigger to create the profile
+          setTimeout(() => fetchProfile(userId, 1), 2000);
+          return;
+        }
         return;
       }
-      setProfile(profileData as Profile);
+      
+      if (profileData) {
+        console.log('Profile loaded successfully:', profileData);
+        setProfile(profileData as Profile);
+      } else {
+        console.log('No profile found for user');
+      }
     } catch (error) {
       console.error('Error in fetchProfile:', error);
     }
@@ -177,20 +194,20 @@ export const useAuth = () => {
     // Clear any pending data on component mount to prevent issues
     clearPendingListingData();
     
-    // --- Set up Sync and Robust Auth Event Handling
-
-    // 1. Auth state listener - MUST be fully synchronous
+    // Set up auth state listener - must be synchronous
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.id);
+        
         // Only synchronous state updates here!
         setSession(session);
         setUser(session?.user ?? null);
 
-        // Async data fetches deferred with setTimeout
+        // Async operations deferred with setTimeout
         if (session?.user) {
           setTimeout(() => {
-            fetchProfile(session.user.id); // load profile async
-          }, 0);
+            fetchProfile(session.user.id);
+          }, 100);
 
           if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
             setTimeout(() => publishPendingListing(session.user.id), 1000);
@@ -203,11 +220,12 @@ export const useAuth = () => {
       }
     );
 
-    // 2. Initial session state fetch (after setting up listener)
+    // Initial session fetch
     supabase.auth.getSession().then(({ data: { session }, error }) => {
       if (error) {
         console.error('Error getting session:', error);
       }
+      console.log('Initial session check:', session?.user?.id);
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
@@ -221,7 +239,6 @@ export const useAuth = () => {
     };
   }, []);
 
-  // -- Supabase sign out function
   const signOut = async () => {
     try {
       await supabase.auth.signOut();

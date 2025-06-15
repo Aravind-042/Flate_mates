@@ -44,7 +44,17 @@ export const useSignin = ({ onSuccess }: UseSigninProps = {}) => {
       }
     } catch (error: any) {
       console.error('Error signing in:', error);
-      toast.error(error.message || "Failed to sign in");
+      
+      // Provide more specific error messages
+      if (error.message?.includes('Invalid login credentials')) {
+        toast.error("Invalid email or password. Please check your credentials and try again.");
+      } else if (error.message?.includes('Email not confirmed')) {
+        toast.error("Please verify your email address before signing in.");
+      } else if (error.message?.includes('Too many requests')) {
+        toast.error("Too many login attempts. Please wait a moment and try again.");
+      } else {
+        toast.error(error.message || "Failed to sign in");
+      }
     } finally {
       setIsLoading(false);
     }
