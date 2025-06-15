@@ -100,36 +100,6 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
     }
   }, [isFocused])
 
-  const searchIconVariants = {
-    initial: { scale: 1 },
-    animate: {
-      rotate: isAnimating ? [0, -15, 15, -10, 10, 0] : 0,
-      scale: isAnimating ? [1, 1.3, 1] : 1,
-      transition: { duration: 0.6, ease: "easeInOut" },
-    },
-  }
-
-  const suggestionVariants = {
-    hidden: (i: number) => ({
-      opacity: 0,
-      y: -10,
-      scale: 0.95,
-      transition: { duration: 0.15, delay: i * 0.05 },
-    }),
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: { type: "spring", stiffness: 300, damping: 15, delay: i * 0.07 },
-    }),
-    exit: (i: number) => ({
-      opacity: 0,
-      y: -5,
-      scale: 0.9,
-      transition: { duration: 0.1, delay: i * 0.03 },
-    }),
-  }
-
   const particles = Array.from({ length: isFocused ? 18 : 0 }, (_, i) => (
     <motion.div
       key={i}
@@ -143,7 +113,7 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
       transition={{
         duration: Math.random() * 1.5 + 1.5,
         ease: "easeInOut",
-        repeat: Number.POSITIVE_INFINITY,
+        repeat: Infinity,
         repeatType: "reverse",
       }}
       className="absolute w-3 h-3 rounded-full bg-gradient-to-r from-purple-400 to-pink-400"
@@ -214,7 +184,7 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
                   "linear-gradient(90deg, #f6d365 0%, #fda085 100%)",
                 ],
               }}
-              transition={{ duration: 15, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
             />
           )}
 
@@ -244,7 +214,14 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
 
           {clickParticles}
 
-          <motion.div className="pl-4 py-3" variants={searchIconVariants} initial="initial" animate="animate">
+          <motion.div 
+            className="pl-4 py-3"
+            animate={{
+              rotate: isAnimating ? [0, -15, 15, -10, 10, 0] : 0,
+              scale: isAnimating ? [1, 1.3, 1] : 1,
+            }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+          >
             <Search
               size={20}
               strokeWidth={isFocused ? 2.5 : 2}
@@ -297,7 +274,7 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
                 opacity: [0, 0.1, 0.2, 0.1, 0],
                 background: "radial-gradient(circle at 50% 0%, rgba(255,255,255,0.8) 0%, transparent 70%)",
               }}
-              transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, repeatType: "loop" }}
+              transition={{ duration: 2, repeat: Infinity, repeatType: "loop" }}
             />
           )}
         </motion.div>
@@ -321,11 +298,28 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
               {suggestions.map((suggestion, index) => (
                 <motion.div
                   key={suggestion}
-                  custom={index}
-                  variants={suggestionVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
+                  initial={{ 
+                    opacity: 0,
+                    y: -10,
+                    scale: 0.95
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    scale: 1
+                  }}
+                  exit={{
+                    opacity: 0,
+                    y: -5,
+                    scale: 0.9
+                  }}
+                  transition={{
+                    duration: 0.15,
+                    delay: index * 0.05,
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 15
+                  }}
                   onClick={() => {
                     setSearchQuery(suggestion)
                     if (onSearch) onSearch(suggestion)
@@ -333,7 +327,11 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
                   }}
                   className="flex items-center gap-2 px-4 py-2 cursor-pointer rounded-md hover:bg-purple-50 dark:hover:bg-purple-900/20 group"
                 >
-                  <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ delay: index * 0.06 }}>
+                  <motion.div 
+                    initial={{ scale: 0.8 }} 
+                    animate={{ scale: 1 }} 
+                    transition={{ delay: index * 0.06 }}
+                  >
                     <CircleDot size={16} className="text-purple-400 group-hover:text-purple-600" />
                   </motion.div>
                   <motion.span
