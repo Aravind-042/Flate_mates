@@ -1,6 +1,6 @@
-
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -42,6 +42,7 @@ interface FlatListing {
 }
 
 const Browse = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
 
@@ -78,6 +79,10 @@ const Browse = () => {
   }) || [];
 
   const cities = Array.from(new Set(listings?.map(listing => listing.locations?.city).filter(Boolean) || []));
+
+  const handleFlatClick = (listingId: string) => {
+    navigate(`/flat/${listingId}`);
+  };
 
   if (error) {
     toast.error("Failed to load listings");
@@ -150,7 +155,11 @@ const Browse = () => {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredListings.map((listing) => (
-                <Card key={listing.id} className="bg-white/80 backdrop-blur-md border-0 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] group overflow-hidden">
+                <Card 
+                  key={listing.id} 
+                  className="bg-white/80 backdrop-blur-md border-0 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] group overflow-hidden cursor-pointer"
+                  onClick={() => handleFlatClick(listing.id)}
+                >
                   <div className="relative">
                     {listing.images && listing.images.length > 0 ? (
                       <img 
@@ -168,6 +177,10 @@ const Browse = () => {
                         size="sm"
                         variant="ghost"
                         className="bg-white/80 backdrop-blur-md hover:bg-white/90 rounded-full p-2"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          // Handle favorite functionality
+                        }}
                       >
                         <Heart className="h-4 w-4 text-coral-500" />
                       </Button>
@@ -228,9 +241,6 @@ const Browse = () => {
                         </div>
                         <div className="text-sm text-slate-600">per month</div>
                       </div>
-                      <Button className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl">
-                        View Details
-                      </Button>
                     </div>
                   </CardContent>
                 </Card>
