@@ -8,6 +8,7 @@ import { HeroSection } from "@/components/Home/HeroSection";
 import { FeaturedListingsSection } from "@/components/Home/FeaturedListingsSection";
 import { FeaturesSection } from "@/components/Home/FeaturesSection";
 import { CTASection } from "@/components/Home/CTASection";
+import { CircularTestimonialsDemo } from "@/components/ui/demo";
 import { toast } from "sonner";
 
 interface FlatListing {
@@ -81,6 +82,7 @@ const Index = () => {
           isLoading={isLoading} 
           filteredListings={filteredListings} 
         />
+        <CircularTestimonialsDemo />
         <FeaturesSection />
         <CTASection />
       </div>
