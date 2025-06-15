@@ -1,8 +1,6 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Layout } from "@/components/Layout";
 import { BackgroundPattern } from "@/components/Home/BackgroundPattern";
 import { HeroSection } from "@/components/Home/HeroSection";
 import { CircularTestimonialsDemo } from "@/components/ui/demo";
@@ -72,22 +70,20 @@ const Index = () => {
   }
 
   return (
-    <Layout>
-      <div className="relative overflow-hidden">
-        <BackgroundPattern />
-        <HeroSection searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        
-        {/* Circular Flat Listings */}
-        {!isLoading && listings && listings.length > 0 && (
-          <CircularFlatListingsDemo listings={filteredListings.length > 0 ? filteredListings : listings} />
-        )}
-        
-        <CircularTestimonialsDemo />
-        
-        {/* Call to Action Section */}
-        <CTASection />
-      </div>
-    </Layout>
+    <div className="relative overflow-hidden">
+      <BackgroundPattern />
+      <HeroSection searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      
+      {/* Circular Flat Listings */}
+      {!isLoading && listings && listings.length > 0 && (
+        <CircularFlatListingsDemo listings={filteredListings.length > 0 ? filteredListings : listings} />
+      )}
+      
+      <CircularTestimonialsDemo />
+      
+      {/* Call to Action Section */}
+      <CTASection />
+    </div>
   );
 };
 

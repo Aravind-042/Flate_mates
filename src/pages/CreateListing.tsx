@@ -1,7 +1,7 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Layout } from "@/components/Layout";
 import { CreateListingHeader } from "@/components/CreateListing/CreateListingHeader";
 import { MainListingLayout } from "@/components/CreateListing/MainListingLayout";
 import { BackToProfileButton } from "@/components/CreateListing/BackToProfileButton";
@@ -29,7 +29,7 @@ const CreateListing = () => {
       parking: false
     },
     rent: {
-      amount: 1, // Start with 1 instead of 0 to satisfy database constraint
+      amount: 1,
       deposit: 0,
       includes: []
     },
@@ -57,12 +57,9 @@ const CreateListing = () => {
     if (currentStep === 'form') {
       setCurrentStep('preview');
     } else if (currentStep === 'preview') {
-      // If user is not logged in, show signup step
       if (!user) {
         setCurrentStep('signup');
       } else {
-        // This case should not happen since the publish button in PreviewSection 
-        // handles the actual publishing for authenticated users
         console.log('Authenticated user trying to proceed from preview - this should be handled by PreviewSection');
       }
     }
@@ -79,27 +76,25 @@ const CreateListing = () => {
   };
 
   return (
-    <Layout>
-      <div className="min-h-screen py-8 px-4 flex flex-col overflow-auto">
-        <div className="max-w-6xl mx-auto flex-1 flex flex-col">
-          <CreateListingHeader currentStep={currentStep} />
+    <div className="min-h-screen py-8 px-4 flex flex-col overflow-auto">
+      <div className="max-w-6xl mx-auto flex-1 flex flex-col">
+        <CreateListingHeader currentStep={currentStep} />
 
-          <MainListingLayout
-            currentStep={currentStep}
-            listingData={listingData}
-            onDataChange={handleDataChange}
-            onNext={handleNext}
-            onBack={handleBack}
-            userId={user?.id || ''}
-          />
+        <MainListingLayout
+          currentStep={currentStep}
+          listingData={listingData}
+          onDataChange={handleDataChange}
+          onNext={handleNext}
+          onBack={handleBack}
+          userId={user?.id || ''}
+        />
 
-          {/* Back Button for Form Step */}
-          {currentStep === 'form' && (
-            <BackToProfileButton onBack={handleBack} />
-          )}
-        </div>
+        {/* Back Button for Form Step */}
+        {currentStep === 'form' && (
+          <BackToProfileButton onBack={handleBack} />
+        )}
       </div>
-    </Layout>
+    </div>
   );
 };
 
