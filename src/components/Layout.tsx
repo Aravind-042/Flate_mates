@@ -2,9 +2,9 @@
 import React from "react";
 import { NavBarDemo } from "./ui/tubelight-navbar-demo";
 import { Boxes } from "@/components/ui/background-boxes";
+import { Outlet } from "react-router-dom";
 
-// Main layout for all pages - enforce consistent background and navigation.
-export const Layout = ({ children }: { children: React.ReactNode }) => {
+export const Layout = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-white via-coral-50 to-violet-50 overflow-auto relative">
       {/* Full-page animated background */}
@@ -15,7 +15,9 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Main app content sits above background */}
       <div className="relative z-10 flex flex-col min-h-screen">
         <NavBarDemo />
-        <main className="flex-1 w-full mx-auto p-0">{children}</main>
+        <main className="flex-1 w-full mx-auto p-0">
+          <Outlet />
+        </main>
       </div>
     </div>
   );
