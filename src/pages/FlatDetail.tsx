@@ -90,9 +90,9 @@ const FlatDetail = () => {
   if (error) {
     toast.error("Failed to load listing details");
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-4 px-4">
+      <div className="min-h-screen py-4 px-4">
         <div className="max-w-2xl mx-auto text-center">
-          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-6 sm:p-8 border border-slate-200">
             <div className="text-red-100 mb-4">
               <Home className="h-16 w-16 sm:h-20 sm:w-20 mx-auto" />
             </div>
@@ -114,7 +114,7 @@ const FlatDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-4 px-4">
+      <div className="min-h-screen py-4 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="animate-pulse">
             <div className="h-6 bg-gradient-to-r from-slate-200 to-slate-300 rounded-xl mb-4 w-1/4"></div>
@@ -132,13 +132,13 @@ const FlatDetail = () => {
   if (!listing) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 py-4 px-4">
+    <div className="min-h-screen py-4 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Back Button - Mobile Optimized */}
         <Button
           variant="ghost"
           onClick={() => navigate("/browse")}
-          className="mb-4 bg-white/80 backdrop-blur-sm border border-slate-200 hover:bg-white hover:shadow-lg transition-all duration-200 rounded-xl px-4 py-2 text-sm"
+          className="mb-4 bg-white/90 backdrop-blur-sm border border-slate-200 hover:bg-white hover:shadow-lg transition-all duration-200 rounded-xl px-4 py-2 text-sm"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           <span className="font-medium">Back to Browse</span>
