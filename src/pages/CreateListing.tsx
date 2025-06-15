@@ -29,7 +29,7 @@ const CreateListing = () => {
       parking: false
     },
     rent: {
-      amount: 0,
+      amount: 1, // Start with 1 instead of 0 to satisfy database constraint
       deposit: 0,
       includes: []
     },

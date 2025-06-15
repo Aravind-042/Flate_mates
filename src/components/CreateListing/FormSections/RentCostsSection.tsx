@@ -11,6 +11,13 @@ interface Props extends FormSectionProps {
 export const RentCostsSection = ({ data, onChange, errors = {} }: Props) => {
   const rentIncludesOptions = ['Electricity', 'Water', 'Internet', 'Maintenance', 'Gas'];
 
+  const handleRentChange = (value: string) => {
+    const numValue = parseInt(value) || 0;
+    // Ensure the value is at least 1 to satisfy database constraint
+    const validValue = Math.max(1, numValue);
+    onChange('rent.amount', validValue);
+  };
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
@@ -21,14 +28,15 @@ export const RentCostsSection = ({ data, onChange, errors = {} }: Props) => {
           <Input
             id="rent"
             type="number"
-            min={0}
+            min={1}
             placeholder="25000"
-            value={data.rent.amount}
-            onChange={(e) => onChange('rent.amount', parseInt(e.target.value) || 0)}
+            value={data.rent.amount || ''}
+            onChange={(e) => handleRentChange(e.target.value)}
             className={`mt-2 ${errors['rent.amount'] ? 'border-red-500' : ''}`}
             required
           />
           {errors['rent.amount'] && <p className="text-destructive text-xs mt-1">{errors['rent.amount']}</p>}
+          {data.rent.amount <= 0 && <p className="text-destructive text-xs mt-1">Rent amount must be greater than 0</p>}
         </div>
         <div>
           <Label htmlFor="deposit">Security Deposit (₹)</Label>
