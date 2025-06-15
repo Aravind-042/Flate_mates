@@ -77,8 +77,8 @@ const keywords = [
 ]
 
 const duration = 0.15
-const transition = { duration, ease: [0.32, 0.72, 0, 1], filter: "blur(4px)" }
-const transitionOverlay = { duration: 0.5, ease: [0.32, 0.72, 0, 1] }
+const transition = { duration, ease: "easeOut" as const }
+const transitionOverlay = { duration: 0.5, ease: "easeOut" as const }
 
 const Carousel = memo(
   ({
@@ -214,13 +214,13 @@ function ThreeDPhotoCarousel() {
               layoutId={`img-${activeImg}`}
               src={activeImg}
               className="max-w-full max-h-full rounded-lg shadow-lg"
-              initial={{ scale: 0.5 }} // Start with a smaller scale
-              animate={{ scale: 1 }} // Animate to full scale
+              initial={{ scale: 0.5 }}
+              animate={{ scale: 1 }}
               transition={{
                 delay: 0.5,
                 duration: 0.5,
-                ease: [0.25, 0.1, 0.25, 1],
-              }} // Clean ease-out curve
+                ease: "easeOut",
+              }}
               style={{
                 willChange: "transform",
               }}

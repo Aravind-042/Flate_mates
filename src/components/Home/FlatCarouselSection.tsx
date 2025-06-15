@@ -41,8 +41,8 @@ interface FlatCarouselProps {
 }
 
 const duration = 0.15;
-const transition = { duration, ease: [0.32, 0.72, 0, 1] };
-const transitionOverlay = { duration: 0.5, ease: [0.32, 0.72, 0, 1] };
+const transition = { duration, ease: "easeOut" as const };
+const transitionOverlay = { duration: 0.5, ease: "easeOut" as const };
 
 const FlatCarousel = memo(
   ({
@@ -233,7 +233,7 @@ export const FlatCarouselSection = ({ listings }: FlatCarouselProps) => {
                   transition={{
                     delay: 0.2,
                     duration: 0.3,
-                    ease: [0.25, 0.1, 0.25, 1],
+                    ease: "easeOut",
                   }}
                 >
                   <div className="flex justify-between items-start mb-4">
