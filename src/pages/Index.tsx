@@ -1,10 +1,10 @@
+
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/Layout";
 import { BackgroundPattern } from "@/components/Home/BackgroundPattern";
 import { HeroSection } from "@/components/Home/HeroSection";
-import { CTASection } from "@/components/Home/CTASection";
 import { CircularTestimonialsDemo } from "@/components/ui/demo";
 import { CircularFlatListingsDemo } from "@/components/ui/circular-flat-listings-demo";
 import { toast } from "sonner";
@@ -82,7 +82,6 @@ const Index = () => {
         )}
         
         <CircularTestimonialsDemo />
-        <CTASection />
       </div>
     </Layout>
   );
