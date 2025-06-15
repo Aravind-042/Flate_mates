@@ -1,28 +1,21 @@
-
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { 
-  User, 
-  Home, 
-  Settings, 
-  Save,
-  Plus
-} from "lucide-react";
+import { Plus, Home, Settings } from "lucide-react";
 import { Layout } from "@/components/Layout";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { ProfileHeader } from "@/components/Profile/ProfileHeader";
+import { ProfileDetailsForm } from "@/components/Profile/ProfileDetailsForm";
 
 const Profile = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+
   const [profileData, setProfileData] = useState({
     full_name: profile?.full_name || '',
     phone_number: profile?.phone_number || '',
@@ -48,7 +41,7 @@ const Profile = () => {
         .eq('id', user?.id);
 
       if (error) throw error;
-      
+
       toast.success("Profile updated successfully!");
     } catch (error: any) {
       toast.error("Error updating profile: " + error.message);
@@ -59,155 +52,76 @@ const Profile = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen py-8 px-4">
+      <div className="min-h-screen py-4 px-2 sm:px-4 bg-gradient-to-br from-white via-coral-50 to-violet-50">
         <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-coral-400 via-pink-500 to-violet-500 bg-clip-text text-transparent">
-              My Profile
-            </h1>
-            <p className="text-xl text-slate-600">
-              Manage your account and preferences
-            </p>
-          </div>
+          {/* Animated Profile Header with Avatar */}
+          <ProfileHeader
+            fullName={profile?.full_name || ""}
+            email={user?.email || ""}
+            avatarUrl={profile?.profile_picture_url}
+          />
 
           <Tabs defaultValue="profile" className="space-y-6">
             <TabsList className="grid w-full grid-cols-3 bg-white/80 backdrop-blur-md border-0 rounded-2xl p-1 shadow-lg">
               <TabsTrigger value="profile" className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-400 data-[state=active]:to-violet-500 data-[state=active]:text-white">
-                <User className="h-4 w-4 mr-2" />
-                Profile
+                <span className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded bg-white text-coral-400 flex items-center justify-center"><span className="material-icons-outlined"></span></span>
+                  Profile
+                </span>
               </TabsTrigger>
               <TabsTrigger value="listings" className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-400 data-[state=active]:to-violet-500 data-[state=active]:text-white">
-                <Home className="h-4 w-4 mr-2" />
-                Listings
+                <span className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded bg-white text-coral-400 flex items-center justify-center"><Home className="h-4 w-4" /></span>
+                  Listings
+                </span>
               </TabsTrigger>
               <TabsTrigger value="settings" className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-400 data-[state=active]:to-violet-500 data-[state=active]:text-white">
-                <Settings className="h-4 w-4 mr-2" />
-                Settings
+                <span className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded bg-white text-coral-400 flex items-center justify-center"><Settings className="h-4 w-4" /></span>
+                  Settings
+                </span>
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="profile">
-              <Card className="bg-white/80 backdrop-blur-md border-0 rounded-3xl shadow-xl">
+            <TabsContent value="profile" className="animate-fade-in">
+              <Card className="bg-white/90 shadow-2xl border-0 rounded-3xl mb-6">
                 <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-slate-800">
-                    Profile Information
-                  </CardTitle>
+                  <CardTitle className="text-2xl font-bold text-slate-800">Edit Profile</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handleUpdateProfile} className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="space-y-3">
-                        <Label htmlFor="full_name" className="text-slate-700 font-semibold">
-                          Full Name
-                        </Label>
-                        <Input
-                          id="full_name"
-                          value={profileData.full_name}
-                          onChange={(e) => setProfileData({ ...profileData, full_name: e.target.value })}
-                          className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
-                        />
-                      </div>
-
-                      <div className="space-y-3">
-                        <Label htmlFor="phone_number" className="text-slate-700 font-semibold">
-                          Phone Number
-                        </Label>
-                        <Input
-                          id="phone_number"
-                          value={profileData.phone_number}
-                          onChange={(e) => setProfileData({ ...profileData, phone_number: e.target.value })}
-                          className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
-                        />
-                      </div>
-
-                      <div className="space-y-3">
-                        <Label htmlFor="city" className="text-slate-700 font-semibold">
-                          City
-                        </Label>
-                        <Input
-                          id="city"
-                          value={profileData.city}
-                          onChange={(e) => setProfileData({ ...profileData, city: e.target.value })}
-                          placeholder="Enter your city"
-                          className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
-                        />
-                      </div>
-
-                      <div className="space-y-3">
-                        <Label htmlFor="age" className="text-slate-700 font-semibold">
-                          Age
-                        </Label>
-                        <Input
-                          id="age"
-                          type="number"
-                          min="18"
-                          max="100"
-                          value={profileData.age}
-                          onChange={(e) => setProfileData({ ...profileData, age: e.target.value })}
-                          placeholder="Enter your age"
-                          className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
-                        />
-                      </div>
-
-                      <div className="space-y-3 md:col-span-2">
-                        <Label htmlFor="profession" className="text-slate-700 font-semibold">
-                          Profession
-                        </Label>
-                        <Input
-                          id="profession"
-                          value={profileData.profession}
-                          onChange={(e) => setProfileData({ ...profileData, profession: e.target.value })}
-                          placeholder="Enter your profession"
-                          className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <Label htmlFor="bio" className="text-slate-700 font-semibold">
-                        Bio
-                      </Label>
-                      <Textarea
-                        id="bio"
-                        value={profileData.bio}
-                        onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
-                        placeholder="Tell us about yourself..."
-                        className="border-2 border-slate-200 focus:border-coral-400 rounded-xl resize-none"
-                        rows={4}
-                      />
-                    </div>
-
-                    <Button 
-                      type="submit" 
-                      disabled={isLoading}
-                      className="w-full h-12 bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl font-semibold"
-                    >
-                      {isLoading ? (
-                        <div className="flex items-center space-x-2">
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                          <span>Saving...</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center space-x-2">
-                          <Save className="h-4 w-4" />
-                          <span>Save Changes</span>
-                        </div>
-                      )}
-                    </Button>
-                  </form>
+                  <ProfileDetailsForm
+                    profileData={profileData}
+                    setProfileData={setProfileData}
+                    handleUpdateProfile={handleUpdateProfile}
+                    isLoading={isLoading}
+                  />
                 </CardContent>
               </Card>
+              {/* Optional: Quick stats/summary cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div className="bg-gradient-to-br from-coral-400/90 to-violet-500/90 text-white p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center transition-transform hover:scale-105">
+                  <span className="text-3xl font-bold">0</span>
+                  <span className="mt-2 font-medium">Listings</span>
+                </div>
+                <div className="bg-gradient-to-br from-violet-400/90 to-coral-500/80 text-white p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center transition-transform hover:scale-105">
+                  <span className="text-3xl font-bold">0</span>
+                  <span className="mt-2 font-medium">Favorites</span>
+                </div>
+                <div className="bg-gradient-to-br from-coral-400/80 to-pink-400/70 text-white p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center transition-transform hover:scale-105">
+                  <span className="text-3xl font-bold">0</span>
+                  <span className="mt-2 font-medium">Reviews</span>
+                </div>
+              </div>
             </TabsContent>
 
-            <TabsContent value="listings">
-              <Card className="bg-white/80 backdrop-blur-md border-0 rounded-3xl shadow-xl">
+            <TabsContent value="listings" className="animate-fade-in">
+              <Card className="bg-white/90 shadow-2xl border-0 rounded-3xl">
                 <CardHeader>
                   <div className="flex justify-between items-center">
                     <CardTitle className="text-2xl font-bold text-slate-800">
                       My Listings
                     </CardTitle>
-                    <Button 
+                    <Button
                       onClick={() => navigate('/create-listing')}
                       className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl"
                     >
@@ -225,7 +139,7 @@ const Profile = () => {
                     <p className="text-slate-600 mb-4">
                       Create your first listing to start finding flatmates.
                     </p>
-                    <Button 
+                    <Button
                       onClick={() => navigate('/create-listing')}
                       className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl"
                     >
@@ -237,8 +151,8 @@ const Profile = () => {
               </Card>
             </TabsContent>
 
-            <TabsContent value="settings">
-              <Card className="bg-white/80 backdrop-blur-md border-0 rounded-3xl shadow-xl">
+            <TabsContent value="settings" className="animate-fade-in">
+              <Card className="bg-white/90 shadow-2xl border-0 rounded-3xl">
                 <CardHeader>
                   <CardTitle className="text-2xl font-bold text-slate-800">
                     Account Settings
@@ -255,7 +169,6 @@ const Profile = () => {
                         Change Email
                       </Button>
                     </div>
-
                     <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
                       <div>
                         <h4 className="font-semibold text-slate-800">Password</h4>
@@ -265,7 +178,6 @@ const Profile = () => {
                         Change Password
                       </Button>
                     </div>
-
                     <div className="pt-6 border-t border-slate-200">
                       <Button variant="destructive" className="w-full rounded-xl">
                         Delete Account
