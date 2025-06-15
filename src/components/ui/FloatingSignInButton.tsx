@@ -10,14 +10,17 @@ export function FloatingSignInButton() {
   const location = useLocation();
   const { user, loading } = useAuth();
 
+  // DEBUG: Track what user and loading are currently set to
+  console.log("[FloatingSignInButton] loading:", loading, "user:", user);
+
   // Hide on /auth page
   if (location.pathname === "/auth") return null;
 
   // Don't show anything until auth state is known (prevents flicker)
   if (loading) return null;
 
-  // Authenticated: show floating "Profile" button (right)
-  if (user) {
+  // Defensive fix: Only show profile button if user is truly set and has id (prevents "ghost login" due to stale state)
+  if (user && user.id) {
     return (
       <button
         onClick={() => navigate("/profile")}

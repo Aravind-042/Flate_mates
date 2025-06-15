@@ -246,6 +246,12 @@ export const useAuth = () => {
     }
   };
 
+  // DEBUG: Show the current computed value of user and return value
+  // (This will print every time useAuth is used or state changes)
+  React.useEffect(() => {
+    console.log("[useAuth Hook] Current user:", user, "session:", session);
+  }, [user, session]);
+
   return {
     user,
     session,
