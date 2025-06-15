@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -63,6 +62,7 @@ export const ListingCard = ({
   };
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     // TODO: Implement favorite functionality
     console.log("Favorite clicked for listing:", listing.id);
@@ -94,7 +94,7 @@ export const ListingCard = ({
           )}
           
           {/* Property Type and Gender Badge */}
-          <div className="absolute top-4 left-4">
+          <div className="absolute top-4 left-4 z-10">
             <Badge className="bg-white/95 text-slate-700 border-0 shadow-md font-medium">
               {formatPropertyType(listing.property_type)}
               {listing.preferred_gender && (
@@ -105,18 +105,17 @@ export const ListingCard = ({
             </Badge>
           </div>
 
-          {/* Heart/Favorite Button with fixed positioning */}
-          <div className="absolute top-4 right-4 z-20">
+          {/* Heart/Favorite Button with improved positioning and event handling */}
+          <div className="absolute top-4 right-4 z-30">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button 
-                  size="sm" 
-                  variant="ghost" 
-                  className="bg-white/90 backdrop-blur-md hover:bg-white/95 rounded-full p-2 shadow-md relative z-30" 
+                <button
+                  className="bg-white/90 backdrop-blur-md hover:bg-white/95 rounded-full p-2 shadow-md transition-all duration-200 hover:scale-110 flex items-center justify-center"
                   onClick={handleFavoriteClick}
+                  type="button"
                 >
                   <Heart className="h-4 w-4 text-coral-500 hover:fill-coral-500 transition-colors" />
-                </Button>
+                </button>
               </TooltipTrigger>
               <TooltipContent side="left" className="z-50">
                 <p>Save to favorites</p>
@@ -125,7 +124,7 @@ export const ListingCard = ({
           </div>
 
           {/* Apply to Join Button - Shows on hover */}
-          <div className={`absolute bottom-4 right-4 transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
+          <div className={`absolute bottom-4 right-4 z-20 transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
             <Button 
               onClick={handleApplyToJoin} 
               className="bg-coral-500 hover:bg-coral-600 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-lg"
