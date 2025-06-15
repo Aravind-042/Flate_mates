@@ -5,7 +5,10 @@ import { useAuth } from "@/hooks/useAuth"
 import { FloatingSignInButton } from "@/components/ui/FloatingSignInButton"
 
 export function NavBarDemo() {
-  const { user } = useAuth()
+  const { user, loading } = useAuth();
+
+  // Wait for auth check before rendering nav
+  if (loading) return null;
 
   const leftItems = [
     { name: 'Home', url: '/', icon: Home },
@@ -25,3 +28,4 @@ export function NavBarDemo() {
     </>
   )
 }
+
