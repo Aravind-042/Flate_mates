@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -10,8 +9,7 @@ import { EmptyState } from "@/components/Browse/EmptyState";
 import { ListingCard } from "@/components/Browse/ListingCard";
 import { SearchBar } from "@/components/ui/search-bar";
 import { Landmark, Factory, Warehouse } from "lucide-react";
-
-// ... FlatListing interface the same ...
+import type { FlatListing } from "@/types/flat";
 
 const Browse = () => {
   const navigate = useNavigate();

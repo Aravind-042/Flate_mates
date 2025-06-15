@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,8 +11,7 @@ import { PropertyDescription } from "@/components/FlatDetail/PropertyDescription
 import { PropertyHighlights } from "@/components/FlatDetail/PropertyHighlights";
 import { PropertyAmenities } from "@/components/FlatDetail/PropertyAmenities";
 import { PropertyTrustIndicators } from "@/components/FlatDetail/PropertyTrustIndicators";
-
-// ... FlatListing interface the same ...
+import type { FlatListing } from "@/types/flat";
 
 const FlatDetail = () => {
   const { id } = useParams<{ id: string }>();
