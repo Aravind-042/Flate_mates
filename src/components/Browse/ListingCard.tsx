@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -64,8 +65,8 @@ export const ListingCard = ({
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    console.log("Favorite button clicked for listing:", listing.id);
     // TODO: Implement favorite functionality
-    console.log("Favorite clicked for listing:", listing.id);
   };
 
   const handleCardClick = (e: React.MouseEvent) => {
@@ -73,6 +74,7 @@ export const ListingCard = ({
     if ((e.target as HTMLElement).closest('button')) {
       return;
     }
+    console.log("Card clicked for listing:", listing.id);
     onCardClick(listing.id);
   };
 
@@ -113,14 +115,17 @@ export const ListingCard = ({
             </div>
           </div>
 
-          {/* Heart/Favorite Button - Simplified without Tooltip wrapper */}
+          {/* Heart/Favorite Button - Fixed with proper event handling */}
           <button
-            className="absolute top-4 right-4 z-30 bg-white/90 backdrop-blur-md hover:bg-white/95 rounded-full p-2 shadow-md transition-all duration-200 hover:scale-110 flex items-center justify-center"
+            className="absolute top-4 right-4 z-50 bg-white/90 backdrop-blur-md hover:bg-white/95 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 flex items-center justify-center border-2 border-transparent hover:border-coral-200"
             onClick={handleFavoriteClick}
+            onMouseDown={(e) => e.stopPropagation()}
+            onMouseUp={(e) => e.stopPropagation()}
             type="button"
             title="Save to favorites"
+            style={{ pointerEvents: 'auto' }}
           >
-            <Heart className="h-4 w-4 text-coral-500 hover:fill-coral-500 transition-colors" />
+            <Heart className="h-5 w-5 text-coral-500 hover:fill-coral-500 transition-colors" />
           </button>
 
           {/* Apply to Join Button - Shows on hover */}
