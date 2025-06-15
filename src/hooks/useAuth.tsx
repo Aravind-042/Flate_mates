@@ -1,22 +1,17 @@
-
 import { useEffect, useState } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import type { Database } from "@/integrations/supabase/types";
 import type { FlatListing } from "@/types/flat";
 import { clearPendingListingData, clearAllAppData } from "@/utils/storageUtils";
 
 // --- Profile types
-type UserRole = Database["public"]["Enums"]["user_role"];
-
 interface Profile {
   id: string;
   email: string;
   phone_number: string;
   full_name: string | null;
-  role: UserRole;
   city: string | null;
   profile_picture_url: string | null;
   bio: string | null;
