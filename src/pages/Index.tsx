@@ -7,6 +7,8 @@ import { BackgroundPattern } from "@/components/Home/BackgroundPattern";
 import { HeroSection } from "@/components/Home/HeroSection";
 import { CircularTestimonialsDemo } from "@/components/ui/demo";
 import { CircularFlatListingsDemo } from "@/components/ui/circular-flat-listings-demo";
+import { FeatureStepsDemo } from "@/components/ui/feature-steps-demo";
+import { CTASection } from "@/components/Home/CTASection";
 import { toast } from "sonner";
 
 interface FlatListing {
@@ -81,7 +83,13 @@ const Index = () => {
           <CircularFlatListingsDemo listings={filteredListings.length > 0 ? filteredListings : listings} />
         )}
         
+        {/* Feature Steps Section */}
+        <FeatureStepsDemo />
+        
         <CircularTestimonialsDemo />
+        
+        {/* Call to Action Section */}
+        <CTASection />
       </div>
     </Layout>
   );
