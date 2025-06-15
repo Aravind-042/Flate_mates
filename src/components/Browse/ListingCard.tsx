@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -92,27 +93,32 @@ export const ListingCard = ({
             </div>
           )}
           
-          {/* Property Type Badge */}
+          {/* Property Type and Gender Badge */}
           <div className="absolute top-4 left-4">
             <Badge className="bg-white/95 text-slate-700 border-0 shadow-md font-medium">
               {formatPropertyType(listing.property_type)}
+              {listing.preferred_gender && (
+                <span className="ml-2 text-purple-600">
+                  • {formatGenderPreference(listing.preferred_gender)}
+                </span>
+              )}
             </Badge>
           </div>
 
-          {/* Heart/Favorite Button */}
-          <div className="absolute top-4 right-4">
+          {/* Heart/Favorite Button with fixed positioning */}
+          <div className="absolute top-4 right-4 z-20">
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button 
                   size="sm" 
                   variant="ghost" 
-                  className="bg-white/90 backdrop-blur-md hover:bg-white/95 rounded-full p-2 shadow-md" 
+                  className="bg-white/90 backdrop-blur-md hover:bg-white/95 rounded-full p-2 shadow-md relative z-30" 
                   onClick={handleFavoriteClick}
                 >
                   <Heart className="h-4 w-4 text-coral-500 hover:fill-coral-500 transition-colors" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
+              <TooltipContent side="left" className="z-50">
                 <p>Save to favorites</p>
               </TooltipContent>
             </Tooltip>
@@ -189,7 +195,7 @@ export const ListingCard = ({
             </div>
           )}
           
-          {/* Property Details with Tooltips - Now includes Gender */}
+          {/* Property Details with Tooltips - Simplified without gender since it's now in the badge */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4 text-sm text-slate-600">
               <Tooltip>
@@ -225,20 +231,6 @@ export const ListingCard = ({
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Parking Available</p>
-                  </TooltipContent>
-                </Tooltip>
-              )}
-
-              {listing.preferred_gender && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center cursor-help">
-                      <Users className="h-4 w-4 mr-1 text-purple-600" />
-                      <span className="text-xs">{formatGenderPreference(listing.preferred_gender)}</span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Preferred Gender: {formatGenderPreference(listing.preferred_gender)}</p>
                   </TooltipContent>
                 </Tooltip>
               )}
