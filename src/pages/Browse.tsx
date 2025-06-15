@@ -87,22 +87,26 @@ const Browse = () => {
         <div className="max-w-7xl mx-auto">
           <BrowseHeader />
           
-          {/* Replaced with motion search bar */}
-          <div className="mb-6 flex flex-col gap-3 max-w-lg w-full mx-auto">
-            <SearchBar 
-              placeholder="Search by title, area, or address..."
-              onSearch={setSearchQuery}
-            />
-            <select
-              value={selectedCity}
-              onChange={(e) => setSelectedCity(e.target.value)}
-              className="h-12 px-4 border-2 border-slate-200 focus:border-coral-400 rounded-xl bg-white text-slate-700 transition-all"
-            >
-              <option value="">All Cities</option>
-              {cities.map(city => (
-                <option key={city} value={city}>{city}</option>
-              ))}
-            </select>
+          {/* Search bar and city select in the same row */}
+          <div className="mb-6 flex flex-col md:flex-row gap-3 md:gap-5 max-w-2xl w-full mx-auto">
+            <div className="flex-1">
+              <SearchBar 
+                placeholder="Search by title, area, or address..."
+                onSearch={setSearchQuery}
+              />
+            </div>
+            <div className="md:w-[220px] w-full">
+              <select
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
+                className="h-12 px-4 border-2 border-slate-200 focus:border-coral-400 rounded-xl bg-white text-slate-700 transition-all w-full shadow-sm"
+              >
+                <option value="">All Cities</option>
+                {cities.map(city => (
+                  <option key={city} value={city}>{city}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {isLoading ? (
@@ -127,4 +131,3 @@ const Browse = () => {
 };
 
 export default Browse;
-
