@@ -162,6 +162,7 @@ const Browse = () => {
                 images: listing.images ?? [],
                 owner_id: listing.ownerId ?? "",
                 created_at: listing.createdAt ?? "",
+                preferred_gender: listing.preferences.gender,
                 locations: {
                   city: listing.location.city,
                   area: listing.location.area
