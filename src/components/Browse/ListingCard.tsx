@@ -68,11 +68,19 @@ export const ListingCard = ({
     console.log("Favorite clicked for listing:", listing.id);
   };
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Don't trigger card click if clicking on interactive elements
+    if ((e.target as HTMLElement).closest('button')) {
+      return;
+    }
+    onCardClick(listing.id);
+  };
+
   return (
     <TooltipProvider>
       <Card 
         className="bg-white/90 backdrop-blur-md border-0 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] group overflow-hidden cursor-pointer" 
-        onClick={() => onCardClick(listing.id)} 
+        onClick={handleCardClick} 
         onMouseEnter={() => setIsHovered(true)} 
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -95,33 +103,25 @@ export const ListingCard = ({
           
           {/* Property Type and Gender Badge */}
           <div className="absolute top-4 left-4 z-10">
-            <Badge className="bg-white/95 text-slate-700 border-0 shadow-md font-medium">
+            <div className="bg-white/95 text-slate-700 border-0 shadow-md font-medium px-2.5 py-1.5 rounded-full text-sm">
               {formatPropertyType(listing.property_type)}
               {listing.preferred_gender && (
                 <span className="ml-2 text-purple-600">
                   • {formatGenderPreference(listing.preferred_gender)}
                 </span>
               )}
-            </Badge>
+            </div>
           </div>
 
-          {/* Heart/Favorite Button with improved positioning and event handling */}
-          <div className="absolute top-4 right-4 z-30">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  className="bg-white/90 backdrop-blur-md hover:bg-white/95 rounded-full p-2 shadow-md transition-all duration-200 hover:scale-110 flex items-center justify-center"
-                  onClick={handleFavoriteClick}
-                  type="button"
-                >
-                  <Heart className="h-4 w-4 text-coral-500 hover:fill-coral-500 transition-colors" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="left" className="z-50">
-                <p>Save to favorites</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
+          {/* Heart/Favorite Button - Simplified without Tooltip wrapper */}
+          <button
+            className="absolute top-4 right-4 z-30 bg-white/90 backdrop-blur-md hover:bg-white/95 rounded-full p-2 shadow-md transition-all duration-200 hover:scale-110 flex items-center justify-center"
+            onClick={handleFavoriteClick}
+            type="button"
+            title="Save to favorites"
+          >
+            <Heart className="h-4 w-4 text-coral-500 hover:fill-coral-500 transition-colors" />
+          </button>
 
           {/* Apply to Join Button - Shows on hover */}
           <div className={`absolute bottom-4 right-4 z-20 transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
