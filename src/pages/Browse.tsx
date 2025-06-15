@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -11,44 +12,91 @@ import { SearchBar } from "@/components/ui/search-bar";
 import { Landmark, Factory, Warehouse } from "lucide-react";
 import type { FlatListing } from "@/types/flat";
 
+function mapDbToFlatListing(db: any): FlatListing {
+  return {
+    id: db.id,
+    title: db.title,
+    description: db.description ?? "",
+    location: {
+      city: db.locations?.city ?? "",
+      area: db.locations?.area ?? "",
+      address: db.address_line1 ?? "",
+    },
+    property: {
+      type: db.property_type,
+      bedrooms: db.bedrooms,
+      bathrooms: db.bathrooms,
+      furnished: !!db.is_furnished,
+      parking: !!db.parking_available,
+    },
+    rent: {
+      amount: db.monthly_rent,
+      deposit: db.security_deposit ?? 0,
+      includes: db.rent_includes ?? [],
+    },
+    amenities: db.amenities ?? [],
+    preferences: {
+      gender: db.preferred_gender ?? "any",
+      profession: db.preferred_professions ?? [],
+      additionalRequirements: db.lifestyle_preferences?.join(", ") ?? "",
+    },
+    contactPreferences: {
+      whatsapp: !!db.contact_whatsapp,
+      call: !!db.contact_phone,
+      email: !!db.contact_email,
+    },
+    images: db.images ?? [],
+    createdAt: db.created_at ?? undefined,
+    ownerId: db.owner_id ?? undefined,
+  };
+}
+
 const Browse = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
 
-  const { data: listings, isLoading, error } = useQuery({
-    queryKey: ['flat-listings'],
+  const { data: listingsDb, isLoading, error } = useQuery({
+    queryKey: ["flat-listings"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('flat_listings')
-        .select(`
+        .from("flat_listings")
+        .select(
+          `
           *,
           locations (
             city,
             area
           )
-        `)
-        .eq('status', 'active')
-        .order('created_at', { ascending: false });
-      
+        `
+        )
+        .eq("status", "active")
+        .order("created_at", { ascending: false });
+
       if (error) {
-        console.error('Error fetching listings:', error);
+        console.error("Error fetching listings:", error);
         throw error;
       }
-      
-      return data as FlatListing[];
-    }
+
+      // Transform DB structure → FlatListing
+      return (data ?? []).map(mapDbToFlatListing) as FlatListing[];
+    },
   });
 
-  const filteredListings = listings?.filter(listing => {
-    const matchesSearch = listing.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         listing.locations?.area?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         listing.address_line1.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCity = !selectedCity || listing.locations?.city?.toLowerCase() === selectedCity.toLowerCase();
-    return matchesSearch && matchesCity;
-  }) || [];
+  const filteredListings =
+    listingsDb?.filter((listing) => {
+      const matchesSearch =
+        listing.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        listing.location.area.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        listing.location.address.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCity =
+        !selectedCity ||
+        listing.location.city.toLowerCase() === selectedCity.toLowerCase();
+      return matchesSearch && matchesCity;
+    }) ?? [];
 
-  const cities = Array.from(new Set(listings?.map(listing => listing.locations?.city).filter(Boolean) || []));
+  const cities =
+    Array.from(new Set(listingsDb?.map((listing) => listing.location.city).filter(Boolean) || []));
 
   const handleFlatClick = (listingId: string) => {
     navigate(`/flat/${listingId}`);
@@ -69,7 +117,7 @@ const Browse = () => {
         {/* Search bar and city select in the same row */}
         <div className="mb-6 flex flex-col md:flex-row gap-3 md:gap-5 max-w-2xl w-full mx-auto">
           <div className="flex-1">
-            <SearchBar 
+            <SearchBar
               placeholder="Search by title, area, or address..."
               onSearch={setSearchQuery}
             />
@@ -81,8 +129,10 @@ const Browse = () => {
               className="h-12 px-4 border-2 border-slate-200 focus:border-coral-400 rounded-xl bg-white text-slate-700 transition-all w-full shadow-sm"
             >
               <option value="">All Cities</option>
-              {cities.map(city => (
-                <option key={city} value={city}>{city}</option>
+              {cities.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
               ))}
             </select>
           </div>
@@ -95,11 +145,7 @@ const Browse = () => {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredListings.map((listing) => (
-              <ListingCard
-                key={listing.id}
-                listing={listing}
-                onCardClick={handleFlatClick}
-              />
+              <ListingCard key={listing.id} listing={listing} onCardClick={handleFlatClick} />
             ))}
           </div>
         )}

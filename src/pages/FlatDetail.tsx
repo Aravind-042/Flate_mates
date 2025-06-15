@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,36 +14,77 @@ import { PropertyAmenities } from "@/components/FlatDetail/PropertyAmenities";
 import { PropertyTrustIndicators } from "@/components/FlatDetail/PropertyTrustIndicators";
 import type { FlatListing } from "@/types/flat";
 
+function mapDbToFlatListing(db: any): FlatListing {
+  return {
+    id: db.id,
+    title: db.title,
+    description: db.description ?? "",
+    location: {
+      city: db.locations?.city ?? "",
+      area: db.locations?.area ?? "",
+      address: db.address_line1 ?? "",
+    },
+    property: {
+      type: db.property_type,
+      bedrooms: db.bedrooms,
+      bathrooms: db.bathrooms,
+      furnished: !!db.is_furnished,
+      parking: !!db.parking_available,
+    },
+    rent: {
+      amount: db.monthly_rent,
+      deposit: db.security_deposit ?? 0,
+      includes: db.rent_includes ?? [],
+    },
+    amenities: db.amenities ?? [],
+    preferences: {
+      gender: db.preferred_gender ?? "any",
+      profession: db.preferred_professions ?? [],
+      additionalRequirements: db.lifestyle_preferences?.join(", ") ?? "",
+    },
+    contactPreferences: {
+      whatsapp: !!db.contact_whatsapp,
+      call: !!db.contact_phone,
+      email: !!db.contact_email,
+    },
+    images: db.images ?? [],
+    createdAt: db.created_at ?? undefined,
+    ownerId: db.owner_id ?? undefined,
+  };
+}
+
 const FlatDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const { data: listing, isLoading, error } = useQuery({
-    queryKey: ['flat-listing', id],
+    queryKey: ["flat-listing", id],
     queryFn: async () => {
-      if (!id) throw new Error('No listing ID provided');
-      
+      if (!id) throw new Error("No listing ID provided");
+
       const { data, error } = await supabase
-        .from('flat_listings')
-        .select(`
+        .from("flat_listings")
+        .select(
+          `
           *,
           locations (
             city,
             area
           )
-        `)
-        .eq('id', id)
-        .eq('status', 'active')
-        .single();
-      
+        `
+        )
+        .eq("id", id)
+        .eq("status", "active")
+        .maybeSingle();
+
       if (error) {
-        console.error('Error fetching listing:', error);
+        console.error("Error fetching listing:", error);
         throw error;
       }
-      
-      return data as FlatListing;
+
+      return data ? mapDbToFlatListing(data) : null;
     },
-    enabled: !!id
+    enabled: !!id,
   });
 
   if (error) {
@@ -55,9 +97,11 @@ const FlatDetail = () => {
               <Home className="h-16 w-16 sm:h-20 sm:w-20 mx-auto" />
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-slate-800 mb-3">Listing Not Found</h1>
-            <p className="text-slate-600 text-sm sm:text-base mb-4">The property you're looking for doesn't exist or has been removed.</p>
-            <Button 
-              onClick={() => navigate('/browse')}
+            <p className="text-slate-600 text-sm sm:text-base mb-4">
+              The property you're looking for doesn't exist or has been removed.
+            </p>
+            <Button
+              onClick={() => navigate("/browse")}
               className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-2 rounded-xl font-semibold text-sm sm:text-base"
             >
               Browse Other Properties
@@ -91,9 +135,9 @@ const FlatDetail = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 py-4 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Back Button - Mobile Optimized */}
-        <Button 
-          variant="ghost" 
-          onClick={() => navigate('/browse')}
+        <Button
+          variant="ghost"
+          onClick={() => navigate("/browse")}
           className="mb-4 bg-white/80 backdrop-blur-sm border border-slate-200 hover:bg-white hover:shadow-lg transition-all duration-200 rounded-xl px-4 py-2 text-sm"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -102,24 +146,36 @@ const FlatDetail = () => {
 
         {/* Main Content - Mobile First Layout */}
         <div className="space-y-4">
-          <PropertyImageGallery 
-            images={listing.images} 
-            title={listing.title} 
+          <PropertyImageGallery images={listing.images} title={listing.title} />
+
+          <PropertyHeader
+            listing={{
+              ...listing,
+              property_type: listing.property.type,
+              bedrooms: listing.property.bedrooms,
+              bathrooms: listing.property.bathrooms,
+              parking_available: listing.property.parking,
+              is_furnished: listing.property.furnished,
+              address_line1: listing.location.address,
+              created_at: listing.createdAt ?? "",
+              locations: {
+                city: listing.location.city,
+                area: listing.location.area,
+              },
+            }}
           />
 
-          <PropertyHeader listing={listing} />
-
-          <PropertyPricing 
-            monthlyRent={listing.monthly_rent}
-            securityDeposit={listing.security_deposit}
+          <PropertyPricing
+            monthlyRent={listing.rent.amount}
+            securityDeposit={listing.rent.deposit}
           />
 
           <PropertyDescription description={listing.description} />
 
-          <PropertyHighlights 
-            propertyType={listing.property_type}
-            isFurnished={listing.is_furnished}
-            parkingAvailable={listing.parking_available}
+          <PropertyHighlights
+            propertyType={listing.property.type}
+            isFurnished={listing.property.furnished}
+            parkingAvailable={listing.property.parking}
           />
 
           <PropertyAmenities amenities={listing.amenities} />
