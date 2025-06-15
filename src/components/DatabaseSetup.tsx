@@ -2,10 +2,10 @@ import React from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+
 export const DatabaseSetup = () => {
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+
   const setupRLSPolicies = async () => {
     try {
       // This component is for reference only - RLS policies should be set up via SQL migrations
@@ -23,5 +23,7 @@ export const DatabaseSetup = () => {
       });
     }
   };
-  return;
+
+  // Do not render anything in the DOM (reference only)
+  return null;
 };
