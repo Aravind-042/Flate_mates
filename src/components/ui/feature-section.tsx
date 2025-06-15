@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -66,9 +67,9 @@ export function FeatureSteps({
               </motion.div>)}
           </div>
 
-          <div className={cn("order-1 md:order-2 relative h-[200px] md:h-[300px] lg:h-[400px] overflow-hidden rounded-2xl shadow-2xl")}>
+          <div className={cn("order-1 md:order-2 relative h-[200px] md:h-[300px] lg:h-[400px] overflow-hidden rounded-2xl shadow-2xl flex items-center justify-center")}>
             <AnimatePresence mode="wait">
-              {features.map((feature, index) => index === currentFeature && <motion.div key={index} className="absolute inset-0 rounded-2xl overflow-hidden" initial={{
+              {features.map((feature, index) => index === currentFeature && <motion.div key={index} className="absolute inset-0 rounded-2xl overflow-hidden flex items-center justify-center" initial={{
               y: 100,
               opacity: 0,
               rotateX: -20
@@ -84,7 +85,7 @@ export function FeatureSteps({
               duration: 0.5,
               ease: "easeInOut"
             }}>
-                      <img src={feature.image} alt={feature.step} className="w-full h-full transition-transform transform object-fill" />
+                      <img src={feature.image} alt={feature.step} className="w-full h-full transition-transform transform object-cover" />
                       <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-white via-white/50 to-transparent" />
                     </motion.div>)}
             </AnimatePresence>
