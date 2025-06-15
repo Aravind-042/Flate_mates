@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,7 +9,6 @@ import { FeaturedListingsSection } from "@/components/Home/FeaturedListingsSecti
 import { FeaturesSection } from "@/components/Home/FeaturesSection";
 import { CTASection } from "@/components/Home/CTASection";
 import { toast } from "sonner";
-import { FlatCarouselSection } from "@/components/Home/FlatCarouselSection";
 
 interface FlatListing {
   id: string;
@@ -76,7 +76,6 @@ const Index = () => {
       <div className="relative overflow-hidden">
         <BackgroundPattern />
         <HeroSection searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <FlatCarouselSection listings={listings || []} />
         <FeaturedListingsSection 
           listings={listings} 
           isLoading={isLoading} 
