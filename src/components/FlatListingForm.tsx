@@ -10,6 +10,7 @@ import { AmenitiesSection } from "@/components/CreateListing/FormSections/Amenit
 import { PreferencesSection } from "@/components/CreateListing/FormSections/PreferencesSection";
 import { ImagesContactSection } from "@/components/CreateListing/FormSections/ImagesContactSection";
 import type { FlatListing } from "@/types/flat";
+import { FlatPreview } from "@/components/FlatPreview";
 
 // Define the list of required fields for each section of the form.
 const requiredFieldsBySection = [
@@ -132,10 +133,34 @@ export const FlatListingForm = ({ data, onChange, onNext }: FlatListingFormProps
     required: true,
   };
 
+  // side-by-side layout for the first ("Basic Details") step
   const renderSection = () => {
+    if (currentSection === 0) {
+      return (
+        <div className="flex flex-col md:flex-row md:gap-8">
+          <div className="md:w-1/2">
+            <BasicDetailsSection {...sectionProps} />
+          </div>
+          <div className="md:w-1/2 mt-8 md:mt-0">
+            <Card className="h-full glass-card">
+              <CardHeader className="pb-2">
+                <h3 className="text-lg font-semibold text-charcoal">Live Preview</h3>
+              </CardHeader>
+              <CardContent>
+                <FlatPreview data={{
+                  ...data,
+                  // Provide only basic details for the preview in step 1
+                  description: data.description,
+                  title: data.title,
+                }} />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      )
+    }
+    // All other steps use the existing layout
     switch (currentSection) {
-      case 0:
-        return <BasicDetailsSection {...sectionProps} />;
       case 1:
         return <LocationSection {...sectionProps} />;
       case 2:
