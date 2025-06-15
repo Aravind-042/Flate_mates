@@ -6,10 +6,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Layout } from "@/components/Layout";
 import { toast } from "sonner";
 import { BrowseHeader } from "@/components/Browse/BrowseHeader";
-import { SearchFilters } from "@/components/Browse/SearchFilters";
 import { LoadingGrid } from "@/components/Browse/LoadingGrid";
 import { EmptyState } from "@/components/Browse/EmptyState";
 import { ListingCard } from "@/components/Browse/ListingCard";
+import { SearchBar } from "@/components/ui/search-bar";
 
 interface FlatListing {
   id: string;
@@ -87,13 +87,23 @@ const Browse = () => {
         <div className="max-w-7xl mx-auto">
           <BrowseHeader />
           
-          <SearchFilters
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            selectedCity={selectedCity}
-            setSelectedCity={setSelectedCity}
-            cities={cities}
-          />
+          {/* Replaced with motion search bar */}
+          <div className="mb-6 flex flex-col gap-3 max-w-lg w-full mx-auto">
+            <SearchBar 
+              placeholder="Search by title, area, or address..."
+              onSearch={setSearchQuery}
+            />
+            <select
+              value={selectedCity}
+              onChange={(e) => setSelectedCity(e.target.value)}
+              className="h-12 px-4 border-2 border-slate-200 focus:border-coral-400 rounded-xl bg-white text-slate-700 transition-all"
+            >
+              <option value="">All Cities</option>
+              {cities.map(city => (
+                <option key={city} value={city}>{city}</option>
+              ))}
+            </select>
+          </div>
 
           {isLoading ? (
             <LoadingGrid />
@@ -117,3 +127,4 @@ const Browse = () => {
 };
 
 export default Browse;
+
