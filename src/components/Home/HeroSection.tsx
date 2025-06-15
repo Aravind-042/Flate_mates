@@ -12,15 +12,6 @@ export const HeroSection = ({ searchQuery, setSearchQuery }: HeroSectionProps) =
   return (
     <section className="relative py-8 sm:py-12 lg:py-16 px-4 text-center">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-4 sm:mb-6">
-          <div className="relative inline-block">
-            <div className="absolute inset-0 bg-gradient-to-r from-deep-blue to-orange blur-2xl opacity-30 rounded-full animate-pulse"></div>
-            <div className="relative bg-gradient-to-r from-deep-blue to-orange p-3 sm:p-4 rounded-3xl shadow-2xl">
-              <Home className="h-8 w-8 sm:h-12 sm:w-12 text-white" />
-            </div>
-          </div>
-        </div>
-        
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-deep-blue via-orange to-emerald bg-clip-text text-transparent leading-tight">
           Find Your Perfect
           <span className="block">Flatmate Today</span>
