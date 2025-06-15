@@ -152,22 +152,22 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
       <motion.form
         onSubmit={handleSubmit}
         className="relative flex items-center justify-center w-full mx-auto"
-        initial={{ width: "240px" }}
-        animate={{ width: isFocused ? "340px" : "240px", scale: isFocused ? 1.05 : 1 }}
+        initial={{ width: "320px" }}
+        animate={{ width: isFocused ? "400px" : "320px", scale: isFocused ? 1.02 : 1 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
         onMouseMove={handleMouseMove}
       >
         <motion.div
           className={cn(
-            "flex items-center w-full rounded-full border relative overflow-hidden backdrop-blur-md",
-            isFocused ? "border-transparent shadow-xl" : "border-gray-200 dark:border-gray-700 bg-white/30 dark:bg-gray-800/50"
+            "flex items-center w-full rounded-full border relative overflow-hidden backdrop-blur-md h-12 sm:h-14",
+            isFocused ? "border-transparent shadow-xl" : "border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-800/50"
           )}
           animate={{
             boxShadow: isClicked
               ? "0 0 40px rgba(139, 92, 246, 0.5), 0 0 15px rgba(236, 72, 153, 0.7) inset"
               : isFocused
               ? "0 15px 35px rgba(0, 0, 0, 0.2)"
-              : "0 0 0 rgba(0, 0, 0, 0)",
+              : "0 4px 15px rgba(0, 0, 0, 0.1)",
           }}
           onClick={handleClick}
         >
@@ -215,7 +215,7 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
           {clickParticles}
 
           <motion.div 
-            className="pl-4 py-3"
+            className="pl-5 sm:pl-6 py-3 sm:py-4 flex items-center justify-center"
             animate={{
               rotate: isAnimating ? [0, -15, 15, -10, 10, 0] : 0,
               scale: isAnimating ? [1, 1.3, 1] : 1,
@@ -227,7 +227,7 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
               strokeWidth={isFocused ? 2.5 : 2}
               className={cn(
                 "transition-all duration-300",
-                isAnimating ? "text-purple-500" : isFocused ? "text-purple-600" : "text-gray-500 dark:text-gray-300",
+                isAnimating ? "text-purple-500" : isFocused ? "text-purple-600" : "text-gray-400 dark:text-gray-400",
               )}
             />
           </motion.div>
@@ -241,7 +241,7 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
             onFocus={() => setIsFocused(true)}
             onBlur={() => setTimeout(() => setIsFocused(false), 200)}
             className={cn(
-              "w-full py-3 bg-transparent outline-none placeholder:text-gray-400 dark:placeholder:text-gray-500 font-medium text-base relative z-10",
+              "w-full py-3 sm:py-4 pl-2 pr-4 bg-transparent outline-none placeholder:text-gray-500 dark:placeholder:text-gray-400 font-medium text-base sm:text-lg relative z-10",
               isFocused ? "text-gray-800 dark:text-white tracking-wide" : "text-gray-600 dark:text-gray-300"
             )}
           />
@@ -259,7 +259,7 @@ const SearchBar = ({ placeholder = "Search...", onSearch }: SearchBarProps) => {
                   boxShadow: "0 10px 25px -5px rgba(139, 92, 246, 0.5)",
                 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-5 py-2 mr-2 text-sm font-medium rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white backdrop-blur-sm transition-all shadow-lg"
+                className="px-4 sm:px-5 py-2 mr-2 sm:mr-3 text-sm font-medium rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white backdrop-blur-sm transition-all shadow-lg"
               >
                 Search
               </motion.button>
