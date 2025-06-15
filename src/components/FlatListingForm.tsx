@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ProgressIndicator } from "@/components/CreateListing/FormSections/ProgressIndicator";
@@ -11,7 +10,6 @@ import { AmenitiesSection } from "@/components/CreateListing/FormSections/Amenit
 import { PreferencesSection } from "@/components/CreateListing/FormSections/PreferencesSection";
 import { ImagesContactSection } from "@/components/CreateListing/FormSections/ImagesContactSection";
 import type { FlatListing } from "@/types/flat";
-import { FlatPreview } from "@/components/FlatPreview";
 
 // Define the list of required fields for each section of the form.
 const requiredFieldsBySection = [
@@ -134,66 +132,25 @@ export const FlatListingForm = ({ data, onChange, onNext }: FlatListingFormProps
     required: true,
   };
 
-  // Always side-by-side layout: left = form section (dynamic), right = live preview
   const renderSection = () => {
-    let SectionComponent = null;
     switch (currentSection) {
       case 0:
-        SectionComponent = <BasicDetailsSection {...sectionProps} />;
-        break;
+        return <BasicDetailsSection {...sectionProps} />;
       case 1:
-        SectionComponent = <LocationSection {...sectionProps} />;
-        break;
+        return <LocationSection {...sectionProps} />;
       case 2:
-        SectionComponent = <PropertyDetailsSection {...sectionProps} />;
-        break;
+        return <PropertyDetailsSection {...sectionProps} />;
       case 3:
-        SectionComponent = <RentCostsSection {...sectionProps} />;
-        break;
+        return <RentCostsSection {...sectionProps} />;
       case 4:
-        SectionComponent = <AmenitiesSection {...sectionProps} />;
-        break;
+        return <AmenitiesSection {...sectionProps} />;
       case 5:
-        SectionComponent = <PreferencesSection {...sectionProps} />;
-        break;
+        return <PreferencesSection {...sectionProps} />;
       case 6:
-        SectionComponent = <ImagesContactSection {...sectionProps} />;
-        break;
+        return <ImagesContactSection {...sectionProps} />;
       default:
-        SectionComponent = null;
+        return null;
     }
-    return (
-      <div className="flex flex-col md:flex-row md:gap-8">
-        {/* Left: the form section */}
-        <div className="md:w-1/2">
-          {SectionComponent}
-          {/* Show top-level errors if any (moved inside the form panel for clarity) */}
-          {Object.values(errors).length > 0 && (
-            <div className="text-red-600 text-sm mt-2">{Object.values(errors)[0]}</div>
-          )}
-          {/* Navigation Buttons shown under the form on all steps */}
-          <NavigationButtons
-            currentSection={currentSection}
-            totalSections={sections.length}
-            onNext={handleNext}
-            onPrevious={handlePrevious}
-            isFirstSection={currentSection === 0}
-            isLastSection={currentSection === sections.length - 1}
-          />
-        </div>
-        {/* Right: the preview panel */}
-        <div className="md:w-1/2 mt-8 md:mt-0">
-          <Card className="h-full glass-card">
-            <CardHeader className="pb-2">
-              <h3 className="text-lg font-semibold text-charcoal">Live Preview</h3>
-            </CardHeader>
-            <CardContent>
-              <FlatPreview data={data} />
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
   };
 
   return (
@@ -208,6 +165,20 @@ export const FlatListingForm = ({ data, onChange, onNext }: FlatListingFormProps
       <CardContent>
         <div className="space-y-6">
           {renderSection()}
+
+          {/* Show top-level errors if any */}
+          {Object.values(errors).length > 0 && (
+            <div className="text-red-600 text-sm">{Object.values(errors)[0]}</div>
+          )}
+          
+          <NavigationButtons
+            currentSection={currentSection}
+            totalSections={sections.length}
+            onNext={handleNext}
+            onPrevious={handlePrevious}
+            isFirstSection={currentSection === 0}
+            isLastSection={currentSection === sections.length - 1}
+          />
         </div>
       </CardContent>
     </Card>
