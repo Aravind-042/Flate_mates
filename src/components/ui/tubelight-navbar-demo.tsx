@@ -1,7 +1,8 @@
 
-import { Home, Search, Plus, User, LogIn } from 'lucide-react'
+import { Home, Search, Plus, User } from 'lucide-react'
 import { NavBar } from "@/components/ui/tubelight-navbar"
 import { useAuth } from "@/hooks/useAuth"
+import { FloatingSignInButton } from "@/components/ui/FloatingSignInButton"
 
 export function NavBarDemo() {
   const { user } = useAuth()
@@ -12,9 +13,15 @@ export function NavBarDemo() {
     { name: 'Create', url: '/create-listing', icon: Plus },
   ]
 
+  // Only show "Profile" for logged in users; if not, don't show anything on right
   const rightItems = user 
     ? [{ name: 'Profile', url: '/profile', icon: User }]
-    : [{ name: 'Sign In', url: '/auth', icon: LogIn }]
+    : []
 
-  return <NavBar leftItems={leftItems} rightItems={rightItems} />
+  return (
+    <>
+      <NavBar leftItems={leftItems} rightItems={rightItems} />
+      {!user && <FloatingSignInButton />}
+    </>
+  )
 }
