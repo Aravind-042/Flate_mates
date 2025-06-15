@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -63,9 +62,9 @@ export const ListingCard = ({
   };
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
+    console.log("handleFavoriteClick fired for listing:", listing.id);
     e.preventDefault();
     e.stopPropagation();
-    console.log("Favorite button clicked for listing:", listing.id);
     // TODO: Implement favorite functionality
   };
 
@@ -115,17 +114,30 @@ export const ListingCard = ({
             </div>
           </div>
 
-          {/* Heart/Favorite Button - Fixed with proper event handling */}
+          {/* DEBUG: Heart/Favorite Button */}
           <button
-            className="absolute top-4 right-4 z-50 bg-white/90 backdrop-blur-md hover:bg-white/95 rounded-full p-3 shadow-lg transition-all duration-200 hover:scale-110 flex items-center justify-center border-2 border-transparent hover:border-coral-200"
-            onClick={handleFavoriteClick}
-            onMouseDown={(e) => e.stopPropagation()}
-            onMouseUp={(e) => e.stopPropagation()}
+            data-debug-heart
+            className="absolute top-4 right-4 z-[1000] bg-white/90 backdrop-blur-md hover:bg-white/95 rounded-full p-4 shadow-lg transition-all duration-200 hover:scale-110 flex items-center justify-center border-4 border-red-500"
+            // add direct inline log and all pointer events for debugging interactiveness
+            onClick={(e) => {
+              console.log("INLINE onClick fired for listing:", listing.id);
+              handleFavoriteClick(e);
+            }}
+            onPointerDown={(e) => {
+              console.log("onPointerDown [favorite] listing.id", listing.id, e);
+            }}
+            onPointerUp={(e) => {
+              console.log("onPointerUp [favorite] listing.id", listing.id, e);
+            }}
+            onMouseOver={(e) => {
+              console.log("onMouseOver [favorite] listing.id", listing.id, e);
+            }}
             type="button"
             title="Save to favorites"
-            style={{ pointerEvents: 'auto' }}
+            style={{ background: "rgba(255,255,255,0.98)" }}
           >
-            <Heart className="h-5 w-5 text-coral-500 hover:fill-coral-500 transition-colors" />
+            <span className="text-xs text-red-600 font-bold mr-2">DEBUG</span>
+            <Heart className="h-7 w-7 text-coral-500 hover:fill-coral-500 transition-colors" />
           </button>
 
           {/* Apply to Join Button - Shows on hover */}
