@@ -22,8 +22,8 @@ export const FlatCarousel = memo(
   }: FlatCarouselComponentProps) => {
     const isScreenSizeSm = useMediaQuery("(max-width: 640px)");
     const cylinderWidth = isScreenSizeSm ? 1100 : 1800;
-    const faceCount = listings.length;
-    const faceWidth = cylinderWidth / faceCount;
+    const visibleTiles = 3; // Only show 3 tiles at once
+    const faceWidth = cylinderWidth / visibleTiles;
     const radius = cylinderWidth / (2 * Math.PI);
     const rotation = useMotionValue(0);
     const transform = useTransform(
@@ -47,9 +47,27 @@ export const FlatCarousel = memo(
       }
     }, [isCarouselActive, controls]);
 
+    // Calculate which tiles should be visible based on rotation
+    const getVisibleTiles = (rotationValue: number) => {
+      const anglePerTile = 360 / listings.length;
+      const currentIndex = Math.floor((rotationValue % 360) / anglePerTile);
+      
+      const visibleIndices = [];
+      for (let i = 0; i < visibleTiles; i++) {
+        const index = (currentIndex + i) % listings.length;
+        visibleIndices.push(index);
+      }
+      return visibleIndices;
+    };
+
     // Calculate scale and opacity based on position
-    const getScaleAndOpacity = (index: number, rotationValue: number) => {
-      const angle = (index * (360 / faceCount) + rotationValue) % 360;
+    const getScaleAndOpacity = (index: number, rotationValue: number, visibleIndices: number[]) => {
+      if (!visibleIndices.includes(index)) {
+        return { scale: 0, opacity: 0 };
+      }
+      
+      const positionInVisible = visibleIndices.indexOf(index);
+      const angle = positionInVisible * (360 / visibleTiles);
       // Normalize angle to -180 to 180
       const normalizedAngle = ((angle + 180) % 360) - 180;
       // Calculate how close the tile is to the front center (0 degrees)
@@ -60,6 +78,8 @@ export const FlatCarousel = memo(
       const opacity = 1 - (distanceFromCenter * 0.4);
       return { scale: Math.max(scale, 0.7), opacity: Math.max(opacity, 0.6) };
     };
+
+    const visibleIndices = getVisibleTiles(rotation.get());
 
     return (
       <div
@@ -98,7 +118,13 @@ export const FlatCarousel = memo(
           animate={controls}
         >
           {listings.map((listing, i) => {
-            const { scale, opacity } = getScaleAndOpacity(i, rotation.get());
+            const { scale, opacity } = getScaleAndOpacity(i, rotation.get(), visibleIndices);
+            const positionInVisible = visibleIndices.indexOf(i);
+            
+            // Only render visible tiles
+            if (!visibleIndices.includes(i)) {
+              return null;
+            }
             
             return (
               <motion.div
@@ -107,10 +133,10 @@ export const FlatCarousel = memo(
                 style={{
                   width: `${faceWidth}px`,
                   transform: `rotateY(${
-                    i * (360 / faceCount)
+                    positionInVisible * (360 / visibleTiles)
                   }deg) translateZ(${radius}px) scale(${scale})`,
                   opacity: opacity,
-                  zIndex: Math.round((1 - Math.abs(((i * (360 / faceCount) + rotation.get()) % 360 - 180) / 180)) * 100),
+                  zIndex: Math.round((1 - Math.abs(((positionInVisible * (360 / visibleTiles)) % 360 - 180) / 180)) * 100),
                 }}
                 onClick={() => handleClick(listing, i)}
               >
