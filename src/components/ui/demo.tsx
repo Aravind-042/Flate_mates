@@ -1,4 +1,3 @@
-
 import React from "react";
 import { CircularTestimonials } from '@/components/ui/circular-testimonials';
 
@@ -31,30 +30,6 @@ const testimonials = [
 
 export const CircularTestimonialsDemo = () => (
   <section>
-    {/* Light testimonials section */}
-    <div className="bg-[#f7f7fa] p-20 rounded-lg min-h-[300px] flex flex-wrap gap-6 items-center justify-center relative">
-      <div
-        className="items-center justify-center relative flex"
-        style={{ maxWidth: "1456px" }}
-      >
-        <CircularTestimonials
-          testimonials={testimonials}
-          autoplay={true}
-          colors={{
-            name: "#0a0a0a",
-            designation: "#454545",
-            testimony: "#171717",
-            arrowBackground: "#141414",
-            arrowForeground: "#f1f1f7",
-            arrowHoverBackground: "#00A6FB",
-          }}
-          fontSizes={{
-            name: "28px",
-            designation: "20px",
-            quote: "20px",
-          }}
-        />
-      </div>
-    </div>
+    {/* Component is now empty - testimonials section removed */}
   </section>
 );
