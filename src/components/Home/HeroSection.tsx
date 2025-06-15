@@ -1,5 +1,6 @@
 
 import { SearchBar } from "@/components/ui/search-bar";
+import { FeatureStepsDemo } from "@/components/ui/feature-steps-demo";
 
 interface HeroSectionProps {
   searchQuery: string;
@@ -12,8 +13,8 @@ export const HeroSection = ({ searchQuery, setSearchQuery }: HeroSectionProps) =
   };
 
   return (
-    <section className="relative py-6 sm:py-8 lg:py-12 px-4 text-center">
-      <div className="max-w-4xl mx-auto">
+    <section className="relative py-6 sm:py-8 lg:py-12 px-4">
+      <div className="max-w-4xl mx-auto text-center mb-8">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-deep-blue via-orange to-emerald bg-clip-text text-transparent leading-tight">
           Find Your Perfect
           <span className="block">Flatmate Today</span>
@@ -31,6 +32,9 @@ export const HeroSection = ({ searchQuery, setSearchQuery }: HeroSectionProps) =
           />
         </div>
       </div>
+
+      {/* Feature Steps Section */}
+      <FeatureStepsDemo />
     </section>
   );
 };

@@ -7,7 +7,6 @@ import { BackgroundPattern } from "@/components/Home/BackgroundPattern";
 import { HeroSection } from "@/components/Home/HeroSection";
 import { CircularTestimonialsDemo } from "@/components/ui/demo";
 import { CircularFlatListingsDemo } from "@/components/ui/circular-flat-listings-demo";
-import { FeatureStepsDemo } from "@/components/ui/feature-steps-demo";
 import { CTASection } from "@/components/Home/CTASection";
 import { toast } from "sonner";
 
@@ -82,9 +81,6 @@ const Index = () => {
         {!isLoading && listings && listings.length > 0 && (
           <CircularFlatListingsDemo listings={filteredListings.length > 0 ? filteredListings : listings} />
         )}
-        
-        {/* Feature Steps Section */}
-        <FeatureStepsDemo />
         
         <CircularTestimonialsDemo />
         
