@@ -31,6 +31,7 @@ export const useAuth = () => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isPublishingPending, setIsPublishingPending] = useState(false);
   const navigate = useNavigate();
 
   // Fetch user profile data
@@ -51,13 +52,64 @@ export const useAuth = () => {
     }
   };
 
+  // Validate listing data before submission
+  const validateListingData = (listingData: FlatListing): boolean => {
+    console.log('Validating listing data:', listingData);
+    
+    if (!listingData.title?.trim()) {
+      console.error('Validation failed: Title is required');
+      return false;
+    }
+    
+    if (!listingData.description?.trim()) {
+      console.error('Validation failed: Description is required');
+      return false;
+    }
+    
+    if (!listingData.location?.city?.trim()) {
+      console.error('Validation failed: City is required');
+      return false;
+    }
+    
+    if (!listingData.location?.area?.trim()) {
+      console.error('Validation failed: Area is required');
+      return false;
+    }
+    
+    if (!listingData.rent?.amount || listingData.rent.amount <= 0) {
+      console.error('Validation failed: Rent amount must be greater than 0, got:', listingData.rent?.amount);
+      return false;
+    }
+    
+    return true;
+  };
+
   // Publish any pending listing after sign up
   const publishPendingListing = async (userId: string) => {
-    try {
-      const pendingData = localStorage.getItem('pendingListingData');
-      if (!pendingData) return;
+    if (isPublishingPending) {
+      console.log('Already publishing pending listing, skipping...');
+      return;
+    }
 
+    try {
+      setIsPublishingPending(true);
+      const pendingData = localStorage.getItem('pendingListingData');
+      if (!pendingData) {
+        console.log('No pending listing data found');
+        return;
+      }
+
+      console.log('Found pending listing data, attempting to parse...');
       const listingData: FlatListing = JSON.parse(pendingData);
+      
+      // Validate the data before attempting to submit
+      if (!validateListingData(listingData)) {
+        console.error('Pending listing data is invalid, removing from localStorage');
+        localStorage.removeItem('pendingListingData');
+        toast.error("Invalid listing data found. Please create your listing again.");
+        return;
+      }
+
       const dbListingData = {
         owner_id: userId,
         title: listingData.title,
@@ -68,7 +120,7 @@ export const useAuth = () => {
         is_furnished: listingData.property.furnished,
         parking_available: listingData.property.parking,
         monthly_rent: listingData.rent.amount,
-        security_deposit: listingData.rent.deposit,
+        security_deposit: listingData.rent.deposit || 0,
         rent_includes: listingData.rent.includes,
         amenities: listingData.amenities,
         preferred_gender: listingData.preferences.gender as 'male' | 'female' | 'any',
@@ -82,6 +134,8 @@ export const useAuth = () => {
         status: 'active' as 'active' | 'inactive' | 'rented' | 'expired'
       };
 
+      console.log('Submitting validated listing data:', dbListingData);
+
       const { data, error } = await supabase
         .from('flat_listings')
         .insert(dbListingData)
@@ -90,15 +144,23 @@ export const useAuth = () => {
 
       if (error) {
         console.error('Error publishing pending listing:', error);
+        // Remove invalid data to prevent retry loops
+        localStorage.removeItem('pendingListingData');
         toast.error("Failed to publish your listing: " + error.message);
         return;
       }
+
+      console.log('Listing published successfully:', data);
       localStorage.removeItem('pendingListingData');
       toast.success("Your listing has been published successfully!");
       setTimeout(() => navigate('/profile'), 2000);
     } catch (error) {
       console.error('Error in publishPendingListing:', error);
-      toast.error("Failed to publish your listing");
+      // Remove data that caused the error to prevent retry loops
+      localStorage.removeItem('pendingListingData');
+      toast.error("Failed to publish your listing. Please try creating it again.");
+    } finally {
+      setIsPublishingPending(false);
     }
   };
 

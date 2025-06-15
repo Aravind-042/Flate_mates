@@ -20,7 +20,22 @@ export const PreviewSection = ({ listingData, onBack, onNext, userId }: PreviewS
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const validateListingData = (data: FlatListing): string | null => {
+    if (!data.title?.trim()) return "Title is required";
+    if (!data.description?.trim()) return "Description is required";
+    if (!data.location?.city?.trim()) return "City is required";
+    if (!data.location?.area?.trim()) return "Area is required";
+    if (!data.rent?.amount || data.rent.amount <= 0) return "Monthly rent must be greater than 0";
+    return null;
+  };
+
   const publishListing = async (data: FlatListing, ownerId: string) => {
+    // Validate data before submission
+    const validationError = validateListingData(data);
+    if (validationError) {
+      throw new Error(validationError);
+    }
+
     // Map the frontend data structure to the database structure
     const dbListingData = {
       owner_id: ownerId,
@@ -32,7 +47,7 @@ export const PreviewSection = ({ listingData, onBack, onNext, userId }: PreviewS
       is_furnished: data.property.furnished,
       parking_available: data.property.parking,
       monthly_rent: data.rent.amount,
-      security_deposit: data.rent.deposit,
+      security_deposit: data.rent.deposit || 0,
       rent_includes: data.rent.includes,
       amenities: data.amenities,
       preferred_gender: data.preferences.gender as 'male' | 'female' | 'any',
@@ -64,12 +79,24 @@ export const PreviewSection = ({ listingData, onBack, onNext, userId }: PreviewS
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) {
+      console.log('Already submitting, ignoring duplicate click');
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
+      // Validate data before proceeding
+      const validationError = validateListingData(listingData);
+      if (validationError) {
+        toast.error(validationError);
+        return;
+      }
+
       if (!userId) {
-        // Save listing data to localStorage for non-authenticated users
-        console.log('Saving listing data for non-authenticated user');
+        // For non-authenticated users, validate before saving to localStorage
+        console.log('Saving validated listing data for non-authenticated user');
         localStorage.setItem('pendingListingData', JSON.stringify(listingData));
         toast.success("Listing details saved! Please sign up to publish.");
         onNext(); // Move to signup step
