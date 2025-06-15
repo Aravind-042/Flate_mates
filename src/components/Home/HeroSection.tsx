@@ -1,7 +1,5 @@
 
-import { useState } from "react";
-import { Home, Search, ArrowRight } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { SearchBar } from "@/components/ui/search-bar";
 
 interface HeroSectionProps {
   searchQuery: string;
@@ -9,6 +7,10 @@ interface HeroSectionProps {
 }
 
 export const HeroSection = ({ searchQuery, setSearchQuery }: HeroSectionProps) => {
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
   return (
     <section className="relative py-8 sm:py-12 lg:py-16 px-4 text-center">
       <div className="max-w-4xl mx-auto">
@@ -21,17 +23,12 @@ export const HeroSection = ({ searchQuery, setSearchQuery }: HeroSectionProps) =
           Discover amazing shared living spaces and connect with like-minded people in your city.
         </p>
 
-        {/* Search Bar */}
+        {/* Enhanced Search Bar */}
         <div className="max-w-md mx-auto mb-6 sm:mb-8 px-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-slate-400" />
-            <Input
-              placeholder="Search by area or city..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 sm:pl-10 h-10 sm:h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl text-base sm:text-lg bg-white/90 backdrop-blur-md"
-            />
-          </div>
+          <SearchBar 
+            placeholder="Search by area or city..."
+            onSearch={handleSearch}
+          />
         </div>
       </div>
     </section>
