@@ -1,19 +1,9 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { 
-  MapPin, 
-  Home, 
-  Bed, 
-  Bath, 
-  Car, 
-  Heart,
-  ChevronRight
-} from "lucide-react";
+import { MapPin, Home, Bed, Bath, Car, Heart, ChevronRight } from "lucide-react";
 import { useState } from "react";
-
 interface FlatListing {
   id: string;
   title: string;
@@ -36,61 +26,43 @@ interface FlatListing {
     area: string;
   };
 }
-
 interface ListingCardProps {
   listing: FlatListing;
   onCardClick: (listingId: string) => void;
 }
-
-export const ListingCard = ({ listing, onCardClick }: ListingCardProps) => {
+export const ListingCard = ({
+  listing,
+  onCardClick
+}: ListingCardProps) => {
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-
   const formatPropertyType = (type: string) => {
     return type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
-
   const truncateDescription = (text: string, maxLength: number = 100) => {
     if (!text || text.length <= maxLength) return text;
     return text.substring(0, maxLength);
   };
-
   const handleApplyToJoin = (e: React.MouseEvent) => {
     e.stopPropagation();
     // TODO: Implement apply to join functionality
     console.log("Apply to join clicked for listing:", listing.id);
   };
-
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     // TODO: Implement favorite functionality
     console.log("Favorite clicked for listing:", listing.id);
   };
-
-  return (
-    <TooltipProvider>
-      <Card 
-        className="bg-white/90 backdrop-blur-md border-0 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] group overflow-hidden cursor-pointer"
-        onClick={() => onCardClick(listing.id)}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
+  return <TooltipProvider>
+      <Card className="bg-white/90 backdrop-blur-md border-0 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] group overflow-hidden cursor-pointer" onClick={() => onCardClick(listing.id)} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
         <div className="relative overflow-hidden">
-          {listing.images && listing.images.length > 0 ? (
-            <div className="relative">
-              <img 
-                src={listing.images[0]} 
-                alt={listing.title}
-                className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
-              />
+          {listing.images && listing.images.length > 0 ? <div className="relative">
+              <img src={listing.images[0]} alt={listing.title} className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110" />
               {/* Gradient overlay for better text visibility */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </div>
-          ) : (
-            <div className="w-full h-48 bg-gradient-to-br from-coral-100 to-violet-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            </div> : <div className="w-full h-48 bg-gradient-to-br from-coral-100 to-violet-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
               <Home className="h-16 w-16 text-coral-400" />
-            </div>
-          )}
+            </div>}
           
           {/* Property Type Badge */}
           <div className="absolute top-4 left-4">
@@ -103,12 +75,7 @@ export const ListingCard = ({ listing, onCardClick }: ListingCardProps) => {
           <div className="absolute top-4 right-4">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="bg-white/90 backdrop-blur-md hover:bg-white/95 rounded-full p-2 shadow-md"
-                  onClick={handleFavoriteClick}
-                >
+                <Button size="sm" variant="ghost" className="bg-white/90 backdrop-blur-md hover:bg-white/95 rounded-full p-2 shadow-md" onClick={handleFavoriteClick}>
                   <Heart className="h-4 w-4 text-coral-500 hover:fill-coral-500 transition-colors" />
                 </Button>
               </TooltipTrigger>
@@ -120,12 +87,7 @@ export const ListingCard = ({ listing, onCardClick }: ListingCardProps) => {
 
           {/* Apply to Join Button - Shows on hover */}
           <div className={`absolute bottom-4 right-4 transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
-            <Button
-              onClick={handleApplyToJoin}
-              className="bg-coral-500 hover:bg-coral-600 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-lg"
-            >
-              Apply to Join
-            </Button>
+            <Button onClick={handleApplyToJoin} className="bg-coral-500 hover:bg-coral-600 text-white rounded-xl px-4 py-2 text-sm font-semibold shadow-lg">View More</Button>
           </div>
         </div>
         
@@ -142,61 +104,38 @@ export const ListingCard = ({ listing, onCardClick }: ListingCardProps) => {
           <div className="flex items-center text-slate-600 mb-3">
             <MapPin className="h-4 w-4 mr-2 text-coral-500" />
             <span className="text-sm">
-              {listing.locations?.area && (
-                <span className="font-medium">{listing.locations.area}</span>
-              )}
-              {listing.locations?.area && listing.locations?.city && (
-                <span className="mx-1">•</span>
-              )}
-              {listing.locations?.city && (
-                <Badge variant="outline" className="ml-1 text-xs border-coral-200 text-coral-700">
+              {listing.locations?.area && <span className="font-medium">{listing.locations.area}</span>}
+              {listing.locations?.area && listing.locations?.city && <span className="mx-1">•</span>}
+              {listing.locations?.city && <Badge variant="outline" className="ml-1 text-xs border-coral-200 text-coral-700">
                   {listing.locations.city}
-                </Badge>
-              )}
-              {!listing.locations?.area && !listing.locations?.city && (
-                <span>{listing.address_line1}</span>
-              )}
+                </Badge>}
+              {!listing.locations?.area && !listing.locations?.city && <span>{listing.address_line1}</span>}
             </span>
           </div>
           
           {/* Description with Read More functionality */}
-          {listing.description && (
-            <div className="mb-4">
+          {listing.description && <div className="mb-4">
               <p className="text-slate-600 text-sm leading-relaxed">
-                {showFullDescription 
-                  ? listing.description 
-                  : truncateDescription(listing.description)
-                }
-                {listing.description.length > 100 && !showFullDescription && (
-                  <>
+                {showFullDescription ? listing.description : truncateDescription(listing.description)}
+                {listing.description.length > 100 && !showFullDescription && <>
                     <span className="bg-gradient-to-r from-transparent to-white absolute right-0 w-8 h-5"></span>
                     ...
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setShowFullDescription(true);
-                      }}
-                      className="text-coral-500 hover:text-coral-600 font-medium ml-1 inline-flex items-center"
-                    >
+                    <button onClick={e => {
+                e.stopPropagation();
+                setShowFullDescription(true);
+              }} className="text-coral-500 hover:text-coral-600 font-medium ml-1 inline-flex items-center">
                       Read More
                       <ChevronRight className="h-3 w-3 ml-1" />
                     </button>
-                  </>
-                )}
-                {showFullDescription && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowFullDescription(false);
-                    }}
-                    className="text-coral-500 hover:text-coral-600 font-medium ml-1"
-                  >
+                  </>}
+                {showFullDescription && <button onClick={e => {
+              e.stopPropagation();
+              setShowFullDescription(false);
+            }} className="text-coral-500 hover:text-coral-600 font-medium ml-1">
                     Show Less
-                  </button>
-                )}
+                  </button>}
               </p>
-            </div>
-          )}
+            </div>}
           
           {/* Property Details with Tooltips */}
           <div className="flex items-center justify-between mb-4">
@@ -225,8 +164,7 @@ export const ListingCard = ({ listing, onCardClick }: ListingCardProps) => {
                 </TooltipContent>
               </Tooltip>
 
-              {listing.parking_available && (
-                <Tooltip>
+              {listing.parking_available && <Tooltip>
                   <TooltipTrigger asChild>
                     <div className="flex items-center cursor-help">
                       <Car className="h-4 w-4 mr-1 text-green-600" />
@@ -235,11 +173,9 @@ export const ListingCard = ({ listing, onCardClick }: ListingCardProps) => {
                   <TooltipContent>
                     <p>Parking Available</p>
                   </TooltipContent>
-                </Tooltip>
-              )}
+                </Tooltip>}
 
-              {listing.is_furnished && (
-                <Tooltip>
+              {listing.is_furnished && <Tooltip>
                   <TooltipTrigger asChild>
                     <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700 cursor-help">
                       Furnished
@@ -248,8 +184,7 @@ export const ListingCard = ({ listing, onCardClick }: ListingCardProps) => {
                   <TooltipContent>
                     <p>Fully Furnished Property</p>
                   </TooltipContent>
-                </Tooltip>
-              )}
+                </Tooltip>}
             </div>
           </div>
           
@@ -263,17 +198,14 @@ export const ListingCard = ({ listing, onCardClick }: ListingCardProps) => {
             </div>
             
             {/* Security Deposit Info */}
-            {listing.security_deposit && listing.security_deposit > 0 && (
-              <div className="text-right">
+            {listing.security_deposit && listing.security_deposit > 0 && <div className="text-right">
                 <div className="text-xs text-slate-500">Security Deposit</div>
                 <div className="text-sm font-semibold text-slate-700">
                   ₹{listing.security_deposit.toLocaleString()}
                 </div>
-              </div>
-            )}
+              </div>}
           </div>
         </CardContent>
       </Card>
-    </TooltipProvider>
-  );
+    </TooltipProvider>;
 };
