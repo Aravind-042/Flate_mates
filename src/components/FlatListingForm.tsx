@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ProgressIndicator } from "@/components/CreateListing/FormSections/ProgressIndicator";
@@ -133,49 +134,66 @@ export const FlatListingForm = ({ data, onChange, onNext }: FlatListingFormProps
     required: true,
   };
 
-  // side-by-side layout for the first ("Basic Details") step
+  // Always side-by-side layout: left = form section (dynamic), right = live preview
   const renderSection = () => {
-    if (currentSection === 0) {
-      return (
-        <div className="flex flex-col md:flex-row md:gap-8">
-          <div className="md:w-1/2">
-            <BasicDetailsSection {...sectionProps} />
-          </div>
-          <div className="md:w-1/2 mt-8 md:mt-0">
-            <Card className="h-full glass-card">
-              <CardHeader className="pb-2">
-                <h3 className="text-lg font-semibold text-charcoal">Live Preview</h3>
-              </CardHeader>
-              <CardContent>
-                <FlatPreview data={{
-                  ...data,
-                  // Provide only basic details for the preview in step 1
-                  description: data.description,
-                  title: data.title,
-                }} />
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      )
-    }
-    // All other steps use the existing layout
+    let SectionComponent = null;
     switch (currentSection) {
+      case 0:
+        SectionComponent = <BasicDetailsSection {...sectionProps} />;
+        break;
       case 1:
-        return <LocationSection {...sectionProps} />;
+        SectionComponent = <LocationSection {...sectionProps} />;
+        break;
       case 2:
-        return <PropertyDetailsSection {...sectionProps} />;
+        SectionComponent = <PropertyDetailsSection {...sectionProps} />;
+        break;
       case 3:
-        return <RentCostsSection {...sectionProps} />;
+        SectionComponent = <RentCostsSection {...sectionProps} />;
+        break;
       case 4:
-        return <AmenitiesSection {...sectionProps} />;
+        SectionComponent = <AmenitiesSection {...sectionProps} />;
+        break;
       case 5:
-        return <PreferencesSection {...sectionProps} />;
+        SectionComponent = <PreferencesSection {...sectionProps} />;
+        break;
       case 6:
-        return <ImagesContactSection {...sectionProps} />;
+        SectionComponent = <ImagesContactSection {...sectionProps} />;
+        break;
       default:
-        return null;
+        SectionComponent = null;
     }
+    return (
+      <div className="flex flex-col md:flex-row md:gap-8">
+        {/* Left: the form section */}
+        <div className="md:w-1/2">
+          {SectionComponent}
+          {/* Show top-level errors if any (moved inside the form panel for clarity) */}
+          {Object.values(errors).length > 0 && (
+            <div className="text-red-600 text-sm mt-2">{Object.values(errors)[0]}</div>
+          )}
+          {/* Navigation Buttons shown under the form on all steps */}
+          <NavigationButtons
+            currentSection={currentSection}
+            totalSections={sections.length}
+            onNext={handleNext}
+            onPrevious={handlePrevious}
+            isFirstSection={currentSection === 0}
+            isLastSection={currentSection === sections.length - 1}
+          />
+        </div>
+        {/* Right: the preview panel */}
+        <div className="md:w-1/2 mt-8 md:mt-0">
+          <Card className="h-full glass-card">
+            <CardHeader className="pb-2">
+              <h3 className="text-lg font-semibold text-charcoal">Live Preview</h3>
+            </CardHeader>
+            <CardContent>
+              <FlatPreview data={data} />
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -190,20 +208,6 @@ export const FlatListingForm = ({ data, onChange, onNext }: FlatListingFormProps
       <CardContent>
         <div className="space-y-6">
           {renderSection()}
-
-          {/* Show top-level errors if any */}
-          {Object.values(errors).length > 0 && (
-            <div className="text-red-600 text-sm">{Object.values(errors)[0]}</div>
-          )}
-          
-          <NavigationButtons
-            currentSection={currentSection}
-            totalSections={sections.length}
-            onNext={handleNext}
-            onPrevious={handlePrevious}
-            isFirstSection={currentSection === 0}
-            isLastSection={currentSection === sections.length - 1}
-          />
         </div>
       </CardContent>
     </Card>
