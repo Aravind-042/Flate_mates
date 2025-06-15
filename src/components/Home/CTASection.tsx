@@ -16,16 +16,16 @@ export const CTASection = () => {
   };
 
   return (
-    <section className="relative py-12 sm:py-16 px-4">
+    <section className="relative py-8 sm:py-12 md:py-16 px-4">
       <div className="max-w-4xl mx-auto text-center">
         <Card className="bg-gradient-to-r from-deep-blue via-orange to-emerald border-0 rounded-3xl shadow-2xl overflow-hidden">
-          <CardContent className="p-8 sm:p-12">
+          <CardContent className="p-6 sm:p-8 md:p-12">
             <div className="text-white">
-              <UserPlus className="h-8 w-8 sm:h-12 sm:w-12 mx-auto mb-4 sm:mb-6" />
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">
+              <UserPlus className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 mx-auto mb-4 sm:mb-6" />
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6">
                 Got a Flat to Share?
               </h2>
-              <p className="text-base sm:text-xl mb-6 sm:mb-8 opacity-90 px-4">
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-6 sm:mb-8 opacity-90 px-2 sm:px-4">
                 Join thousands of flat owners who found their perfect flatmates through our platform.
               </p>
               
@@ -35,24 +35,25 @@ export const CTASection = () => {
                     <NeonButton 
                       variant="ghost" 
                       size="lg"
-                      className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-bold bg-white text-deep-blue hover:bg-gray-100 shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200"
+                      className="h-10 sm:h-12 md:h-14 px-4 sm:px-6 md:px-8 text-sm sm:text-base md:text-lg font-bold bg-white text-deep-blue hover:bg-gray-100 shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200 rounded-xl"
                     >
-                      <UserPlus className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
-                      <span className="hidden sm:inline">Create Your Listing</span>
+                      <UserPlus className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
+                      <span className="hidden xs:hidden sm:inline">Create Your Listing</span>
                       <span className="sm:hidden">Create Listing</span>
-                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-1 sm:ml-2" />
                     </NeonButton>
                   </Link>
                 ) : (
                   <NeonButton 
                     variant="ghost" 
                     size="lg"
-                    className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-bold bg-white text-deep-blue hover:bg-gray-100 shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200"
+                    className="h-10 sm:h-12 md:h-14 px-4 sm:px-6 md:px-8 text-sm sm:text-base md:text-lg font-bold bg-white text-deep-blue hover:bg-gray-100 shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200 rounded-xl"
                     onClick={handleCreateListingClick}
                   >
-                    <UserPlus className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
-                    Get Started
-                    <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
+                    <UserPlus className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
+                    <span className="hidden xs:hidden sm:inline">Get Started Today</span>
+                    <span className="sm:hidden">Get Started</span>
+                    <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-1 sm:ml-2" />
                   </NeonButton>
                 )}
               </div>
