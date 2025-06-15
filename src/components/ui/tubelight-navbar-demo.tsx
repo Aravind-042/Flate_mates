@@ -1,31 +1,22 @@
 
-import { Home, Search, Plus, User } from 'lucide-react'
+import { Home, Search, Plus } from 'lucide-react'
 import { NavBar } from "@/components/ui/tubelight-navbar"
 import { useAuth } from "@/hooks/useAuth"
 import { FloatingSignInButton } from "@/components/ui/FloatingSignInButton"
 
 export function NavBarDemo() {
-  const { user, loading } = useAuth();
-
-  // Wait for auth check before rendering nav
-  if (loading) return null;
-
+  // Only ever show leftItems in nav bar, never "Profile"
   const leftItems = [
     { name: 'Home', url: '/', icon: Home },
     { name: 'Browse', url: '/browse', icon: Search },
     { name: 'Create', url: '/create-listing', icon: Plus },
   ]
 
-  // Only show "Profile" for logged in users; if not, don't show anything on right
-  const rightItems = user 
-    ? [{ name: 'Profile', url: '/profile', icon: User }]
-    : []
-
+  // Don't pass any rightItems (Profile now always handled by floating CTA)
   return (
     <>
-      <NavBar leftItems={leftItems} rightItems={rightItems} />
-      {!user && <FloatingSignInButton />}
+      <NavBar leftItems={leftItems} />
+      <FloatingSignInButton />
     </>
   )
 }
-
