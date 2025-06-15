@@ -1,9 +1,10 @@
 
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import {
   motion,
   useMotionValue,
   useTransform,
+  useAnimationFrame,
 } from "framer-motion";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Card, CardContent } from "@/components/ui/card";
@@ -29,6 +30,22 @@ export const FlatCarousel = memo(
       rotation,
       (value) => `rotate3d(0, 1, 0, ${value}deg)`
     );
+
+    // Auto rotation effect
+    useAnimationFrame((time) => {
+      if (isCarouselActive && listings.length > 0) {
+        // Rotate at 0.1 degrees per frame (adjust speed as needed)
+        rotation.set(rotation.get() + 0.1);
+      }
+    });
+
+    // Reset rotation when carousel becomes inactive
+    useEffect(() => {
+      if (!isCarouselActive) {
+        // Optionally stop at current position when user interacts
+        controls.stop();
+      }
+    }, [isCarouselActive, controls]);
 
     return (
       <div
