@@ -1,10 +1,10 @@
-
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Button as NeonButton } from "@/components/ui/neon-button";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { 
@@ -305,14 +305,18 @@ const Index = () => {
               </div>
             )}
 
-            {/* Browse More Button */}
+            {/* Browse More Button with Neon Effect */}
             <div className="text-center mt-8 sm:mt-12">
               <Link to="/browse">
-                <Button className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-bold bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200">
+                <NeonButton 
+                  variant="solid" 
+                  size="lg"
+                  className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-bold shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200"
+                >
                   <Search className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                   Browse All Listings
                   <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
-                </Button>
+                </NeonButton>
               </Link>
             </div>
           </div>
@@ -371,22 +375,28 @@ const Index = () => {
                   </p>
                   {user && profile?.role === 'flat_owner' ? (
                     <Link to="/create-listing">
-                      <Button className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-bold bg-white text-deep-blue hover:bg-gray-100 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200">
+                      <NeonButton 
+                        variant="ghost" 
+                        size="lg"
+                        className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-bold bg-white text-deep-blue hover:bg-gray-100 shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200"
+                      >
                         <UserPlus className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                         <span className="hidden sm:inline">Create Your Listing</span>
                         <span className="sm:hidden">Create Listing</span>
                         <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
-                      </Button>
+                      </NeonButton>
                     </Link>
                   ) : (
-                    <Button 
-                      className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-bold bg-white text-deep-blue hover:bg-gray-100 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200"
+                    <NeonButton 
+                      variant="ghost" 
+                      size="lg"
+                      className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-bold bg-white text-deep-blue hover:bg-gray-100 shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200"
                       onClick={handleCreateListingClick}
                     >
                       <UserPlus className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                       Get Started
                       <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
-                    </Button>
+                    </NeonButton>
                   )}
                 </div>
               </CardContent>
