@@ -2,17 +2,21 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button as NeonButton } from "@/components/ui/neon-button";
-import { UserPlus, ArrowRight } from "lucide-react";
+import { UserPlus, ArrowRight, Trash2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 
 export const CTASection = () => {
-  const { user, profile } = useAuth();
+  const { user, profile, clearAllPendingData } = useAuth();
 
   const handleCreateListingClick = () => {
     if (!user) {
       toast.info("Sign up to create your own flat listing and find the perfect flatmate!");
     }
+  };
+
+  const handleClearPendingData = () => {
+    clearAllPendingData();
   };
 
   return (
@@ -28,31 +32,45 @@ export const CTASection = () => {
               <p className="text-base sm:text-xl mb-6 sm:mb-8 opacity-90 px-4">
                 Join thousands of flat owners who found their perfect flatmates through our platform.
               </p>
-              {user && profile?.role === 'flat_owner' ? (
-                <Link to="/create-listing">
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                {user && profile?.role === 'flat_owner' ? (
+                  <Link to="/create-listing">
+                    <NeonButton 
+                      variant="ghost" 
+                      size="lg"
+                      className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-bold bg-white text-deep-blue hover:bg-gray-100 shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200"
+                    >
+                      <UserPlus className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                      <span className="hidden sm:inline">Create Your Listing</span>
+                      <span className="sm:hidden">Create Listing</span>
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
+                    </NeonButton>
+                  </Link>
+                ) : (
                   <NeonButton 
                     variant="ghost" 
                     size="lg"
                     className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-bold bg-white text-deep-blue hover:bg-gray-100 shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200"
+                    onClick={handleCreateListingClick}
                   >
                     <UserPlus className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
-                    <span className="hidden sm:inline">Create Your Listing</span>
-                    <span className="sm:hidden">Create Listing</span>
+                    Get Started
                     <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
                   </NeonButton>
-                </Link>
-              ) : (
+                )}
+                
+                {/* Emergency clear button for debugging */}
                 <NeonButton 
                   variant="ghost" 
                   size="lg"
-                  className="h-12 sm:h-14 px-6 sm:px-8 text-base sm:text-lg font-bold bg-white text-deep-blue hover:bg-gray-100 shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200"
-                  onClick={handleCreateListingClick}
+                  className="h-12 sm:h-14 px-4 sm:px-6 text-sm sm:text-base font-bold bg-red-500 text-white hover:bg-red-600 shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200"
+                  onClick={handleClearPendingData}
                 >
-                  <UserPlus className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
-                  Get Started
-                  <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
+                  <Trash2 className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                  Clear Data
                 </NeonButton>
-              )}
+              </div>
             </div>
           </CardContent>
         </Card>

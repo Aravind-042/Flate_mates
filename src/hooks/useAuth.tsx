@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import type { Database } from "@/integrations/supabase/types";
 import type { FlatListing } from "@/types/flat";
+import { clearPendingListingData, clearAllAppData } from "@/utils/storageUtils";
 
 // --- Profile types
 type UserRole = Database["public"]["Enums"]["user_role"];
@@ -104,8 +104,8 @@ export const useAuth = () => {
       
       // Validate the data before attempting to submit
       if (!validateListingData(listingData)) {
-        console.error('Pending listing data is invalid, removing from localStorage');
-        localStorage.removeItem('pendingListingData');
+        console.error('Pending listing data is invalid, clearing localStorage');
+        clearPendingListingData();
         toast.error("Invalid listing data found. Please create your listing again.");
         return;
       }
@@ -144,27 +144,39 @@ export const useAuth = () => {
 
       if (error) {
         console.error('Error publishing pending listing:', error);
-        // Remove invalid data to prevent retry loops
-        localStorage.removeItem('pendingListingData');
+        clearPendingListingData();
         toast.error("Failed to publish your listing: " + error.message);
         return;
       }
 
       console.log('Listing published successfully:', data);
-      localStorage.removeItem('pendingListingData');
+      clearPendingListingData();
       toast.success("Your listing has been published successfully!");
       setTimeout(() => navigate('/profile'), 2000);
     } catch (error) {
       console.error('Error in publishPendingListing:', error);
-      // Remove data that caused the error to prevent retry loops
-      localStorage.removeItem('pendingListingData');
+      clearPendingListingData();
       toast.error("Failed to publish your listing. Please try creating it again.");
     } finally {
       setIsPublishingPending(false);
     }
   };
 
+  // Manual cleanup function
+  const clearAllPendingData = () => {
+    const cleared = clearAllAppData();
+    if (cleared) {
+      toast.success("All pending data has been cleared");
+    } else {
+      toast.error("Failed to clear pending data");
+    }
+    return cleared;
+  };
+
   useEffect(() => {
+    // Clear any pending data on component mount to prevent issues
+    clearPendingListingData();
+    
     // --- Set up Sync and Robust Auth Event Handling
 
     // 1. Auth state listener - MUST be fully synchronous
@@ -228,6 +240,7 @@ export const useAuth = () => {
     profile,
     loading,
     signOut,
-    isAuthenticated: !!user
+    isAuthenticated: !!user,
+    clearAllPendingData
   };
 };
