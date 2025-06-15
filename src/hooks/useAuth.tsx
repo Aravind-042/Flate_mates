@@ -186,15 +186,11 @@ export const useAuth = () => {
   };
 
   useEffect(() => {
-    // Clear any pending data on component mount to prevent issues
     clearPendingListingData();
-    
     // Set up auth state listener - must be synchronous
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.id);
-        
-        // Only synchronous state updates here!
+        console.log('Auth state changed:', event, session?.user?.id, session);
         setSession(session);
         setUser(session?.user ?? null);
 
@@ -210,7 +206,6 @@ export const useAuth = () => {
         } else {
           setProfile(null);
         }
-
         setLoading(false);
       }
     );
@@ -220,7 +215,7 @@ export const useAuth = () => {
       if (error) {
         console.error('Error getting session:', error);
       }
-      console.log('Initial session check:', session?.user?.id);
+      console.log('Initial session check:', session?.user?.id, session);
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
@@ -234,13 +229,18 @@ export const useAuth = () => {
     };
   }, []);
 
+  // Updated signOut logic: forcibly clear all tokens and reload
   const signOut = async () => {
     try {
       await supabase.auth.signOut();
+      // Force clear all session data in localStorage & cookies for extra safety
+      localStorage.clear();
+      sessionStorage.clear();
       setProfile(null);
       setUser(null);
       setSession(null);
-      navigate("/");
+      // Force a reload to ensure state is correct everywhere
+      window.location.replace("/");
     } catch (error) {
       console.error('Error signing out:', error);
     }
