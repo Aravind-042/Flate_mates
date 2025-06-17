@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { FlatListing } from "@/types/flat";
 import { ArrowLeft, Save } from "lucide-react";
+import { savePendingListingData } from "@/utils/storageUtils";
 
 interface PreviewSectionProps {
   listingData: FlatListing;
@@ -95,9 +96,15 @@ export const PreviewSection = ({ listingData, onBack, onNext, userId }: PreviewS
       }
 
       if (!userId) {
-        // For non-authenticated users, validate before saving to localStorage
+        // For non-authenticated users, use the new safe storage method
         console.log('Saving validated listing data for non-authenticated user');
-        localStorage.setItem('pendingListingData', JSON.stringify(listingData));
+        const saveResult = savePendingListingData(listingData);
+        
+        if (!saveResult.success) {
+          toast.error(saveResult.error || "Failed to save listing data");
+          return;
+        }
+        
         toast.success("Listing details saved! Please sign up to publish.");
         onNext(); // Move to signup step
         return;

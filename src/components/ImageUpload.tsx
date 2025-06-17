@@ -2,7 +2,9 @@
 import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Upload, X, Image } from "lucide-react";
+import { Upload, X, Image, AlertTriangle } from "lucide-react";
+import { compressImage, getTotalImagesSize } from "@/utils/imageUtils";
+import { toast } from "sonner";
 
 interface ImageUploadProps {
   images: string[];
@@ -12,25 +14,60 @@ interface ImageUploadProps {
 export const ImageUpload = ({ images, onChange }: ImageUploadProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleFileSelect = (files: FileList | null) => {
+  const handleFileSelect = async (files: FileList | null) => {
     if (!files) return;
 
+    setIsProcessing(true);
     const newImages: string[] = [];
-    Array.from(files).forEach((file) => {
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          if (e.target?.result) {
-            newImages.push(e.target.result as string);
-            if (newImages.length === files.length) {
-              onChange([...images, ...newImages]);
-            }
+    
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.type.startsWith('image/')) {
+          // Check file size before processing
+          const fileSizeMB = file.size / (1024 * 1024);
+          
+          let dataUrl: string;
+          if (fileSizeMB > 2) {
+            // Compress large images
+            console.log(`Compressing large image (${fileSizeMB.toFixed(1)}MB)`);
+            dataUrl = await compressImage(file, 800, 0.7);
+          } else {
+            // Use original for smaller images
+            dataUrl = await new Promise<string>((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = (e) => resolve(e.target?.result as string);
+              reader.onerror = reject;
+              reader.readAsDataURL(file);
+            });
           }
-        };
-        reader.readAsDataURL(file);
+          
+          newImages.push(dataUrl);
+        }
       }
-    });
+
+      // Check total size before adding
+      const updatedImages = [...images, ...newImages];
+      const totalSize = getTotalImagesSize(updatedImages);
+      
+      if (totalSize > 4) {
+        toast.error(`Images too large (${totalSize.toFixed(1)}MB). Please reduce image sizes or remove some images.`);
+        return;
+      }
+
+      onChange(updatedImages);
+      
+      if (newImages.length > 0) {
+        toast.success(`Added ${newImages.length} image(s) (${totalSize.toFixed(1)}MB total)`);
+      }
+    } catch (error) {
+      console.error('Error processing images:', error);
+      toast.error("Failed to process some images. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -52,18 +89,35 @@ export const ImageUpload = ({ images, onChange }: ImageUploadProps) => {
   const removeImage = (index: number) => {
     const newImages = images.filter((_, i) => i !== index);
     onChange(newImages);
+    toast.success("Image removed");
   };
+
+  const totalSizeMB = getTotalImagesSize(images);
+  const isNearLimit = totalSizeMB > 3;
 
   return (
     <div className="space-y-4">
+      {/* Storage usage indicator */}
+      {images.length > 0 && (
+        <div className={`text-sm p-2 rounded flex items-center space-x-2 ${
+          isNearLimit ? 'bg-orange-50 text-orange-700' : 'bg-gray-50 text-gray-600'
+        }`}>
+          {isNearLimit && <AlertTriangle className="h-4 w-4" />}
+          <span>
+            Storage used: {totalSizeMB.toFixed(1)}MB / 4MB limit
+            {isNearLimit && " (near limit)"}
+          </span>
+        </div>
+      )}
+
       <Card
         className={`border-2 border-dashed p-6 text-center cursor-pointer transition-colors ${
           dragOver ? 'border-blue-400 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
-        }`}
+        } ${isProcessing ? 'opacity-50 pointer-events-none' : ''}`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        onClick={() => fileInputRef.current?.click()}
+        onClick={() => !isProcessing && fileInputRef.current?.click()}
       >
         <input
           ref={fileInputRef}
@@ -72,16 +126,28 @@ export const ImageUpload = ({ images, onChange }: ImageUploadProps) => {
           accept="image/*"
           className="hidden"
           onChange={(e) => handleFileSelect(e.target.files)}
+          disabled={isProcessing}
         />
         <div className="space-y-2">
-          <Upload className="h-8 w-8 mx-auto text-gray-400" />
-          <div>
-            <p className="text-gray-600">Click to upload or drag and drop</p>
-            <p className="text-sm text-gray-400">PNG, JPG, JPEG up to 10MB each</p>
-          </div>
-          <Button type="button" variant="outline" size="sm">
-            Select Images
-          </Button>
+          {isProcessing ? (
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-6 h-6 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
+              <span>Processing images...</span>
+            </div>
+          ) : (
+            <>
+              <Upload className="h-8 w-8 mx-auto text-gray-400" />
+              <div>
+                <p className="text-gray-600">Click to upload or drag and drop</p>
+                <p className="text-sm text-gray-400">
+                  PNG, JPG, JPEG (Large images will be compressed automatically)
+                </p>
+              </div>
+              <Button type="button" variant="outline" size="sm" disabled={isProcessing}>
+                Select Images
+              </Button>
+            </>
+          )}
         </div>
       </Card>
 

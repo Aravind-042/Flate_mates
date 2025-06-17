@@ -1,10 +1,11 @@
+
 import { useEffect, useState } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import type { FlatListing } from "@/types/flat";
-import { clearPendingListingData, clearAllAppData } from "@/utils/storageUtils";
+import { clearPendingListingData, clearAllAppData, getPendingListingData } from "@/utils/storageUtils";
 
 // --- Profile types
 interface Profile {
@@ -105,14 +106,13 @@ export const useAuth = () => {
 
     try {
       setIsPublishingPending(true);
-      const pendingData = localStorage.getItem('pendingListingData');
-      if (!pendingData) {
+      const listingData = getPendingListingData();
+      if (!listingData) {
         console.log('No pending listing data found');
         return;
       }
 
-      console.log('Found pending listing data, attempting to parse...');
-      const listingData: FlatListing = JSON.parse(pendingData);
+      console.log('Found pending listing data, validating...');
       
       // Validate the data before attempting to submit
       if (!validateListingData(listingData)) {
