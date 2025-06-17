@@ -89,7 +89,7 @@ export const ListingCard = ({
           </div>
 
           {/* DEBUG: Heart/Favorite Button */}
-          <button data-debug-heart className="absolute top-4 right-4 z-[1000] bg-white/90 backdrop-blur-md hover:bg-white/95 rounded-full p-4 shadow-lg transition-all duration-200 hover:scale-110 flex items-center justify-center border-4 border-red-500"
+          <button data-debug-heart
         // add direct inline log and all pointer events for debugging interactiveness
         onClick={e => {
           console.log("INLINE onClick fired for listing:", listing.id);
@@ -102,7 +102,7 @@ export const ListingCard = ({
           console.log("onMouseOver [favorite] listing.id", listing.id, e);
         }} type="button" title="Save to favorites" style={{
           background: "rgba(255,255,255,0.98)"
-        }}>
+        }} className="absolute top-4 right-4 z-[1000] bg-white/90 backdrop-blur-md hover:bg-white/95 rounded-full p-4 shadow-lg transition-all duration-200 hover:scale-110 flex items-center justify-center border-4 border-red-500 py-[6px] px-[6px]">
             
             <Heart className="h-7 w-7 text-coral-500 hover:fill-coral-500 transition-colors" />
           </button>
