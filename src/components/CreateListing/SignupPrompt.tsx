@@ -15,7 +15,7 @@ export const SignupPrompt = ({ onBack }: SignupPromptProps) => {
 
   return (
     // Full height flex container to ensure vertical/horizontal centering always.
-    <div className="flex min-h-[70vh] h-[70vh] w-full items-center justify-center">
+    <div className="flex min-h-screen w-full flex-col items-center justify-center px-4 py-12">
       <Card className="w-full max-w-lg glass-card flex flex-col rounded-2xl shadow-2xl justify-center items-center">
         <CardHeader className="text-center">
           <div className="mx-auto w-16 h-16 bg-gradient-to-r from-deep-blue to-orange rounded-full flex items-center justify-center mb-4">
