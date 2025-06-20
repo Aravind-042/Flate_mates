@@ -1,26 +1,27 @@
 
-import { User } from "lucide-react";
-
 interface FormHeaderProps {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   icon?: React.ReactNode;
 }
 
 export const FormHeader = ({ title, subtitle, icon }: FormHeaderProps) => {
   return (
-    <div className="text-center space-y-6">
-      <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-deep-blue to-orange blur-2xl opacity-30 rounded-full animate-pulse"></div>
-        <div className="relative bg-gradient-to-r from-deep-blue to-orange p-5 rounded-3xl shadow-2xl inline-block">
-          {icon || <User className="h-12 w-12 text-white" />}
+    <div className="text-center space-y-4 mb-8">
+      <div className="flex justify-center">
+        <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+          <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+            <div className="w-4 h-4 bg-purple-500 rounded-sm transform rotate-45"></div>
+          </div>
         </div>
       </div>
-      <div className="space-y-3">
-        <h1 className="text-5xl font-bold bg-gradient-to-r from-deep-blue via-orange to-emerald bg-clip-text text-transparent">
+      <div className="space-y-2">
+        <h1 className="text-2xl font-semibold text-gray-800">
           {title}
         </h1>
-        <p className="text-xl text-charcoal font-medium">{subtitle}</p>
+        {subtitle && (
+          <p className="text-gray-600 text-sm">{subtitle}</p>
+        )}
       </div>
     </div>
   );

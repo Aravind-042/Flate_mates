@@ -8,9 +8,6 @@ interface AuthDialogProps {
   signupRoleIntent?: "flat_owner" | "flat_seeker";
 }
 
-/**
- * AuthDialog: Improved responsive modal with better mobile experience
- */
 export function AuthDialog({ open, onOpenChange, signupRoleIntent }: AuthDialogProps) {
   const handleAuthSuccess = () => {
     onOpenChange(false);
@@ -24,11 +21,11 @@ export function AuthDialog({ open, onOpenChange, signupRoleIntent }: AuthDialogP
           overflow: "hidden"
         }}
       >
-        <div className="w-full max-w-[95vw] sm:max-w-md lg:max-w-lg max-h-[95vh] rounded-2xl bg-white/95 shadow-2xl flex flex-col items-center overflow-hidden mx-4">
-          <div className="w-full flex-1 p-4 sm:p-6 lg:p-8 flex flex-col overflow-y-auto scrollbar-none"
+        <div className="w-full max-w-[95vw] sm:max-w-md max-h-[95vh] flex flex-col items-center overflow-hidden mx-4">
+          <div className="w-full flex-1 flex flex-col overflow-y-auto scrollbar-none"
             style={{
               maxHeight: '95vh',
-              minHeight: "300px",
+              minHeight: "400px",
             }}
           >
             <AuthPage 

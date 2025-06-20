@@ -13,10 +13,9 @@ export const AuthModeSwitch = ({ onSwitch, text, linkText }: AuthModeSwitchProps
       <Button 
         variant="ghost" 
         onClick={onSwitch}
-        className="text-charcoal hover:text-deep-blue font-semibold text-lg hover:bg-transparent focus:bg-transparent active:bg-transparent transition-none"
-        style={{ background: "none" }}
+        className="text-gray-600 hover:text-gray-800 font-medium text-sm hover:bg-transparent transition-colors"
       >
-        {text} <span className="text-deep-blue ml-2 underline">{linkText}</span>
+        {text} <span className="text-purple-600 ml-1 underline">{linkText}</span>
       </Button>
     </div>
   );

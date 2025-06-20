@@ -6,8 +6,8 @@ import { Eye, EyeOff } from "lucide-react";
 
 interface FormFieldProps {
   id: string;
-  label: string;
-  icon: React.ReactNode;
+  label?: string;
+  icon?: React.ReactNode;
   placeholder: string;
   value: string;
   onChange: (value: string) => void;
@@ -30,11 +30,12 @@ export const FormField = ({
   onTogglePassword
 }: FormFieldProps) => {
   return (
-    <div className="space-y-4">
-      <Label htmlFor={id} className="text-charcoal font-semibold text-lg flex items-center gap-2">
-        {icon}
-        {label}
-      </Label>
+    <div className="space-y-2">
+      {label && (
+        <Label htmlFor={id} className="text-gray-700 font-medium text-sm">
+          {label}
+        </Label>
+      )}
       <div className="relative">
         <Input
           id={id}
@@ -42,7 +43,7 @@ export const FormField = ({
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="h-16 text-lg border-2 border-light-slate focus:border-deep-blue focus:ring-deep-blue rounded-2xl bg-white/90 backdrop-blur-sm shadow-lg transition-all duration-200 hover:shadow-xl"
+          className="h-14 text-base border-0 bg-gray-100/80 focus:bg-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent rounded-2xl transition-all duration-200"
           style={showPasswordToggle ? { paddingRight: '3.5rem' } : {}}
         />
         {showPasswordToggle && onTogglePassword && (
@@ -51,12 +52,12 @@ export const FormField = ({
             variant="ghost"
             size="sm"
             onClick={onTogglePassword}
-            className="absolute right-4 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-slate-100 rounded-full"
+            className="absolute right-4 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
           >
             {showPassword ? (
-              <EyeOff className="h-5 w-5 text-slate-500" />
+              <EyeOff className="h-5 w-5 text-gray-400" />
             ) : (
-              <Eye className="h-5 w-5 text-slate-500" />
+              <Eye className="h-5 w-5 text-gray-400" />
             )}
           </Button>
         )}
