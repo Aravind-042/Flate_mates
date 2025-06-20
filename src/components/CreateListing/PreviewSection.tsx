@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,7 @@ import { toast } from "sonner";
 import type { FlatListing } from "@/types/flat";
 import { ArrowLeft, Save } from "lucide-react";
 import { savePendingListingData } from "@/utils/storageUtils";
+import { TextShimmer } from "@/components/ui/text-shimmer";
 
 interface PreviewSectionProps {
   listingData: FlatListing;
@@ -148,10 +148,12 @@ export const PreviewSection = ({ listingData, onBack, onNext, userId }: PreviewS
               className="flex-1 bg-gradient-to-r from-deep-blue to-orange hover:from-darker-blue hover:to-orange-darker text-white rounded-xl disabled:opacity-50"
             >
               {isSubmitting ? (
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  <span>Saving...</span>
-                </div>
+                <TextShimmer 
+                  className="text-white font-semibold"
+                  duration={1.2}
+                >
+                  Publishing your listing...
+                </TextShimmer>
               ) : !userId ? (
                 <div className="flex items-center space-x-2">
                   <Save className="h-4 w-4" />
