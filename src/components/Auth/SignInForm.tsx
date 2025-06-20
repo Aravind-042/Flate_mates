@@ -43,12 +43,7 @@ export const SignInForm = ({
           </Button>
         </div>
 
-        <div className="relative flex items-center justify-center my-6">
-          
-          <div className="relative bg-white px-4">
-            <span className="text-gray-400 text-sm font-medium">OR</span>
-          </div>
-        </div>
+        
 
         
 
