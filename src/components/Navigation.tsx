@@ -14,15 +14,20 @@ import {
 } from "lucide-react";
 
 export const Navigation = () => {
-  const { user, profile } = useAuth();
+  const { user, signOut, profile } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate("/");
+    try {
+      await signOut(); // from useAuth
+      navigate("/");   // redirect after logout
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
+  
 
   const navItems = [
     { to: "/", label: "Home", icon: Home },

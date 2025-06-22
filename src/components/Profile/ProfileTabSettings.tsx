@@ -1,7 +1,7 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { LogoutButton } from "../Auth/LogoutButton";
 
 interface ProfileTabSettingsProps {
   user: { email?: string | null };
@@ -26,6 +26,7 @@ export const ProfileTabSettings: React.FC<ProfileTabSettingsProps> = ({ user }) 
               Change Email
             </Button>
           </div>
+
           <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
             <div>
               <h4 className="font-semibold text-slate-800">Password</h4>
@@ -35,14 +36,21 @@ export const ProfileTabSettings: React.FC<ProfileTabSettingsProps> = ({ user }) 
               Change Password
             </Button>
           </div>
+
+          {/* Logout + Delete Buttons */}
           <div className="pt-6 border-t border-slate-200">
-            <Button variant="destructive" className="w-full rounded-xl">
-              Delete Account
-            </Button>
+            <div className="flex justify-center gap-4 mt-6 px-4">
+              <LogoutButton />
+              <Button
+                variant="destructive"
+                className="w-1/2 max-w-[200px] rounded-lg px-4 py-2 font-medium"
+              >
+                Delete Account
+              </Button>
+            </div>
           </div>
         </div>
       </CardContent>
     </Card>
   );
 };
-

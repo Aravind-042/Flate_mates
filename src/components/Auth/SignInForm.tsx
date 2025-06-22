@@ -29,9 +29,9 @@ export const SignInForm = ({
       <FormHeader title="Welcome back!" />
 
       <div className="space-y-4">
-        <FormField id="email" placeholder="aravindkallam12@gmail.com" value={email} onChange={setEmail} type="email" />
+        <FormField id="email" placeholder="Enter your mail address" value={email} onChange={setEmail} type="email" />
 
-        <FormField id="password" placeholder="••••••••••••" value={password} onChange={setPassword} type="password" showPasswordToggle={true} showPassword={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} />
+        <FormField id="password" placeholder="Enter your password" value={password} onChange={setPassword} type="password" showPasswordToggle={true} showPassword={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} />
 
         <SubmitButton isLoading={isLoading} onClick={handleSignIn} loadingText="Signing In...">
           Log in

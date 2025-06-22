@@ -63,7 +63,7 @@ export const MainListingLayout = ({
       </div>
       
       {/* Right: Live Preview - Hidden during signup step, shows above form on mobile */}
-      {currentStep !== 'signup' && (
+      {currentStep === 'form' && (
         <div className="xl:sticky xl:top-8 h-full min-h-[300px] sm:min-h-[350px] flex flex-col w-full max-w-full order-1 xl:order-2">
           <Card className="glass-card flex flex-col h-full min-h-[300px] sm:min-h-[350px]">
             <CardHeader className="pb-3 sm:pb-4">
