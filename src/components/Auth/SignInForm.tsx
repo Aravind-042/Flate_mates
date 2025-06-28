@@ -3,7 +3,6 @@ import { FormHeader } from "./FormHeader";
 import { FormField } from "./FormField";
 import { SubmitButton } from "./SubmitButton";
 import { AuthModeSwitch } from "./AuthModeSwitch";
-import { Button } from "@/components/ui/button";
 import { useSignin } from "@/hooks/useSignin";
 
 interface SignInFormProps {
@@ -71,15 +70,14 @@ export const SignInForm = ({
         </SubmitButton>
 
         <div className="text-center">
-          <Button 
-            variant="ghost" 
+          <button
             onClick={onSwitchToForgotPassword}
-            className="btn-ghost text-slate-600 hover:text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="text-blue-600 hover:text-blue-700 underline hover:no-underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded transition-colors duration-200 font-medium text-sm"
             aria-label="Reset your password"
             tabIndex={0}
           >
             Forgot password?
-          </Button>
+          </button>
         </div>
 
         <AuthModeSwitch

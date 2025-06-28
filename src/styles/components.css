@@ -124,13 +124,13 @@
     @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset;
   }
 
-  /* Clickable link styles */
-  .link-primary {
-    @apply text-blue-600 hover:text-blue-700 underline focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200;
+  /* Clickable link styles for auth pages */
+  .auth-link {
+    @apply text-blue-600 hover:text-blue-700 underline hover:no-underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded transition-colors duration-200 font-medium;
   }
 
-  .link-secondary {
-    @apply text-slate-600 hover:text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200;
+  .auth-link-small {
+    @apply text-blue-600 hover:text-blue-700 underline hover:no-underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded transition-colors duration-200 font-medium text-sm;
   }
 
   /* Custom scrollbar for carousel thumbnails */

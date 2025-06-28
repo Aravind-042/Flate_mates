@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-
 interface AuthModeSwitchProps {
   onSwitch: () => void;
   text: string;
@@ -9,15 +7,17 @@ interface AuthModeSwitchProps {
 export const AuthModeSwitch = ({ onSwitch, text, linkText }: AuthModeSwitchProps) => {
   return (
     <div className="text-center pt-4">
-      <Button 
-        variant="ghost" 
-        onClick={onSwitch}
-        className="btn-ghost text-slate-600 hover:text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
-        aria-label={`${text} ${linkText}`}
-        tabIndex={0}
-      >
-        {text} <span className="text-blue-600 ml-1 underline hover:text-blue-700 transition-colors duration-200">{linkText}</span>
-      </Button>
+      <p className="text-slate-600">
+        {text}{" "}
+        <button
+          onClick={onSwitch}
+          className="text-blue-600 hover:text-blue-700 underline hover:no-underline focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded transition-colors duration-200 font-medium"
+          aria-label={`${text} ${linkText}`}
+          tabIndex={0}
+        >
+          {linkText}
+        </button>
+      </p>
     </div>
   );
 };
