@@ -185,6 +185,15 @@
   .hover\:scale-105:hover {
     transform: scale(1.05);
   }
+
+  /* Guest mode button specific styles */
+  .guest-mode-glow {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3), 0 0 40px rgba(16, 185, 129, 0.1);
+  }
+
+  .guest-mode-glow:hover {
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.4), 0 0 60px rgba(16, 185, 129, 0.2);
+  }
 }
 
 /* Dark mode variants */

@@ -43,6 +43,10 @@ function App() {
           <BrowserRouter>
             <DatabaseSetup />
             <Routes>
+              {/* Auth page without layout (no navigation) */}
+              <Route path="/auth" element={<AuthPage />} />
+              
+              {/* All other pages with layout */}
               <Route path="/" element={<Layout />}>
                 <Route index element={<Index />} />
                 <Route path="about" element={<About />} />
@@ -54,7 +58,6 @@ function App() {
                   </ProtectedRoute>
                 } />
                 <Route path="create-listing" element={<CreateListing />} />
-                <Route path="auth" element={<AuthPage />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
             </Routes>
