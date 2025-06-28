@@ -1,4 +1,4 @@
-import { ImageUploadManager } from "./ImageUpload/ImageUploadManager";
+import { ImageUploadWithCarousel } from "./ImageUpload/ImageUploadWithCarousel";
 
 interface ImageUploadProps {
   images: string[];
@@ -7,7 +7,7 @@ interface ImageUploadProps {
 
 export const ImageUpload = ({ images, onChange }: ImageUploadProps) => {
   return (
-    <ImageUploadManager
+    <ImageUploadWithCarousel
       images={images}
       onChange={onChange}
       maxImages={10}
