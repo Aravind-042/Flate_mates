@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -12,18 +11,48 @@ import { ProfileTabListings } from "@/components/Profile/ProfileTabListings";
 import { ProfileTabSettings } from "@/components/Profile/ProfileTabSettings";
 
 const Profile = () => {
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   const [profileData, setProfileData] = useState({
-    full_name: profile?.full_name || '',
-    phone_number: profile?.phone_number || '',
-    city: profile?.city || '',
-    bio: profile?.bio || '',
-    age: profile?.age || '',
-    profession: profile?.profession || ''
+    full_name: "",
+    phone_number: "",
+    city: "",
+    bio: "",
+    age: "",
+    profession: "",
+    profile_picture_url: "",
   });
+
+  const fetchProfile = async () => {
+    if (!user?.id) return;
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    if (error) {
+      toast.error("Failed to load profile");
+      return;
+    }
+
+    setProfileData({
+      full_name: data.full_name || "",
+      phone_number: data.phone_number || "",
+      city: data.city || "",
+      bio: data.bio || "",
+      age: data.age || "",
+      profession: data.profession || "",
+      profile_picture_url: data.profile_picture_url || "",
+    });
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, [user?.id]);
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,14 +60,18 @@ const Profile = () => {
 
     try {
       const updateData = {
-        ...profileData,
-        age: profileData.age ? parseInt(profileData.age.toString()) : null
+        full_name: profileData.full_name,
+        phone_number: profileData.phone_number,
+        city: profileData.city,
+        bio: profileData.bio,
+        age: profileData.age ? parseInt(profileData.age.toString()) : null,
+        profession: profileData.profession,
       };
 
       const { error } = await supabase
-        .from('profiles')
+        .from("profiles")
         .update(updateData)
-        .eq('id', user?.id);
+        .eq("id", user?.id);
 
       if (error) throw error;
 
@@ -53,11 +86,10 @@ const Profile = () => {
   return (
     <div className="min-h-screen py-4 px-2 sm:px-4">
       <div className="max-w-4xl mx-auto">
-        {/* Animated Profile Header with Avatar */}
         <ProfileHeader
-          fullName={profile?.full_name || ""}
+          fullName={profileData.full_name}
           email={user?.email || ""}
-          avatarUrl={profile?.profile_picture_url}
+          avatarUrl={profileData.profile_picture_url}
         />
 
         <Tabs defaultValue="profile" className="space-y-6">
