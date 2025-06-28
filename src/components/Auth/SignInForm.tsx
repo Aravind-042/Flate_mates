@@ -8,11 +8,13 @@ import { useSignin } from "@/hooks/useSignin";
 
 interface SignInFormProps {
   onSwitchToSignUp: () => void;
+  onSwitchToForgotPassword: () => void;
   onSuccess?: () => void;
 }
 
 export const SignInForm = ({
   onSwitchToSignUp,
+  onSwitchToForgotPassword,
   onSuccess
 }: SignInFormProps) => {
   const [email, setEmail] = useState('');
@@ -25,6 +27,12 @@ export const SignInForm = ({
     await signIn(email, password);
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !isLoading) {
+      handleSignIn();
+    }
+  };
+
   return (
     <div className="space-y-6">
       <FormHeader 
@@ -32,7 +40,7 @@ export const SignInForm = ({
         subtitle="Sign in to your account to continue"
       />
 
-      <div className="space-y-4">
+      <div className="space-y-4" onKeyPress={handleKeyPress}>
         <FormField
           id="email"
           label="Email Address"
@@ -63,7 +71,13 @@ export const SignInForm = ({
         </SubmitButton>
 
         <div className="text-center">
-          <Button variant="ghost" className="btn-ghost text-slate-600 hover:text-blue-600">
+          <Button 
+            variant="ghost" 
+            onClick={onSwitchToForgotPassword}
+            className="btn-ghost text-slate-600 hover:text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            aria-label="Reset your password"
+            tabIndex={0}
+          >
             Forgot password?
           </Button>
         </div>

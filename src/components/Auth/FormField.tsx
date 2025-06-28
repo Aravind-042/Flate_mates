@@ -29,7 +29,10 @@ export const FormField = ({
   return (
     <div className="space-y-2">
       {label && (
-        <Label htmlFor={id} className="text-slate-700 font-medium">
+        <Label 
+          htmlFor={id} 
+          className="text-slate-700 font-medium"
+        >
           {label}
         </Label>
       )}
@@ -40,7 +43,9 @@ export const FormField = ({
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="input-primary"
+          className="input-primary focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          aria-describedby={label ? `${id}-label` : undefined}
+          autoComplete={type === "email" ? "email" : type === "password" ? "current-password" : "off"}
         />
         {showPasswordToggle && onTogglePassword && (
           <Button
@@ -48,7 +53,9 @@ export const FormField = ({
             variant="ghost"
             size="sm"
             onClick={onTogglePassword}
-            className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-slate-100"
+            className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-slate-100 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            tabIndex={0}
           >
             {showPassword ? (
               <EyeOff className="h-4 w-4 text-slate-400" />

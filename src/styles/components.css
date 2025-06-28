@@ -1,4 +1,3 @@
-
 @layer components {
   /* Enhanced color utilities */
   .text-deep-blue { color: hsl(var(--deep-blue)); }
@@ -114,6 +113,24 @@
 
   .to-pink-500 {
     --tw-gradient-to: rgb(236 72 153);
+  }
+
+  /* Enhanced focus states for accessibility */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  }
+
+  .focus-ring-inset {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset;
+  }
+
+  /* Clickable link styles */
+  .link-primary {
+    @apply text-blue-600 hover:text-blue-700 underline focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200;
+  }
+
+  .link-secondary {
+    @apply text-slate-600 hover:text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200;
   }
 }
 

@@ -13,7 +13,9 @@ export const SubmitButton = ({ isLoading, onClick, children, loadingText }: Subm
     <Button 
       onClick={onClick}
       disabled={isLoading}
-      className="btn-primary w-full"
+      className="btn-primary w-full focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      aria-label={isLoading ? loadingText : children?.toString()}
+      tabIndex={0}
     >
       {isLoading ? (
         <TextShimmer 
