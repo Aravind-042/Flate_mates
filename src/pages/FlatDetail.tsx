@@ -8,14 +8,27 @@ import { PropertyDescription } from "@/components/FlatDetail/PropertyDescription
 import { PropertyHighlights } from "@/components/FlatDetail/PropertyHighlights";
 import { PropertyAmenities } from "@/components/FlatDetail/PropertyAmenities";
 import { PropertyTrustIndicators } from "@/components/FlatDetail/PropertyTrustIndicators";
-import { useListing } from "@/hooks/queries/useListings";
+import { useListing, usePrefetchOwnerListings } from "@/hooks/queries/useListings";
 import { ListingService } from "@/services/listingService";
+import { useEffect } from "react";
 
 const FlatDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const { data: listing, isLoading, error } = useListing(id!);
+  // Optimized data fetching with prefetching
+  const { data: listing, isLoading, error } = useListing(id!, {
+    enabled: !!id
+  });
+  
+  const prefetchOwnerListings = usePrefetchOwnerListings();
+
+  // Prefetch owner's other listings for better UX
+  useEffect(() => {
+    if (listing?.owner_id) {
+      prefetchOwnerListings(listing.owner_id);
+    }
+  }, [listing?.owner_id, prefetchOwnerListings]);
 
   if (error) {
     return (

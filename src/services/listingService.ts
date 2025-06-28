@@ -13,43 +13,91 @@ export interface ListingWithLocation extends ListingRow {
   };
 }
 
+// Cache for frequently accessed data
+const cache = new Map<string, { data: any; timestamp: number; ttl: number }>();
+
+const getCachedData = (key: string) => {
+  const cached = cache.get(key);
+  if (cached && Date.now() - cached.timestamp < cached.ttl) {
+    return cached.data;
+  }
+  cache.delete(key);
+  return null;
+};
+
+const setCachedData = (key: string, data: any, ttl: number = 5 * 60 * 1000) => {
+  cache.set(key, { data, timestamp: Date.now(), ttl });
+};
+
 export class ListingService {
-  /**
-   * Fetch all active listings with location data
-   */
-  static async getActiveListings(): Promise<ListingWithLocation[]> {
-    const { data, error } = await supabase
+  // Optimized base query with consistent select fields
+  private static getBaseQuery() {
+    return supabase
       .from('flat_listings')
       .select(`
-        *,
+        id,
+        title,
+        description,
+        property_type,
+        bedrooms,
+        bathrooms,
+        monthly_rent,
+        security_deposit,
+        is_furnished,
+        parking_available,
+        amenities,
+        address_line1,
+        address_line2,
+        images,
+        owner_id,
+        created_at,
+        updated_at,
+        status,
+        preferred_gender,
+        preferred_professions,
+        lifestyle_preferences,
+        contact_phone,
+        contact_whatsapp,
+        contact_email,
+        rent_includes,
         locations (
           city,
           area
         )
-      `)
+      `);
+  }
+
+  /**
+   * Fetch all active listings with optimized query
+   */
+  static async getActiveListings(): Promise<ListingWithLocation[]> {
+    const cacheKey = 'active_listings';
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    const { data, error } = await this.getBaseQuery()
       .eq('status', 'active')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .limit(100); // Reasonable limit to prevent large payloads
 
     if (error) {
       throw new Error(`Failed to fetch listings: ${error.message}`);
     }
 
-    return data || [];
+    const result = data || [];
+    setCachedData(cacheKey, result, 10 * 60 * 1000); // 10 minute cache
+    return result;
   }
 
   /**
-   * Fetch a single listing by ID
+   * Fetch a single listing by ID with caching
    */
   static async getListingById(id: string): Promise<ListingWithLocation | null> {
-    const { data, error } = await supabase
-      .from('flat_listings')
-      .select(`
-        *,
-        locations (
-          city,
-          area
-        )
-      `)
+    const cacheKey = `listing_${id}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    const { data, error } = await this.getBaseQuery()
       .eq('id', id)
       .eq('status', 'active')
       .maybeSingle();
@@ -58,6 +106,7 @@ export class ListingService {
       throw new Error(`Failed to fetch listing: ${error.message}`);
     }
 
+    setCachedData(cacheKey, data, 30 * 60 * 1000); // 30 minute cache
     return data;
   }
 
@@ -65,15 +114,11 @@ export class ListingService {
    * Fetch listings by owner ID
    */
   static async getListingsByOwner(ownerId: string): Promise<ListingWithLocation[]> {
-    const { data, error } = await supabase
-      .from('flat_listings')
-      .select(`
-        *,
-        locations (
-          city,
-          area
-        )
-      `)
+    const cacheKey = `owner_listings_${ownerId}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    const { data, error } = await this.getBaseQuery()
       .eq('owner_id', ownerId)
       .order('created_at', { ascending: false });
 
@@ -81,67 +126,58 @@ export class ListingService {
       throw new Error(`Failed to fetch owner listings: ${error.message}`);
     }
 
-    return data || [];
+    const result = data || [];
+    setCachedData(cacheKey, result, 5 * 60 * 1000); // 5 minute cache
+    return result;
   }
 
   /**
-   * Create a new listing
+   * Get featured listings with caching
    */
-  static async createListing(listingData: ListingInsert): Promise<ListingRow> {
+  static async getFeaturedListings(limit: number = 6): Promise<ListingWithLocation[]> {
+    const cacheKey = `featured_listings_${limit}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
+    const { data, error } = await this.getBaseQuery()
+      .eq('status', 'active')
+      .eq('is_featured', true)
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      throw new Error(`Failed to fetch featured listings: ${error.message}`);
+    }
+
+    const result = data || [];
+    setCachedData(cacheKey, result, 20 * 60 * 1000); // 20 minute cache
+    return result;
+  }
+
+  /**
+   * Get unique cities for filter dropdown
+   */
+  static async getUniqueCities(): Promise<string[]> {
+    const cacheKey = 'unique_cities';
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
+
     const { data, error } = await supabase
-      .from('flat_listings')
-      .insert(listingData)
-      .select()
-      .single();
+      .from('locations')
+      .select('city')
+      .order('city');
 
     if (error) {
-      throw new Error(`Failed to create listing: ${error.message}`);
+      throw new Error(`Failed to fetch cities: ${error.message}`);
     }
 
-    return data;
+    const cities = Array.from(new Set(data?.map(item => item.city).filter(Boolean))) || [];
+    setCachedData(cacheKey, cities, 60 * 60 * 1000); // 1 hour cache
+    return cities;
   }
 
   /**
-   * Update an existing listing
-   */
-  static async updateListing(id: string, updates: ListingUpdate): Promise<ListingRow> {
-    const { data, error } = await supabase
-      .from('flat_listings')
-      .update(updates)
-      .eq('id', id)
-      .select()
-      .single();
-
-    if (error) {
-      throw new Error(`Failed to update listing: ${error.message}`);
-    }
-
-    return data;
-  }
-
-  /**
-   * Delete a listing
-   */
-  static async deleteListing(id: string): Promise<void> {
-    const { error } = await supabase
-      .from('flat_listings')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      throw new Error(`Failed to delete listing: ${error.message}`);
-    }
-  }
-
-  /**
-   * Mark listing as rented
-   */
-  static async markAsRented(id: string): Promise<ListingRow> {
-    return this.updateListing(id, { status: 'rented' });
-  }
-
-  /**
-   * Search listings with filters
+   * Optimized search with better query construction
    */
   static async searchListings(filters: {
     city?: string;
@@ -151,18 +187,13 @@ export class ListingService {
     bedrooms?: number;
     searchQuery?: string;
   }): Promise<ListingWithLocation[]> {
-    let query = supabase
-      .from('flat_listings')
-      .select(`
-        *,
-        locations (
-          city,
-          area
-        )
-      `)
-      .eq('status', 'active');
+    const cacheKey = `search_${JSON.stringify(filters)}`;
+    const cached = getCachedData(cacheKey);
+    if (cached) return cached;
 
-    // Apply filters
+    let query = this.getBaseQuery().eq('status', 'active');
+
+    // Apply filters efficiently
     if (filters.city) {
       query = query.eq('locations.city', filters.city);
     }
@@ -184,45 +215,151 @@ export class ListingService {
     }
 
     if (filters.searchQuery) {
-      query = query.or(`title.ilike.%${filters.searchQuery}%,description.ilike.%${filters.searchQuery}%`);
+      // Use full-text search for better performance
+      query = query.textSearch('search_vector', filters.searchQuery, {
+        type: 'websearch',
+        config: 'english'
+      });
     }
 
-    const { data, error } = await query.order('created_at', { ascending: false });
+    const { data, error } = await query
+      .order('created_at', { ascending: false })
+      .limit(50); // Reasonable limit for search results
 
     if (error) {
       throw new Error(`Failed to search listings: ${error.message}`);
     }
 
-    return data || [];
+    const result = data || [];
+    setCachedData(cacheKey, result, 5 * 60 * 1000); // 5 minute cache
+    return result;
   }
 
   /**
-   * Get featured listings
+   * Paginated listings for infinite scroll (future enhancement)
    */
-  static async getFeaturedListings(limit: number = 6): Promise<ListingWithLocation[]> {
-    const { data, error } = await supabase
-      .from('flat_listings')
-      .select(`
-        *,
-        locations (
-          city,
-          area
-        )
-      `)
-      .eq('status', 'active')
-      .eq('is_featured', true)
+  static async getListingsWithPagination(
+    filters: Parameters<typeof this.searchListings>[0] = {},
+    page: number = 0,
+    pageSize: number = 20
+  ): Promise<ListingWithLocation[]> {
+    let query = this.getBaseQuery().eq('status', 'active');
+
+    // Apply filters (same as search)
+    if (filters.city) query = query.eq('locations.city', filters.city);
+    if (filters.minPrice !== undefined) query = query.gte('monthly_rent', filters.minPrice);
+    if (filters.maxPrice !== undefined) query = query.lte('monthly_rent', filters.maxPrice);
+    if (filters.propertyType) query = query.eq('property_type', filters.propertyType);
+    if (filters.bedrooms !== undefined) query = query.eq('bedrooms', filters.bedrooms);
+    if (filters.searchQuery) {
+      query = query.textSearch('search_vector', filters.searchQuery, {
+        type: 'websearch',
+        config: 'english'
+      });
+    }
+
+    const { data, error } = await query
       .order('created_at', { ascending: false })
-      .limit(limit);
+      .range(page * pageSize, (page + 1) * pageSize - 1);
 
     if (error) {
-      throw new Error(`Failed to fetch featured listings: ${error.message}`);
+      throw new Error(`Failed to fetch paginated listings: ${error.message}`);
     }
 
     return data || [];
   }
 
   /**
-   * Transform database listing to FlatListing type
+   * Create a new listing with cache invalidation
+   */
+  static async createListing(listingData: ListingInsert): Promise<ListingRow> {
+    const { data, error } = await supabase
+      .from('flat_listings')
+      .insert(listingData)
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error(`Failed to create listing: ${error.message}`);
+    }
+
+    // Invalidate relevant caches
+    this.invalidateCache(['active_listings', `owner_listings_${listingData.owner_id}`, 'featured_listings']);
+
+    return data;
+  }
+
+  /**
+   * Update an existing listing with cache invalidation
+   */
+  static async updateListing(id: string, updates: ListingUpdate): Promise<ListingRow> {
+    const { data, error } = await supabase
+      .from('flat_listings')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      throw new Error(`Failed to update listing: ${error.message}`);
+    }
+
+    // Invalidate relevant caches
+    this.invalidateCache([`listing_${id}`, 'active_listings', `owner_listings_${data.owner_id}`]);
+
+    return data;
+  }
+
+  /**
+   * Delete a listing with cache invalidation
+   */
+  static async deleteListing(id: string): Promise<void> {
+    const { error } = await supabase
+      .from('flat_listings')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      throw new Error(`Failed to delete listing: ${error.message}`);
+    }
+
+    // Invalidate relevant caches
+    this.invalidateCache([`listing_${id}`, 'active_listings']);
+  }
+
+  /**
+   * Mark listing as rented
+   */
+  static async markAsRented(id: string): Promise<ListingRow> {
+    return this.updateListing(id, { status: 'rented' });
+  }
+
+  /**
+   * Cache invalidation utility
+   */
+  private static invalidateCache(keys: string[]) {
+    keys.forEach(key => {
+      // Remove exact matches
+      cache.delete(key);
+      
+      // Remove pattern matches (for dynamic keys)
+      for (const cacheKey of cache.keys()) {
+        if (key.includes('*') && cacheKey.includes(key.replace('*', ''))) {
+          cache.delete(cacheKey);
+        }
+      }
+    });
+  }
+
+  /**
+   * Clear all cache (utility for development)
+   */
+  static clearCache() {
+    cache.clear();
+  }
+
+  /**
+   * Transform database listing to FlatListing type (optimized)
    */
   static transformToFlatListing(dbListing: ListingWithLocation): FlatListing {
     return {
@@ -264,7 +401,7 @@ export class ListingService {
   }
 
   /**
-   * Transform FlatListing to database insert format
+   * Transform FlatListing to database insert format (optimized)
    */
   static transformToDbInsert(flatListing: FlatListing, ownerId: string): ListingInsert {
     return {

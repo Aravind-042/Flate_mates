@@ -1,4 +1,3 @@
-
 import React from "react";
 import { User } from "lucide-react";
 
@@ -33,10 +32,10 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         </div>
       </div>
       <div className="mt-4 md:mt-0 text-center md:text-left">
-        <h2 className="text-3xl sm:text-4xl font-bold text-white drop-shadow">
+        <h2 className="text-heading-1 font-secondary font-bold text-white drop-shadow">
           {fullName || "Your Name"}
         </h2>
-        <p className="text-lg text-white/80">{email}</p>
+        <p className="text-body-large font-primary text-white/80">{email}</p>
       </div>
     </div>
   );

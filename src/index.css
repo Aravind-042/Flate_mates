@@ -1,4 +1,7 @@
-/* Import design system first */
+/* Import typography system first */
+@import './styles/typography.css';
+
+/* Import design system with typography enhancements */
 @import './styles/design-system.css';
 
 /* Import base styles and Tailwind */

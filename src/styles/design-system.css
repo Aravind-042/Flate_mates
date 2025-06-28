@@ -1,4 +1,4 @@
-/* Design System - Uniform UI Components */
+/* Design System - Uniform UI Components with Enhanced Typography */
 
 @layer components {
   /* === CORE COLOR PALETTE === */
@@ -50,46 +50,69 @@
     @apply bg-white/70 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl;
   }
 
-  /* === UNIFIED BUTTON STYLES === */
+  /* === UNIFIED BUTTON STYLES WITH TYPOGRAPHY === */
   .btn-primary {
     @apply bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-xl px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02];
+    font-family: var(--font-secondary);
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
   .btn-secondary {
     @apply bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-semibold rounded-xl px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02];
+    font-family: var(--font-secondary);
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
   .btn-outline {
     @apply border-2 border-slate-300 hover:border-blue-500 text-slate-700 hover:text-blue-600 bg-white hover:bg-blue-50 font-medium rounded-xl px-6 py-3 transition-all duration-200;
+    font-family: var(--font-primary);
+    font-weight: 500;
   }
 
   .btn-ghost {
     @apply text-slate-600 hover:text-blue-600 hover:bg-blue-50 font-medium rounded-xl px-4 py-2 transition-all duration-200;
+    font-family: var(--font-primary);
+    font-weight: 500;
   }
 
-  /* === UNIFIED INPUT STYLES === */
+  /* === UNIFIED INPUT STYLES WITH TYPOGRAPHY === */
   .input-primary {
     @apply h-12 px-4 border-2 border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 rounded-xl bg-white text-slate-700 placeholder:text-slate-400 transition-all duration-200;
+    font-family: var(--font-primary);
+    font-weight: 400;
+    font-size: 1rem;
   }
 
   .input-search {
     @apply h-12 px-4 pl-12 border-2 border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 rounded-full bg-white text-slate-700 placeholder:text-slate-400 transition-all duration-200;
+    font-family: var(--font-primary);
+    font-weight: 400;
+    font-size: 1rem;
   }
 
-  /* === UNIFIED HEADER STYLES === */
+  /* === UNIFIED HEADER STYLES WITH TYPOGRAPHY === */
   .page-header {
     @apply text-center mb-12;
   }
 
   .page-title {
     @apply text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent;
+    font-family: var(--font-secondary);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
   }
 
   .page-subtitle {
     @apply text-xl text-slate-600 max-w-2xl mx-auto;
+    font-family: var(--font-primary);
+    font-weight: 400;
+    line-height: 1.6;
   }
 
-  /* === UNIFIED SECTION STYLES === */
+  /* === UNIFIED SECTION STYLES WITH TYPOGRAPHY === */
   .section-container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16;
   }
@@ -100,10 +123,17 @@
 
   .section-title {
     @apply text-3xl md:text-4xl font-bold mb-6 text-slate-800;
+    font-family: var(--font-secondary);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
   }
 
   .section-description {
     @apply text-lg text-slate-600 max-w-3xl mx-auto;
+    font-family: var(--font-primary);
+    font-weight: 400;
+    line-height: 1.6;
   }
 
   /* === UNIFIED GRID LAYOUTS === */
@@ -128,25 +158,40 @@
     @apply w-6 h-6 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin;
   }
 
-  /* === UNIFIED BADGE STYLES === */
+  /* === UNIFIED BADGE STYLES WITH TYPOGRAPHY === */
   .badge-primary {
     @apply bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium;
+    font-family: var(--font-accent);
+    font-weight: 600;
+    letter-spacing: 0.01em;
   }
 
   .badge-secondary {
     @apply bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-medium;
+    font-family: var(--font-accent);
+    font-weight: 600;
+    letter-spacing: 0.01em;
   }
 
   .badge-success {
     @apply bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium;
+    font-family: var(--font-accent);
+    font-weight: 600;
+    letter-spacing: 0.01em;
   }
 
   .badge-warning {
     @apply bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-medium;
+    font-family: var(--font-accent);
+    font-weight: 600;
+    letter-spacing: 0.01em;
   }
 
   .badge-error {
     @apply bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium;
+    font-family: var(--font-accent);
+    font-weight: 600;
+    letter-spacing: 0.01em;
   }
 
   /* === UNIFIED SPACING === */
@@ -160,39 +205,6 @@
 
   .space-element {
     @apply py-4 md:py-6;
-  }
-
-  /* === UNIFIED TYPOGRAPHY === */
-  .text-display {
-    @apply text-4xl md:text-5xl lg:text-6xl font-bold leading-tight;
-  }
-
-  .text-heading-1 {
-    @apply text-3xl md:text-4xl font-bold leading-tight;
-  }
-
-  .text-heading-2 {
-    @apply text-2xl md:text-3xl font-bold leading-tight;
-  }
-
-  .text-heading-3 {
-    @apply text-xl md:text-2xl font-semibold leading-tight;
-  }
-
-  .text-body-large {
-    @apply text-lg leading-relaxed;
-  }
-
-  .text-body {
-    @apply text-base leading-relaxed;
-  }
-
-  .text-body-small {
-    @apply text-sm leading-relaxed;
-  }
-
-  .text-caption {
-    @apply text-xs leading-normal;
   }
 
   /* === UNIFIED ANIMATIONS === */
@@ -255,5 +267,74 @@
 
   .hover-fade {
     @apply transition-opacity duration-200 hover:opacity-80;
+  }
+
+  /* === FORM TYPOGRAPHY === */
+  .form-label {
+    font-family: var(--font-accent);
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: 0.01em;
+    color: hsl(var(--neutral-700));
+  }
+
+  .form-helper {
+    font-family: var(--font-primary);
+    font-weight: 400;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: hsl(var(--neutral-500));
+  }
+
+  .form-error {
+    font-family: var(--font-primary);
+    font-weight: 500;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: hsl(var(--error));
+  }
+
+  /* === NAVIGATION TYPOGRAPHY === */
+  .nav-link {
+    font-family: var(--font-accent);
+    font-weight: 500;
+    font-size: 0.875rem;
+    letter-spacing: 0.005em;
+    transition: all 0.2s ease;
+  }
+
+  .nav-link-active {
+    font-family: var(--font-accent);
+    font-weight: 600;
+    font-size: 0.875rem;
+    letter-spacing: 0.005em;
+    color: hsl(var(--brand-primary));
+  }
+
+  /* === CARD CONTENT TYPOGRAPHY === */
+  .card-title {
+    font-family: var(--font-secondary);
+    font-weight: 600;
+    font-size: 1.125rem;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: hsl(var(--neutral-800));
+  }
+
+  .card-description {
+    font-family: var(--font-primary);
+    font-weight: 400;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: hsl(var(--neutral-600));
+  }
+
+  .card-meta {
+    font-family: var(--font-accent);
+    font-weight: 500;
+    font-size: 0.75rem;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: hsl(var(--neutral-500));
   }
 }

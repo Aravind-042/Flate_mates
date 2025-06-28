@@ -1,8 +1,7 @@
-
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button as NeonButton } from "@/components/ui/neon-button";
-import { HousePlus,UserPlus, ArrowRight } from "lucide-react";
+import { HousePlus, UserPlus, ArrowRight } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 
@@ -22,10 +21,13 @@ export const CTASection = () => {
           <CardContent className="p-6 sm:p-8 md:p-12">
             <div className="text-white">
               <HousePlus className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 mx-auto mb-4 sm:mb-6" />
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6">
+              
+              {/* Enhanced Typography */}
+              <h2 className="text-heading-1 font-secondary font-bold mb-4 sm:mb-6 text-white">
                 Got a Flat to Share?
               </h2>
-              <p className="text-sm sm:text-base md:text-lg lg:text-xl mb-6 sm:mb-8 opacity-90 px-2 sm:px-4">
+              
+              <p className="text-body-large font-primary mb-6 sm:mb-8 opacity-90 px-2 sm:px-4 text-white">
                 Join thousands of flat owners who found their perfect flatmates through our platform.
               </p>
               
@@ -35,19 +37,19 @@ export const CTASection = () => {
                     <NeonButton 
                       variant="ghost" 
                       size="lg"
-                      className="flex items-center h-10 sm:h-12 md:h-14 px-4 sm:px-6 md:px-8 text-sm sm:text-base md:text-lg font-bold bg-white text-deep-blue hover:bg-gray-100 shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200 rounded-xl"
+                      className="flex items-center h-10 sm:h-12 md:h-14 px-4 sm:px-6 md:px-8 font-secondary font-bold bg-white text-deep-blue hover:bg-gray-100 shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200 rounded-xl"
                     >
                       <span><HousePlus className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" /></span>
                       <span className="hidden xs:hidden sm:inline">Create Your Listing</span>
                       <span className="sm:hidden">Create Listing</span>
-                     <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-1 sm:ml-2" />
+                      <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-1 sm:ml-2" />
                     </NeonButton>
                   </Link>
                 ) : (
                   <NeonButton 
                     variant="ghost" 
                     size="lg"
-                    className="flex items-center h-10 sm:h-12 md:h-14 px-4 sm:px-6 md:px-8 text-sm sm:text-base md:text-lg font-bold bg-white text-deep-blue hover:bg-gray-100 shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200 rounded-xl"
+                    className="flex items-center h-10 sm:h-12 md:h-14 px-4 sm:px-6 md:px-8 font-secondary font-bold bg-white text-deep-blue hover:bg-gray-100 shadow-xl hover:shadow-2xl transform hover:scale-[1.05] transition-all duration-200 rounded-xl"
                     onClick={handleCreateListingClick}
                   >
                     <HousePlus className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />

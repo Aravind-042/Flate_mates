@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { BrowseHeader } from "@/components/Browse/BrowseHeader";
 import { LoadingGrid } from "@/components/Browse/LoadingGrid";
@@ -6,9 +6,10 @@ import { EmptyState } from "@/components/Browse/EmptyState";
 import { ListingCard } from "@/components/Browse/ListingCard";
 import { SearchBar } from "@/components/ui/search-bar";
 import { Landmark, Factory, Warehouse } from "lucide-react";
-import { useListings } from "@/hooks/queries/useListings";
+import { useListings, useCities, usePrefetchListing } from "@/hooks/queries/useListings";
 import { ListingService } from "@/services/listingService";
 import { useUIStore } from "@/store/uiStore";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const Browse = () => {
   const navigate = useNavigate();
@@ -16,36 +17,82 @@ const Browse = () => {
   const [selectedCity, setSelectedCity] = useState("");
   
   const { searchFilters, setSearchFilters } = useUIStore();
+  
+  // Debounce search query for better performance
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  
+  // Optimized data fetching
   const { data: listingsDb, isLoading, error } = useListings();
+  const { data: cities = [] } = useCities();
+  const prefetchListing = usePrefetchListing();
 
-  const filteredListings = listingsDb?.filter((listing) => {
-    const flatListing = ListingService.transformToFlatListing(listing);
-    const matchesSearch =
-      flatListing.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      flatListing.location.area.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      flatListing.location.address.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCity =
-      !selectedCity ||
-      flatListing.location.city.toLowerCase() === selectedCity.toLowerCase();
-    return matchesSearch && matchesCity;
-  }) ?? [];
+  // Memoized filtered listings for better performance
+  const filteredListings = useMemo(() => {
+    if (!listingsDb) return [];
 
-  const cities = Array.from(
-    new Set(
-      listingsDb
-        ?.map((listing) => listing.locations?.city)
-        .filter(Boolean) || []
-    )
-  );
+    return listingsDb.filter((listing) => {
+      const flatListing = ListingService.transformToFlatListing(listing);
+      
+      const matchesSearch = !debouncedSearchQuery || 
+        flatListing.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+        flatListing.location.area.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+        flatListing.location.address.toLowerCase().includes(debouncedSearchQuery.toLowerCase());
+      
+      const matchesCity = !selectedCity ||
+        flatListing.location.city.toLowerCase() === selectedCity.toLowerCase();
+      
+      return matchesSearch && matchesCity;
+    });
+  }, [listingsDb, debouncedSearchQuery, selectedCity]);
 
-  const handleFlatClick = (listingId: string) => {
+  // Memoized transformed listings
+  const transformedListings = useMemo(() => {
+    return filteredListings.map((listing) => {
+      const flatListing = ListingService.transformToFlatListing(listing);
+      return {
+        id: flatListing.id!,
+        title: flatListing.title,
+        description: flatListing.description,
+        property_type: flatListing.property.type,
+        bedrooms: flatListing.property.bedrooms,
+        bathrooms: flatListing.property.bathrooms,
+        monthly_rent: flatListing.rent.amount,
+        security_deposit: flatListing.rent.deposit,
+        is_furnished: flatListing.property.furnished,
+        parking_available: flatListing.property.parking,
+        amenities: flatListing.amenities,
+        address_line1: flatListing.location.address,
+        address_line2: "",
+        images: flatListing.images,
+        owner_id: flatListing.ownerId!,
+        created_at: flatListing.createdAt!,
+        preferred_gender: flatListing.preferences.gender,
+        locations: {
+          city: flatListing.location.city,
+          area: flatListing.location.area,
+        },
+      };
+    });
+  }, [filteredListings]);
+
+  // Optimized handlers
+  const handleFlatClick = useCallback((listingId: string) => {
     navigate(`/flat/${listingId}`);
-  };
+  }, [navigate]);
 
-  const handleCityChange = (city: string) => {
+  const handleCityChange = useCallback((city: string) => {
     setSelectedCity(city);
     setSearchFilters({ city });
-  };
+  }, [setSearchFilters]);
+
+  const handleSearch = useCallback((query: string) => {
+    setSearchQuery(query);
+  }, []);
+
+  // Prefetch listing on hover for better UX
+  const handleListingHover = useCallback((listingId: string) => {
+    prefetchListing(listingId);
+  }, [prefetchListing]);
 
   if (error) {
     return (
@@ -79,7 +126,7 @@ const Browse = () => {
           <div className="flex-1">
             <SearchBar
               placeholder="Search by title, area, or address..."
-              onSearch={setSearchQuery}
+              onSearch={handleSearch}
             />
           </div>
           <div className="md:w-[220px] w-full">
@@ -98,47 +145,35 @@ const Browse = () => {
           </div>
         </div>
 
+        {/* Results */}
         {isLoading ? (
           <LoadingGrid />
-        ) : filteredListings.length === 0 ? (
+        ) : transformedListings.length === 0 ? (
           <EmptyState />
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredListings.map((listing) => {
-              const flatListing = ListingService.transformToFlatListing(listing);
-              // Transform to match ListingCard's expected props
-              const cardListing = {
-                id: flatListing.id!,
-                title: flatListing.title,
-                description: flatListing.description,
-                property_type: flatListing.property.type,
-                bedrooms: flatListing.property.bedrooms,
-                bathrooms: flatListing.property.bathrooms,
-                monthly_rent: flatListing.rent.amount,
-                security_deposit: flatListing.rent.deposit,
-                is_furnished: flatListing.property.furnished,
-                parking_available: flatListing.property.parking,
-                amenities: flatListing.amenities,
-                address_line1: flatListing.location.address,
-                address_line2: "",
-                images: flatListing.images,
-                owner_id: flatListing.ownerId!,
-                created_at: flatListing.createdAt!,
-                preferred_gender: flatListing.preferences.gender,
-                locations: {
-                  city: flatListing.location.city,
-                  area: flatListing.location.area,
-                },
-              };
-              
-              return (
+            {transformedListings.map((listing) => (
+              <div
+                key={listing.id}
+                onMouseEnter={() => handleListingHover(listing.id)}
+              >
                 <ListingCard
-                  key={cardListing.id}
-                  listing={cardListing}
+                  listing={listing}
                   onCardClick={handleFlatClick}
                 />
-              );
-            })}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Results summary */}
+        {!isLoading && transformedListings.length > 0 && (
+          <div className="mt-8 text-center">
+            <p className="text-slate-600">
+              Showing {transformedListings.length} of {listingsDb?.length || 0} listings
+              {selectedCity && ` in ${selectedCity}`}
+              {debouncedSearchQuery && ` matching "${debouncedSearchQuery}"`}
+            </p>
           </div>
         )}
       </div>
