@@ -1,72 +1,52 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { BackgroundPattern } from "@/components/Home/BackgroundPattern";
 import { HeroSection } from "@/components/Home/HeroSection";
 import { CircularTestimonialsDemo } from "@/components/ui/demo";
 import { CircularFlatListingsDemo } from "@/components/ui/circular-flat-listings-demo";
 import { CTASection } from "@/components/Home/CTASection";
-import { toast } from "sonner";
-
-interface FlatListing {
-  id: string;
-  title: string;
-  description: string | null;
-  property_type: string;
-  bedrooms: number;
-  bathrooms: number;
-  monthly_rent: number;
-  security_deposit: number | null;
-  is_furnished: boolean | null;
-  parking_available: boolean | null;
-  amenities: string[] | null;
-  address_line1: string;
-  address_line2: string | null;
-  images: string[] | null;
-  owner_id: string;
-  created_at: string;
-  locations?: {
-    city: string;
-    area: string;
-  };
-}
+import { useFeaturedListings } from "@/hooks/queries/useListings";
+import { ListingService } from "@/services/listingService";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: listings, isLoading, error } = useQuery({
-    queryKey: ['featured-listings'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('flat_listings')
-        .select(`
-          *,
-          locations (
-            city,
-            area
-          )
-        `)
-        .eq('status', 'active')
-        .order('created_at', { ascending: false })
-        .limit(6);
-      
-      if (error) {
-        console.error('Error fetching listings:', error);
-        throw error;
-      }
-      
-      return data as FlatListing[];
-    }
+  const { data: listings, isLoading, error } = useFeaturedListings(6);
+
+  // Transform listings for the circular component
+  const transformedListings = listings?.map(listing => {
+    const flatListing = ListingService.transformToFlatListing(listing);
+    return {
+      id: flatListing.id!,
+      title: flatListing.title,
+      description: flatListing.description,
+      property_type: flatListing.property.type,
+      bedrooms: flatListing.property.bedrooms,
+      bathrooms: flatListing.property.bathrooms,
+      monthly_rent: flatListing.rent.amount,
+      security_deposit: flatListing.rent.deposit,
+      is_furnished: flatListing.property.furnished,
+      parking_available: flatListing.property.parking,
+      amenities: flatListing.amenities,
+      address_line1: flatListing.location.address,
+      address_line2: "",
+      images: flatListing.images,
+      owner_id: flatListing.ownerId!,
+      created_at: flatListing.createdAt!,
+      locations: {
+        city: flatListing.location.city,
+        area: flatListing.location.area,
+      },
+    };
   });
 
-  const filteredListings = listings?.filter(listing => 
+  const filteredListings = transformedListings?.filter(listing => 
     listing.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     listing.locations?.area?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     listing.address_line1.toLowerCase().includes(searchQuery.toLowerCase())
   ) || [];
 
   if (error) {
-    toast.error("Failed to load listings");
+    console.error("Failed to load featured listings:", error);
   }
 
   return (
@@ -75,8 +55,10 @@ const Index = () => {
       <HeroSection searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       
       {/* Circular Flat Listings */}
-      {!isLoading && listings && listings.length > 0 && (
-        <CircularFlatListingsDemo listings={filteredListings.length > 0 ? filteredListings : listings} />
+      {!isLoading && transformedListings && transformedListings.length > 0 && (
+        <CircularFlatListingsDemo 
+          listings={filteredListings.length > 0 ? filteredListings : transformedListings} 
+        />
       )}
       
       <CircularTestimonialsDemo />
