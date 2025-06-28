@@ -20,7 +20,7 @@ const Profile = () => {
     phone_number: "",
     city: "",
     bio: "",
-    age: "",
+    age: 0,
     profession: "",
     profile_picture_url: "",
   });
@@ -44,7 +44,7 @@ const Profile = () => {
       phone_number: data.phone_number || "",
       city: data.city || "",
       bio: data.bio || "",
-      age: data.age || "",
+      age: data.age || 0,
       profession: data.profession || "",
       profile_picture_url: data.profile_picture_url || "",
     });
