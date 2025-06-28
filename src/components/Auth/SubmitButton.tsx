@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { TextShimmer } from "@/components/ui/text-shimmer";
 
@@ -14,7 +13,7 @@ export const SubmitButton = ({ isLoading, onClick, children, loadingText }: Subm
     <Button 
       onClick={onClick}
       disabled={isLoading}
-      className="w-full h-14 text-base font-semibold bg-purple-900 hover:bg-purple-800 text-white rounded-2xl shadow-lg transition-all duration-200"
+      className="btn-primary w-full"
     >
       {isLoading ? (
         <TextShimmer 

@@ -4,13 +4,14 @@ import { FormField } from "./FormField";
 import { RoleSelector } from "./RoleSelector";
 import { SubmitButton } from "./SubmitButton";
 import { AuthModeSwitch } from "./AuthModeSwitch";
-import { Button } from "@/components/ui/button";
 import { useSignup } from "@/hooks/useSignup";
+
 interface SignUpFormProps {
   onSwitchToSignIn: () => void;
   signupRoleIntentProp?: "flat_owner" | "flat_seeker";
   onSuccess?: () => void;
 }
+
 export const SignUpForm = ({
   onSwitchToSignIn,
   signupRoleIntentProp,
@@ -19,6 +20,7 @@ export const SignUpForm = ({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  
   const initialRole: 'flat_seeker' | 'flat_owner' = (() => {
     if (signupRoleIntentProp) return signupRoleIntentProp;
     try {
@@ -28,43 +30,77 @@ export const SignUpForm = ({
     } catch (_) {}
     return "flat_seeker";
   })();
+  
   const [role, setRole] = useState<'flat_seeker' | 'flat_owner'>(initialRole);
   const [showPassword, setShowPassword] = useState(false);
-  const {
-    signUp,
-    isLoading
-  } = useSignup({
-    onSuccess
-  });
+  
+  const { signUp, isLoading } = useSignup({ onSuccess });
+
   const handleSignUp = () => {
     signUp(email, password, fullName, role);
   };
-  return <div className="space-y-6">
-      <FormHeader title="Join FlatMates" subtitle="Create your account and find your perfect flatmate" />
+
+  return (
+    <div className="space-y-6">
+      <FormHeader 
+        title="Join FlatMates" 
+        subtitle="Create your account and find your perfect flatmate"
+      />
 
       <div className="space-y-4">
-        <FormField id="fullNameSignup" placeholder="Enter your full name" value={fullName} onChange={setFullName} />
+        <FormField
+          id="fullNameSignup"
+          label="Full Name"
+          placeholder="Enter your full name"
+          value={fullName}
+          onChange={setFullName}
+        />
 
         <RoleSelector value={role} onChange={setRole} />
 
-        <FormField id="emailSignup" placeholder="your.email@example.com" value={email} onChange={setEmail} type="email" />
+        <FormField
+          id="emailSignup"
+          label="Email Address"
+          placeholder="your.email@example.com"
+          value={email}
+          onChange={setEmail}
+          type="email"
+        />
 
-        <FormField id="passwordSignup" placeholder="Create a strong password (min 6 characters)" value={password} onChange={setPassword} showPasswordToggle={true} showPassword={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} />
+        <FormField
+          id="passwordSignup"
+          label="Password"
+          placeholder="Create a strong password (min 6 characters)"
+          value={password}
+          onChange={setPassword}
+          showPasswordToggle={true}
+          showPassword={showPassword}
+          onTogglePassword={() => setShowPassword(!showPassword)}
+        />
 
-        <SubmitButton isLoading={isLoading} onClick={handleSignUp} loadingText="Creating Account...">
+        <SubmitButton
+          isLoading={isLoading}
+          onClick={handleSignUp}
+          loadingText="Creating Account..."
+        >
           Create Account
         </SubmitButton>
 
         <div className="relative flex items-center justify-center my-6">
-          
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-200"></div>
+          </div>
           <div className="relative bg-white px-4">
-            <span className="text-gray-400 text-sm font-medium">OR</span>
+            <span className="text-slate-400 text-sm font-medium">OR</span>
           </div>
         </div>
 
-        
-
-        <AuthModeSwitch onSwitch={onSwitchToSignIn} text="Already have an account?" linkText="Sign In" />
+        <AuthModeSwitch
+          onSwitch={onSwitchToSignIn}
+          text="Already have an account?"
+          linkText="Sign In"
+        />
       </div>
-    </div>;
+    </div>
+  );
 };

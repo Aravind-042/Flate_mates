@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 
 interface AuthModeSwitchProps {
@@ -13,9 +12,9 @@ export const AuthModeSwitch = ({ onSwitch, text, linkText }: AuthModeSwitchProps
       <Button 
         variant="ghost" 
         onClick={onSwitch}
-        className="text-gray-600 hover:text-gray-800 font-medium text-sm hover:bg-transparent transition-colors"
+        className="btn-ghost text-slate-600 hover:text-blue-600"
       >
-        {text} <span className="text-purple-600 ml-1 underline">{linkText}</span>
+        {text} <span className="text-blue-600 ml-1 underline">{linkText}</span>
       </Button>
     </div>
   );
