@@ -1,3 +1,5 @@
+/* Import design system first */
+@import './styles/design-system.css';
 
 /* Import base styles and Tailwind */
 @import './styles/base.css';
