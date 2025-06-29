@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { AuthLayout } from "./Auth/AuthLayout";
 import { SignInForm } from "./Auth/SignInForm";
 import { SignUpForm } from "./Auth/SignUpForm";
 import { ForgotPasswordForm } from "./Auth/ForgotPasswordForm";
 import { ResetPasswordForm } from "./Auth/ResetPasswordForm";
-import { GuestModeButton } from "./Auth/GuestModeButton";
+import { useNavigate } from "react-router-dom";
 
 type AuthMode = 'signin' | 'signup' | 'forgot-password' | 'reset-password';
 
@@ -99,14 +99,8 @@ export const AuthPage = ({ signupRoleIntent, onAuthSuccess }: AuthPageProps) => 
   };
 
   return (
-    <div className="relative min-h-screen">
-      {/* Guest Mode Button - Floating prominently */}
-      <GuestModeButton />
-      
-      {/* Main Auth Content */}
-      <AuthLayout>
-        {renderAuthForm()}
-      </AuthLayout>
-    </div>
+    <AuthLayout>
+      {renderAuthForm()}
+    </AuthLayout>
   );
 };
