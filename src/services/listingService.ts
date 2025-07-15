@@ -176,7 +176,7 @@ export class ListingService {
     }
 
     if (filters.propertyType) {
-      query = query.eq('property_type', filters.propertyType);
+      query = query.eq('property_type', filters.propertyType as 'apartment' | 'independent_house' | 'villa' | 'pg' | 'shared_room' | 'studio');
     }
 
     if (filters.bedrooms !== undefined) {

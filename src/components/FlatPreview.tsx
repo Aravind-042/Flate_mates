@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Bed, Bath, Car, Wifi, Users, Phone, Mail } from "lucide-react";
+import { ImageCarousel } from "@/components/ui/ImageCarousel";
+import { MapPin, Bed, Bath, Car, Users, Phone, Mail } from "lucide-react";
 import type { FlatListing } from "@/types/flat";
 
 interface FlatPreviewProps {
@@ -20,28 +21,13 @@ export const FlatPreview = ({ data }: FlatPreviewProps) => {
     <div className="space-y-6">
       <Card className="overflow-hidden">
         <div className="relative">
-          {data.images.length > 0 ? (
-            <div className="grid grid-cols-2 gap-2 p-4">
-              {data.images.slice(0, 4).map((image, index) => (
-                <div key={index} className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                  <img
-                    src={image}
-                    alt={`Property ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                  {index === 3 && data.images.length > 4 && (
-                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                      <span className="text-white font-semibold">+{data.images.length - 4} more</span>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="h-64 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-              <p className="text-gray-500">No images uploaded yet</p>
-            </div>
-          )}
+          <ImageCarousel
+            images={data.images.length > 0 ? data.images : null}
+            title={data.title || "Property Preview"}
+            height="h-64"
+            showIndicator={true}
+            showArrows={true}
+          />
         </div>
         
         <CardContent className="p-6">

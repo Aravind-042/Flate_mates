@@ -2,7 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { MapPin, Home, Bed, Bath, Car, Heart, ChevronRight, Users } from "lucide-react";
+import { ImageCarousel } from "@/components/ui/ImageCarousel";
+import { MapPin, Bed, Bath, Car, Heart, ChevronRight } from "lucide-react";
 import { useState } from "react";
 interface FlatListing {
   id: string;
@@ -70,13 +71,13 @@ export const ListingCard = ({
   return <TooltipProvider>
       <Card className="bg-white/90 backdrop-blur-md border-0 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] group overflow-hidden cursor-pointer" onClick={handleCardClick} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
         <div className="relative overflow-hidden">
-          {listing.images && listing.images.length > 0 ? <div className="relative">
-              <img src={listing.images[0]} alt={listing.title} className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110" />
-              {/* Gradient overlay for better text visibility */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </div> : <div className="w-full h-48 bg-gradient-to-br from-coral-100 to-violet-100 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <Home className="h-16 w-16 text-coral-400" />
-            </div>}
+          <ImageCarousel
+            images={listing.images}
+            title={listing.title}
+            height="h-48"
+            showIndicator={true}
+            showArrows={true}
+          />
           
           {/* Property Type and Gender Badge */}
           <div className="absolute top-4 left-4 z-10">

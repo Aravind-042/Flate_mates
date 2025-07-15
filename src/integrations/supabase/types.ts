@@ -7,8 +7,65 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instanciate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "12.2.3 (519615d)"
+  }
   public: {
     Tables: {
+      conversations: {
+        Row: {
+          created_at: string | null
+          id: string
+          last_message_at: string | null
+          listing_id: string | null
+          participant_1: string
+          participant_2: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          last_message_at?: string | null
+          listing_id?: string | null
+          participant_1: string
+          participant_2: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          last_message_at?: string | null
+          listing_id?: string | null
+          participant_1?: string
+          participant_2?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "flat_listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_participant_1_fkey"
+            columns: ["participant_1"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_participant_2_fkey"
+            columns: ["participant_2"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       flat_listings: {
         Row: {
           address_line1: string
@@ -17,6 +74,7 @@ export type Database = {
           available_from: string | null
           bathrooms: number
           bedrooms: number
+          boost_score: number | null
           brokerage_amount: number | null
           carpet_area_sqft: number | null
           contact_email: boolean | null
@@ -33,6 +91,7 @@ export type Database = {
           is_featured: boolean | null
           is_furnished: boolean | null
           landmark: string | null
+          last_boosted_at: string | null
           lease_duration_months: number | null
           lifestyle_preferences: string[] | null
           location_id: string | null
@@ -51,7 +110,10 @@ export type Database = {
             | null
           preferred_professions: string[] | null
           property_type: Database["public"]["Enums"]["property_type"]
+          quality_score: number | null
           rent_includes: string[] | null
+          response_rate: number | null
+          search_vector: unknown | null
           security_deposit: number | null
           status: Database["public"]["Enums"]["listing_status"] | null
           title: string
@@ -69,6 +131,7 @@ export type Database = {
           available_from?: string | null
           bathrooms?: number
           bedrooms?: number
+          boost_score?: number | null
           brokerage_amount?: number | null
           carpet_area_sqft?: number | null
           contact_email?: boolean | null
@@ -85,6 +148,7 @@ export type Database = {
           is_featured?: boolean | null
           is_furnished?: boolean | null
           landmark?: string | null
+          last_boosted_at?: string | null
           lease_duration_months?: number | null
           lifestyle_preferences?: string[] | null
           location_id?: string | null
@@ -103,7 +167,10 @@ export type Database = {
             | null
           preferred_professions?: string[] | null
           property_type: Database["public"]["Enums"]["property_type"]
+          quality_score?: number | null
           rent_includes?: string[] | null
+          response_rate?: number | null
+          search_vector?: unknown | null
           security_deposit?: number | null
           status?: Database["public"]["Enums"]["listing_status"] | null
           title: string
@@ -121,6 +188,7 @@ export type Database = {
           available_from?: string | null
           bathrooms?: number
           bedrooms?: number
+          boost_score?: number | null
           brokerage_amount?: number | null
           carpet_area_sqft?: number | null
           contact_email?: boolean | null
@@ -137,6 +205,7 @@ export type Database = {
           is_featured?: boolean | null
           is_furnished?: boolean | null
           landmark?: string | null
+          last_boosted_at?: string | null
           lease_duration_months?: number | null
           lifestyle_preferences?: string[] | null
           location_id?: string | null
@@ -155,7 +224,10 @@ export type Database = {
             | null
           preferred_professions?: string[] | null
           property_type?: Database["public"]["Enums"]["property_type"]
+          quality_score?: number | null
           rent_includes?: string[] | null
+          response_rate?: number | null
+          search_vector?: unknown | null
           security_deposit?: number | null
           status?: Database["public"]["Enums"]["listing_status"] | null
           title?: string
@@ -284,6 +356,167 @@ export type Database = {
           },
         ]
       }
+      listing_boosts: {
+        Row: {
+          amount_paid: number
+          boost_type: string
+          created_at: string | null
+          ends_at: string
+          id: string
+          is_active: boolean | null
+          listing_id: string
+          starts_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_paid: number
+          boost_type: string
+          created_at?: string | null
+          ends_at: string
+          id?: string
+          is_active?: boolean | null
+          listing_id: string
+          starts_at: string
+          user_id: string
+        }
+        Update: {
+          amount_paid?: number
+          boost_type?: string
+          created_at?: string | null
+          ends_at?: string
+          id?: string
+          is_active?: boolean | null
+          listing_id?: string
+          starts_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_boosts_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "flat_listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "listing_boosts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listing_tags: {
+        Row: {
+          created_at: string | null
+          id: string
+          listing_id: string
+          tag: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          listing_id: string
+          tag: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          listing_id?: string
+          tag?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_tags_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "flat_listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listing_views: {
+        Row: {
+          created_at: string | null
+          id: string
+          listing_id: string
+          referrer: string | null
+          user_agent: string | null
+          view_duration: number | null
+          viewer_id: string | null
+          viewer_ip: unknown | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          listing_id: string
+          referrer?: string | null
+          user_agent?: string | null
+          view_duration?: number | null
+          viewer_id?: string | null
+          viewer_ip?: unknown | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          listing_id?: string
+          referrer?: string | null
+          user_agent?: string | null
+          view_duration?: number | null
+          viewer_id?: string | null
+          viewer_ip?: unknown | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_views_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "flat_listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "listing_views_viewer_id_fkey"
+            columns: ["viewer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      location_suggestions: {
+        Row: {
+          area: string
+          city: string
+          created_at: string | null
+          full_address: string | null
+          id: string
+          latitude: number | null
+          longitude: number | null
+          popularity_score: number | null
+        }
+        Insert: {
+          area: string
+          city: string
+          created_at?: string | null
+          full_address?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          popularity_score?: number | null
+        }
+        Update: {
+          area?: string
+          city?: string
+          created_at?: string | null
+          full_address?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          popularity_score?: number | null
+        }
+        Relationships: []
+      }
       locations: {
         Row: {
           area: string
@@ -319,6 +552,92 @@ export type Database = {
           state?: string | null
         }
         Relationships: []
+      }
+      message_attachments: {
+        Row: {
+          created_at: string | null
+          file_name: string
+          file_size: number | null
+          file_type: string | null
+          file_url: string
+          id: string
+          message_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          file_name: string
+          file_size?: number | null
+          file_type?: string | null
+          file_url: string
+          id?: string
+          message_id: string
+        }
+        Update: {
+          created_at?: string | null
+          file_name?: string
+          file_size?: number | null
+          file_type?: string | null
+          file_url?: string
+          id?: string
+          message_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_attachments_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          message_type: string | null
+          sender_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message_type?: string | null
+          sender_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message_type?: string | null
+          sender_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_sender_id_fkey"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       notifications: {
         Row: {
@@ -361,6 +680,53 @@ export type Database = {
           },
         ]
       }
+      payment_methods: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          is_default: boolean | null
+          last_four: string | null
+          provider: string | null
+          provider_payment_method_id: string | null
+          type: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          last_four?: string | null
+          provider?: string | null
+          provider_payment_method_id?: string | null
+          type: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          last_four?: string | null
+          provider?: string | null
+          provider_payment_method_id?: string | null
+          type?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_methods_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           age: number | null
@@ -368,12 +734,17 @@ export type Database = {
           city: string | null
           created_at: string | null
           email: string
+          email_verified: boolean | null
           full_name: string | null
           id: string
           is_verified: boolean | null
+          last_active_at: string | null
           phone_number: string
+          phone_verified: boolean | null
+          preferences: Json | null
           profession: string | null
           profile_picture_url: string | null
+          social_links: Json | null
           updated_at: string | null
           verification_documents: string[] | null
         }
@@ -383,12 +754,17 @@ export type Database = {
           city?: string | null
           created_at?: string | null
           email: string
+          email_verified?: boolean | null
           full_name?: string | null
           id: string
           is_verified?: boolean | null
+          last_active_at?: string | null
           phone_number?: string
+          phone_verified?: boolean | null
+          preferences?: Json | null
           profession?: string | null
           profile_picture_url?: string | null
+          social_links?: Json | null
           updated_at?: string | null
           verification_documents?: string[] | null
         }
@@ -398,16 +774,72 @@ export type Database = {
           city?: string | null
           created_at?: string | null
           email?: string
+          email_verified?: boolean | null
           full_name?: string | null
           id?: string
           is_verified?: boolean | null
+          last_active_at?: string | null
           phone_number?: string
+          phone_verified?: boolean | null
+          preferences?: Json | null
           profession?: string | null
           profile_picture_url?: string | null
+          social_links?: Json | null
           updated_at?: string | null
           verification_documents?: string[] | null
         }
         Relationships: []
+      }
+      property_reports: {
+        Row: {
+          admin_notes: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          listing_id: string
+          report_type: string
+          reporter_id: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          listing_id: string
+          report_type: string
+          reporter_id: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          listing_id?: string
+          report_type?: string
+          reporter_id?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_reports_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "flat_listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "property_reports_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reviews: {
         Row: {
@@ -470,6 +902,50 @@ export type Database = {
           },
         ]
       }
+      saved_searches: {
+        Row: {
+          created_at: string | null
+          email_alerts: boolean | null
+          id: string
+          is_active: boolean | null
+          last_notified_at: string | null
+          name: string
+          search_criteria: Json
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          email_alerts?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          last_notified_at?: string | null
+          name: string
+          search_criteria: Json
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          email_alerts?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          last_notified_at?: string | null
+          name?: string
+          search_criteria?: Json
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_searches_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       search_history: {
         Row: {
           created_at: string | null
@@ -498,6 +974,183 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "search_history_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscription_plans: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          features: Json | null
+          id: string
+          is_active: boolean | null
+          max_listings: number | null
+          name: string
+          price_monthly: number
+          price_yearly: number | null
+          priority_support: boolean | null
+          updated_at: string | null
+          verified_badge: boolean | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          max_listings?: number | null
+          name: string
+          price_monthly: number
+          price_yearly?: number | null
+          priority_support?: boolean | null
+          updated_at?: string | null
+          verified_badge?: boolean | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          features?: Json | null
+          id?: string
+          is_active?: boolean | null
+          max_listings?: number | null
+          name?: string
+          price_monthly?: number
+          price_yearly?: number | null
+          priority_support?: boolean | null
+          updated_at?: string | null
+          verified_badge?: boolean | null
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          created_at: string | null
+          currency: string | null
+          description: string | null
+          gateway_response: Json | null
+          gateway_transaction_id: string | null
+          id: string
+          payment_gateway: string | null
+          payment_method_id: string | null
+          status: string | null
+          subscription_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          gateway_response?: Json | null
+          gateway_transaction_id?: string | null
+          id?: string
+          payment_gateway?: string | null
+          payment_method_id?: string | null
+          status?: string | null
+          subscription_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          gateway_response?: Json | null
+          gateway_transaction_id?: string | null
+          id?: string
+          payment_gateway?: string | null
+          payment_method_id?: string | null
+          status?: string | null
+          subscription_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_payment_method_id_fkey"
+            columns: ["payment_method_id"]
+            isOneToOne: false
+            referencedRelation: "payment_methods"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "user_subscriptions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trending_searches: {
+        Row: {
+          created_at: string | null
+          id: string
+          last_searched_at: string | null
+          search_count: number | null
+          search_term: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          last_searched_at?: string | null
+          search_count?: number | null
+          search_term: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          last_searched_at?: string | null
+          search_count?: number | null
+          search_term?: string
+        }
+        Relationships: []
+      }
+      user_activity_log: {
+        Row: {
+          activity_data: Json | null
+          activity_type: string
+          created_at: string | null
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          activity_data?: Json | null
+          activity_type: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          activity_data?: Json | null
+          activity_type?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_activity_log_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -541,6 +1194,60 @@ export type Database = {
           },
         ]
       }
+      user_subscriptions: {
+        Row: {
+          auto_renew: boolean | null
+          created_at: string | null
+          ends_at: string
+          id: string
+          payment_method: string | null
+          plan_id: string
+          starts_at: string
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          auto_renew?: boolean | null
+          created_at?: string | null
+          ends_at: string
+          id?: string
+          payment_method?: string | null
+          plan_id: string
+          starts_at: string
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          auto_renew?: boolean | null
+          created_at?: string | null
+          ends_at?: string
+          id?: string
+          payment_method?: string | null
+          plan_id?: string
+          starts_at?: string
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_subscriptions_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "subscription_plans"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_subscriptions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -549,6 +1256,35 @@ export type Database = {
       create_sample_listings_for_user: {
         Args: { user_id: string }
         Returns: number
+      }
+      search_listings: {
+        Args: {
+          search_query?: string
+          city_filter?: string
+          min_rent?: number
+          max_rent?: number
+          property_types?: string[]
+          min_bedrooms?: number
+          amenities_filter?: string[]
+          limit_count?: number
+          offset_count?: number
+        }
+        Returns: {
+          id: string
+          title: string
+          description: string
+          monthly_rent: number
+          property_type: string
+          bedrooms: number
+          bathrooms: number
+          search_rank: number
+          boost_score: number
+          created_at: string
+        }[]
+      }
+      track_search_term: {
+        Args: { term: string }
+        Returns: undefined
       }
     }
     Enums: {
@@ -575,21 +1311,25 @@ export type Database = {
   }
 }
 
-type DefaultSchema = Database[Extract<keyof Database, "public">]
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
@@ -607,14 +1347,16 @@ export type Tables<
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I
     }
     ? I
@@ -630,14 +1372,16 @@ export type TablesInsert<
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never,
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U
     }
     ? U
@@ -653,14 +1397,16 @@ export type TablesUpdate<
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never,
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
@@ -668,14 +1414,16 @@ export type Enums<
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    schema: keyof DatabaseWithoutInternals
   }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never,
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
