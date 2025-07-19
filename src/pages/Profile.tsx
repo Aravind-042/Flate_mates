@@ -5,7 +5,8 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { ProfileHeader } from "@/components/Profile/ProfileHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Home, Settings } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Home, Settings } from "lucide-react";
 import { ProfileTabProfile } from "@/components/Profile/ProfileTabProfile";
 import { ProfileTabListings } from "@/components/Profile/ProfileTabListings";
 import { ProfileTabSettings } from "@/components/Profile/ProfileTabSettings";
@@ -51,8 +52,17 @@ const Profile = () => {
         profile_picture_url: data.profile_picture_url || "",
       });
     } else {
-      // Profile doesn't exist yet, create default values
-      console.log("No profile found, using defaults");
+      // Profile doesn't exist yet, populate from auth metadata
+      console.log("No profile found, using auth data defaults");
+      setProfileData({
+        full_name: user?.user_metadata?.full_name || "",
+        phone_number: user?.user_metadata?.phone_number || "",
+        city: "",
+        bio: "",
+        age: 0,
+        profession: "",
+        profile_picture_url: "",
+      });
     }
   };
 
@@ -74,14 +84,21 @@ const Profile = () => {
         profession: profileData.profession,
       };
 
+      // Use upsert to handle case where profile might not exist
       const { error } = await supabase
         .from("profiles")
-        .update(updateData)
+        .upsert({ 
+          id: user?.id,
+          email: user?.email,
+          ...updateData 
+        })
         .eq("id", user?.id);
 
       if (error) throw error;
 
       toast.success("Profile updated successfully!");
+      // Refetch the profile to ensure UI is updated
+      fetchProfile();
     } catch (error: any) {
       toast.error("Error updating profile: " + error.message);
     } finally {
@@ -92,6 +109,15 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-background py-8 px-4">
       <div className="max-w-6xl mx-auto space-y-8">
+        {/* Back Button */}
+        <Button
+          variant="ghost"
+          onClick={() => navigate("/")}
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Home
+        </Button>
         {/* Header Section */}
         <div className="text-center space-y-4">
           <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-r from-primary to-secondary p-1">
