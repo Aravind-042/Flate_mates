@@ -57,7 +57,26 @@ export const useSignup = ({ onSuccess }: UseSignupProps = {}) => {
         user_email: data.user?.email,
         session_exists: !!data.session
       });
-      
+      const userId = data.user?.id;
+      console.log(userId)
+      if (userId) {
+        const { error: profileInsertError } = await supabase
+          .from('profiles')
+          .insert([
+            {
+              id: userId,        // assuming your primary key in profiles is 'id' matching auth.user.id
+              full_name: fullName,
+              email:email
+              
+            }
+          ]);
+
+        if (profileInsertError) {
+          console.error('Failed to insert into profiles:', profileInsertError);
+          toast.error("Failed to create user profile. Please contact support.");
+          return;
+        }
+      }
       toast.success("Account created successfully! Please check your email to verify your account.");
       
       // Handle successful sign up
