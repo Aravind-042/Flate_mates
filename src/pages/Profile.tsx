@@ -32,22 +32,28 @@ const Profile = () => {
       .from("profiles")
       .select("*")
       .eq("id", user.id)
-      .single();
+      .maybeSingle();
 
     if (error) {
-      toast.error("Failed to load profile");
+      console.error("Profile fetch error:", error);
+      toast.error("Failed to load profile: " + error.message);
       return;
     }
 
-    setProfileData({
-      full_name: data.full_name || "",
-      phone_number: data.phone_number || "",
-      city: data.city || "",
-      bio: data.bio || "",
-      age: data.age || 0,
-      profession: data.profession || "",
-      profile_picture_url: data.profile_picture_url || "",
-    });
+    if (data) {
+      setProfileData({
+        full_name: data.full_name || "",
+        phone_number: data.phone_number || "",
+        city: data.city || "",
+        bio: data.bio || "",
+        age: data.age || 0,
+        profession: data.profession || "",
+        profile_picture_url: data.profile_picture_url || "",
+      });
+    } else {
+      // Profile doesn't exist yet, create default values
+      console.log("No profile found, using defaults");
+    }
   };
 
   useEffect(() => {
@@ -84,53 +90,56 @@ const Profile = () => {
   };
 
   return (
-    <div className="min-h-screen py-4 px-2 sm:px-4">
-      <div className="max-w-4xl mx-auto">
-        <ProfileHeader
-          fullName={profileData.full_name}
-          email={user?.email || ""}
-          avatarUrl={profileData.profile_picture_url}
-        />
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-background py-8 px-4">
+      <div className="max-w-6xl mx-auto space-y-8">
+        {/* Header Section */}
+        <div className="text-center space-y-4">
+          <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-r from-primary to-secondary p-1">
+            <div className="w-full h-full rounded-full bg-background flex items-center justify-center text-4xl font-bold text-primary">
+              {profileData.full_name ? profileData.full_name.charAt(0).toUpperCase() : user?.email?.charAt(0).toUpperCase() || "U"}
+            </div>
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">{profileData.full_name || "Your Profile"}</h1>
+            <p className="text-muted-foreground">{user?.email}</p>
+          </div>
+        </div>
 
-        <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-white/90 backdrop-blur-md border-0 rounded-2xl p-1 shadow-lg">
-            <TabsTrigger value="profile" className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-600 data-[state=active]:to-violet-600 data-[state=active]:text-white data-[state=inactive]:text-slate-500 font-semibold">
-              <span className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded bg-white text-coral-400 flex items-center justify-center font-bold">P</span>
-                Profile
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="listings" className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-600 data-[state=active]:to-violet-600 data-[state=active]:text-white data-[state=inactive]:text-slate-500 font-semibold">
-              <span className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded bg-white text-coral-400 flex items-center justify-center"><Home className="h-4 w-4" /></span>
-                Listings
-              </span>
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-600 data-[state=active]:to-violet-600 data-[state=active]:text-white data-[state=inactive]:text-slate-500 font-semibold">
-              <span className="flex items-center gap-2">
-                <span className="w-5 h-5 rounded bg-white text-coral-400 flex items-center justify-center"><Settings className="h-4 w-4" /></span>
-                Settings
-              </span>
-            </TabsTrigger>
-          </TabsList>
+        {/* Navigation Cards */}
+        <div className="grid md:grid-cols-3 gap-6">
+          <Tabs defaultValue="profile" className="md:col-span-3">
+            <div className="flex justify-center mb-8">
+              <TabsList className="grid w-full max-w-md grid-cols-3 bg-card/50 border rounded-xl p-1">
+                <TabsTrigger value="profile" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Profile
+                </TabsTrigger>
+                <TabsTrigger value="listings" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Listings
+                </TabsTrigger>
+                <TabsTrigger value="settings" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                  Settings
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
-          <TabsContent value="profile" className="animate-fade-in">
-            <ProfileTabProfile
-              profileData={profileData}
-              setProfileData={setProfileData}
-              handleUpdateProfile={handleUpdateProfile}
-              isLoading={isLoading}
-            />
-          </TabsContent>
+            <TabsContent value="profile" className="animate-fade-in">
+              <ProfileTabProfile
+                profileData={profileData}
+                setProfileData={setProfileData}
+                handleUpdateProfile={handleUpdateProfile}
+                isLoading={isLoading}
+              />
+            </TabsContent>
 
-          <TabsContent value="listings" className="animate-fade-in">
-            <ProfileTabListings />
-          </TabsContent>
+            <TabsContent value="listings" className="animate-fade-in">
+              <ProfileTabListings />
+            </TabsContent>
 
-          <TabsContent value="settings" className="animate-fade-in">
-            <ProfileTabSettings user={user || {}} />
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="settings" className="animate-fade-in">
+              <ProfileTabSettings user={user || {}} />
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
     </div>
   );

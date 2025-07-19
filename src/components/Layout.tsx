@@ -2,9 +2,12 @@
 import React from "react";
 import { NavBarDemo } from "./ui/tubelight-navbar-demo";
 import { Boxes } from "@/components/ui/background-boxes";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 
 export const Layout = () => {
+  const location = useLocation();
+  const isProfilePage = location.pathname === '/profile';
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-100 overflow-auto relative">
       {/* Subtle animated background with heavy overlay */}
@@ -16,7 +19,7 @@ export const Layout = () => {
 
       {/* Main app content sits above background */}
       <div className="relative z-10 flex flex-col min-h-screen">
-        <NavBarDemo />
+        {!isProfilePage && <NavBarDemo />}
         <main className="flex-1 w-full mx-auto p-0">
           <Outlet />
         </main>

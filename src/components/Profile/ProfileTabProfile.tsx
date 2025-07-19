@@ -17,9 +17,9 @@ export const ProfileTabProfile: React.FC<ProfileTabProfileProps> = ({
   isLoading,
 }) => (
   <>
-    <Card className="bg-white/90 shadow-2xl border-0 rounded-3xl mb-6">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold text-slate-800">Edit Profile</CardTitle>
+    <Card className="bg-card/90 backdrop-blur-sm border shadow-lg rounded-2xl mb-8">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-2xl font-bold text-foreground">Edit Profile</CardTitle>
       </CardHeader>
       <CardContent>
         <ProfileDetailsForm
@@ -30,19 +30,28 @@ export const ProfileTabProfile: React.FC<ProfileTabProfileProps> = ({
         />
       </CardContent>
     </Card>
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-      <div className="bg-gradient-to-br from-coral-400/90 to-violet-500/90 text-white p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center transition-transform hover:scale-105">
-        <span className="text-3xl font-bold">0</span>
-        <span className="mt-2 font-medium">Listings</span>
-      </div>
-      <div className="bg-gradient-to-br from-violet-400/90 to-coral-500/80 text-white p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center transition-transform hover:scale-105">
-        <span className="text-3xl font-bold">0</span>
-        <span className="mt-2 font-medium">Favorites</span>
-      </div>
-      <div className="bg-gradient-to-br from-coral-400/80 to-pink-400/70 text-white p-6 rounded-2xl shadow-lg flex flex-col justify-center items-center transition-transform hover:scale-105">
-        <span className="text-3xl font-bold">0</span>
-        <span className="mt-2 font-medium">Reviews</span>
-      </div>
+    
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <Card className="border-0 bg-gradient-to-br from-primary/10 to-secondary/10 hover:from-primary/20 hover:to-secondary/20 transition-all duration-300 cursor-pointer">
+        <CardContent className="p-8 text-center">
+          <div className="text-4xl font-bold text-primary mb-2">0</div>
+          <div className="text-muted-foreground font-medium">Active Listings</div>
+        </CardContent>
+      </Card>
+      
+      <Card className="border-0 bg-gradient-to-br from-secondary/10 to-accent/10 hover:from-secondary/20 hover:to-accent/20 transition-all duration-300 cursor-pointer">
+        <CardContent className="p-8 text-center">
+          <div className="text-4xl font-bold text-secondary mb-2">0</div>
+          <div className="text-muted-foreground font-medium">Saved Favorites</div>
+        </CardContent>
+      </Card>
+      
+      <Card className="border-0 bg-gradient-to-br from-accent/10 to-primary/10 hover:from-accent/20 hover:to-primary/20 transition-all duration-300 cursor-pointer">
+        <CardContent className="p-8 text-center">
+          <div className="text-4xl font-bold text-accent mb-2">0</div>
+          <div className="text-muted-foreground font-medium">Reviews</div>
+        </CardContent>
+      </Card>
     </div>
   </>
 );
