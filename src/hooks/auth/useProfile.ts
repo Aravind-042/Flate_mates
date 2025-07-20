@@ -1,13 +1,16 @@
 
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import type { Profile } from "./types";
 
 export const useProfile = () => {
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchProfile = async (userId: string, retryCount = 0) => {
     try {
+      setLoading(true);
       console.log('Fetching profile for user:', userId);
       const { data: profileData, error } = await supabase
         .from('profiles')
@@ -36,12 +39,44 @@ export const useProfile = () => {
       }
     } catch (error) {
       console.error('Error in fetchProfile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateProfile = async (updates: Partial<Profile>) => {
+    if (!profile?.id) return;
+    
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('profiles')
+        .update(updates)
+        .eq('id', profile.id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error updating profile:', error);
+        toast.error('Failed to update profile');
+        return;
+      }
+
+      setProfile(data as Profile);
+      toast.success('Profile updated successfully');
+    } catch (error) {
+      console.error('Error in updateProfile:', error);
+      toast.error('Failed to update profile');
+    } finally {
+      setLoading(false);
     }
   };
 
   return {
     profile,
     setProfile,
-    fetchProfile
+    fetchProfile,
+    updateProfile,
+    loading
   };
 };

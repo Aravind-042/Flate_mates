@@ -70,8 +70,9 @@ const Profile = () => {
     <div className="min-h-screen py-8 px-4">
       <div className="max-w-6xl mx-auto">
         <ProfileHeader 
-          profile={profile} 
-          loading={isLoading}
+          fullName={profile?.full_name || null}
+          email={profile?.email || null}
+          avatarUrl={profile?.profile_picture_url || null}
         />
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
@@ -120,7 +121,7 @@ const Profile = () => {
           </TabsContent>
 
           <TabsContent value="settings" className="mt-6">
-            <ProfileTabSettings />
+            <ProfileTabSettings user={{ email: user?.email || null }} />
           </TabsContent>
         </Tabs>
       </div>
