@@ -3,6 +3,7 @@ import { FormHeader } from "./FormHeader";
 import { FormField } from "./FormField";
 import { SubmitButton } from "./SubmitButton";
 import { AuthModeSwitch } from "./AuthModeSwitch";
+import { OAuthButtons } from "./OAuthButtons";
 import { useSignin } from "@/hooks/useSignin";
 
 interface SignInFormProps {
@@ -69,6 +70,16 @@ export const SignInForm = ({
           Sign In
         </SubmitButton>
 
+        <div className="relative flex items-center justify-center my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-200"></div>
+          </div>
+          <div className="relative bg-white px-4">
+            <span className="text-slate-400 text-sm font-medium">OR</span>
+          </div>
+        </div>
+
+        <OAuthButtons />
         <div className="text-center">
           <button
             onClick={onSwitchToForgotPassword}
