@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
@@ -27,6 +28,14 @@ interface UIState {
   };
   setSearchFilters: (filters: Partial<UIState['searchFilters']>) => void;
   resetSearchFilters: () => void;
+  
+  // Performance optimizations
+  imageLoadingPriority: 'eager' | 'lazy';
+  setImageLoadingPriority: (priority: 'eager' | 'lazy') => void;
+  
+  // Animation preferences
+  enableAnimations: boolean;
+  setEnableAnimations: (enable: boolean) => void;
   
   // Notification state
   notifications: Array<{
@@ -73,6 +82,14 @@ export const useUIStore = create<UIState>()(
           searchFilters: { ...state.searchFilters, ...filters }
         })),
       resetSearchFilters: () => set({ searchFilters: defaultSearchFilters }),
+      
+      // Performance optimizations
+      imageLoadingPriority: 'lazy',
+      setImageLoadingPriority: (priority) => set({ imageLoadingPriority: priority }),
+      
+      // Animation preferences
+      enableAnimations: true,
+      setEnableAnimations: (enable) => set({ enableAnimations: enable }),
       
       // Notifications
       notifications: [],
