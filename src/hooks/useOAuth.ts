@@ -22,10 +22,16 @@ export const useOAuth = ({ onSuccess }: UseOAuthProps = {}) => {
     try {
       console.log(`Attempting OAuth sign in with ${provider}`);
       
+      // Get the current URL for redirect
+      const currentUrl = window.location.origin;
+      const redirectTo = currentUrl.includes('localhost') 
+        ? 'http://localhost:8080/' 
+        : currentUrl + '/';
+      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
@@ -47,14 +53,16 @@ export const useOAuth = ({ onSuccess }: UseOAuthProps = {}) => {
       console.error(`Error signing in with ${provider}:`, error);
       
       // Provide specific error messages
-      if (error.message?.includes('popup')) {
+      if (error.message?.includes('refused to connect') || error.message?.includes('CORS')) {
+        toast.error(`${provider} OAuth is not configured yet. Please contact support or use email/password sign-in.`);
+      } else if (error.message?.includes('popup')) {
         toast.error(`Please allow popups for ${provider} sign-in to work properly.`);
       } else if (error.message?.includes('cancelled')) {
         toast.info(`${provider} sign-in was cancelled.`);
       } else if (error.message?.includes('network')) {
         toast.error("Network error. Please check your connection and try again.");
       } else {
-        toast.error(`Failed to sign in with ${provider}. Please try again.`);
+        toast.error(`${provider} OAuth is not available yet. Please use email/password sign-in.`);
       }
     } finally {
       setIsLoading(prev => ({ ...prev, [provider]: false }));
