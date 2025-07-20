@@ -20,7 +20,7 @@ export const Layout = () => {
       {/* Main app content sits above background */}
       <div className="relative z-10 flex flex-col min-h-screen">
         {!isProfilePage && <NavBarDemo />}
-        <main className="flex-1 w-full mx-auto p-0">
+        <main className={`flex-1 w-full mx-auto p-0 ${!isProfilePage ? 'pt-20 sm:pt-16 pb-20 sm:pb-6' : ''}`}>
           <Outlet />
         </main>
       </div>
