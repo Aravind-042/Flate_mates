@@ -58,7 +58,7 @@ export function NavBar({ leftItems, rightItems = [], className }: NavBarProps) {
           className={cn(
             "relative cursor-pointer text-sm font-semibold px-6 py-2 rounded-full transition-all duration-300",
             "text-foreground/70 hover:text-foreground",
-            isActive && "bg-gradient-to-r from-coral-400 to-violet-500 text-white shadow-lg",
+            isActive && "bg-gradient-to-r from-coral-500 to-violet-600 text-white shadow-lg border border-white/20",
           )}
         >
           <span className="hidden md:inline">{item.name}</span>
