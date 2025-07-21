@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DatabaseSetup } from "@/components/DatabaseSetup";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { lazy, Suspense } from "react";
-import { LoadingGrid } from "@/components/Browse/LoadingGrid";
+import { WalkingLoader } from "@/components/ui/walking-loader";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Layout } from "@/components/Layout";
 
@@ -42,10 +42,8 @@ const queryClient = new QueryClient({
 
 // Loading component for Suspense fallback
 const PageLoader = () => (
-  <div className="min-h-screen py-8 px-4">
-    <div className="max-w-6xl mx-auto">
-      <LoadingGrid />
-    </div>
+  <div className="min-h-screen flex items-center justify-center">
+    <WalkingLoader size="md" speed="normal" text="Loading..." />
   </div>
 );
 
