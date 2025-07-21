@@ -1,3 +1,3 @@
 export const BrowseHeader = () => {
-  return;
+  return null;
 };
