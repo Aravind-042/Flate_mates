@@ -67,61 +67,118 @@ const Profile = () => {
   const isLoading = authLoading || profileLoading;
 
   return (
-    <div className="min-h-screen py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        <ProfileHeader 
-          fullName={profile?.full_name || null}
-          email={profile?.email || null}
-          avatarUrl={profile?.profile_picture_url || null}
-        />
+    <div className="min-h-screen bg-gray-50">
+      {/* Back to Home Button */}
+      <div className="px-6 py-4">
+        <button 
+          onClick={() => window.history.back()}
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to Home
+        </button>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-6">
+        {/* Profile Header */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="relative mb-4">
+            {profile?.profile_picture_url ? (
+              <img
+                src={profile.profile_picture_url}
+                className="w-24 h-24 rounded-full object-cover border-4 border-gradient-to-r from-blue-400 to-orange-400"
+                alt="Profile"
+              />
+            ) : (
+              <div className="w-24 h-24 bg-gradient-to-r from-blue-400 to-orange-400 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
+                <span className="text-2xl font-bold text-white">
+                  {profile?.full_name?.charAt(0)?.toUpperCase() || 'A'}
+                </span>
+              </div>
+            )}
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">
+            {profile?.full_name || 'Your Name'}
+          </h1>
+          <p className="text-gray-600">{profile?.email}</p>
+        </div>
         
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
-          <TabsList className="grid w-full grid-cols-4 bg-white/90 backdrop-blur-sm border border-slate-200 rounded-2xl p-1 shadow-lg">
-            <TabsTrigger 
-              value="profile" 
-              className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-400 data-[state=active]:to-violet-500 data-[state=active]:text-white font-semibold"
-            >
-              Profile
-            </TabsTrigger>
-            <TabsTrigger 
-              value="listings" 
-              className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-400 data-[state=active]:to-violet-500 data-[state=active]:text-white font-semibold"
-            >
-              My Listings
-            </TabsTrigger>
-            <TabsTrigger 
-              value="favorites" 
-              className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-400 data-[state=active]:to-violet-500 data-[state=active]:text-white font-semibold"
-            >
-              Favorites
-            </TabsTrigger>
-            <TabsTrigger 
-              value="settings" 
-              className="rounded-xl data-[state=active]:bg-gradient-to-r data-[state=active]:from-coral-400 data-[state=active]:to-violet-500 data-[state=active]:text-white font-semibold"
-            >
-              Settings
-            </TabsTrigger>
-          </TabsList>
+        {/* Navigation Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
+          <div className="flex justify-center mb-6">
+            <div className="flex bg-gray-100 rounded-full p-1">
+              <button
+                onClick={() => setActiveTab('profile')}
+                className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+                  activeTab === 'profile'
+                    ? 'bg-blue-500 text-white shadow-md'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                Profile
+              </button>
+              <button
+                onClick={() => setActiveTab('listings')}
+                className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+                  activeTab === 'listings'
+                    ? 'bg-blue-500 text-white shadow-md'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                Listings
+              </button>
+              <button
+                onClick={() => setActiveTab('favorites')}
+                className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+                  activeTab === 'favorites'
+                    ? 'bg-blue-500 text-white shadow-md'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                Favorites
+              </button>
+              <button
+                onClick={() => setActiveTab('settings')}
+                className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
+                  activeTab === 'settings'
+                    ? 'bg-blue-500 text-white shadow-md'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+              >
+                Settings
+              </button>
+            </div>
+          </div>
 
-          <TabsContent value="profile" className="mt-6">
-            <ProfileTabProfile
-              profileData={profileData}
-              setProfileData={setProfileData}
-              handleUpdateProfile={handleUpdateProfile}
-              isLoading={isLoading}
-            />
+          <TabsContent value="profile" className="animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+              <ProfileTabProfile
+                profileData={profileData}
+                setProfileData={setProfileData}
+                handleUpdateProfile={handleUpdateProfile}
+                isLoading={isLoading}
+              />
+            </div>
           </TabsContent>
 
-          <TabsContent value="listings" className="mt-6">
-            <ProfileTabListings />
+          <TabsContent value="listings" className="animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+              <ProfileTabListings />
+            </div>
           </TabsContent>
 
-          <TabsContent value="favorites" className="mt-6">
-            <ProfileTabFavorites />
+          <TabsContent value="favorites" className="animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+              <ProfileTabFavorites />
+            </div>
           </TabsContent>
 
-          <TabsContent value="settings" className="mt-6">
-            <ProfileTabSettings user={{ email: user?.email || null }} />
+          <TabsContent value="settings" className="animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+              <ProfileTabSettings user={{ email: user?.email || null }} />
+            </div>
           </TabsContent>
         </Tabs>
       </div>
