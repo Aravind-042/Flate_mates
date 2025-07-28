@@ -126,6 +126,12 @@ const FlatDetail = () => {
           <PropertyPricing
             monthlyRent={flatListing.rent.amount}
             securityDeposit={flatListing.rent.deposit}
+            listingId={flatListing.id!}
+            listingTitle={flatListing.title}
+            ownerProfile={{
+              phone_number: '9876543210', // This should come from owner profile data
+              email: 'owner@example.com' // This should come from owner profile data
+            }}
           />
 
           <PropertyDescription description={flatListing.description} />
