@@ -14,6 +14,38 @@ export type Database = {
   }
   public: {
     Tables: {
+      contact_access_log: {
+        Row: {
+          accessed_at: string
+          credits_used: number
+          id: string
+          listing_id: string
+          user_id: string
+        }
+        Insert: {
+          accessed_at?: string
+          credits_used?: number
+          id?: string
+          listing_id: string
+          user_id: string
+        }
+        Update: {
+          accessed_at?: string
+          credits_used?: number
+          id?: string
+          listing_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contact_access_log_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "flat_listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conversations: {
         Row: {
           created_at: string | null
@@ -841,6 +873,42 @@ export type Database = {
           },
         ]
       }
+      referrals: {
+        Row: {
+          created_at: string
+          credits_awarded: number | null
+          id: string
+          referral_code: string
+          referred_email: string
+          referred_user_id: string | null
+          referrer_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          credits_awarded?: number | null
+          id?: string
+          referral_code: string
+          referred_email: string
+          referred_user_id?: string | null
+          referrer_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          credits_awarded?: number | null
+          id?: string
+          referral_code?: string
+          referred_email?: string
+          referred_user_id?: string | null
+          referrer_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       reviews: {
         Row: {
           created_at: string | null
@@ -1158,6 +1226,30 @@ export type Database = {
           },
         ]
       }
+      user_credits: {
+        Row: {
+          created_at: string
+          credits: number
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credits?: number
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credits?: number
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_favorites: {
         Row: {
           created_at: string | null
@@ -1253,9 +1345,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      consume_credit_for_contact: {
+        Args: { listing_id: string }
+        Returns: boolean
+      }
       create_sample_listings_for_user: {
         Args: { user_id: string }
         Returns: number
+      }
+      generate_referral_code: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      process_referral_signup: {
+        Args: { referred_email: string; referral_code: string }
+        Returns: undefined
       }
       search_listings: {
         Args: {
