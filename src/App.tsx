@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DatabaseSetup } from "@/components/DatabaseSetup";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { WalkingLoader } from "@/components/ui/walking-loader";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Layout } from "@/components/Layout";
@@ -40,12 +40,34 @@ const queryClient = new QueryClient({
   },
 });
 
-// Loading component for Suspense fallback
-const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <WalkingLoader size="md" speed="normal" text="Loading..." />
-  </div>
-);
+// Loading component for Suspense fallback with timeout
+const PageLoader = () => {
+  const [showTimeoutMessage, setShowTimeoutMessage] = useState(false);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowTimeoutMessage(true);
+    }, 10000); // Show timeout message after 10 seconds
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      {!showTimeoutMessage ? (
+        <WalkingLoader size="md" speed="normal" text="Loading your page..." />
+      ) : (
+        <div className="text-center space-y-4">
+          <WalkingLoader size="sm" speed="fast" text="Still loading..." />
+          <div className="text-muted-foreground max-w-md">
+            <p>This is taking longer than expected.</p>
+            <p className="text-sm mt-2">Try refreshing the page or check your internet connection.</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 function App() {
   return (

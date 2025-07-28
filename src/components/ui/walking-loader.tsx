@@ -19,9 +19,9 @@ export const WalkingLoader = ({
   const [currentFrame, setCurrentFrame] = useState(0)
   
   const sizeConfig = {
-    sm: { scale: 0.6, containerHeight: 'h-32' },
-    md: { scale: 0.8, containerHeight: 'h-40' },
-    lg: { scale: 1, containerHeight: 'h-48' }
+    sm: { scale: 0.6, containerHeight: 'h-32', width: 'w-64' },
+    md: { scale: 0.8, containerHeight: 'h-40', width: 'w-80' },
+    lg: { scale: 1, containerHeight: 'h-48', width: 'w-96' }
   }
   
   const speedConfig = {
@@ -43,13 +43,13 @@ export const WalkingLoader = ({
 
   return (
     <div className="flex flex-col items-center justify-center space-y-4">
-      <div className={`relative ${config.containerHeight} w-full max-w-md overflow-hidden`}>
+      <div className={`relative ${config.containerHeight} ${config.width} overflow-hidden mx-auto`}>
         {/* Building */}
         <motion.div
-          className="absolute right-0 top-0 bg-foreground"
+          className="absolute right-4 top-0 bg-foreground rounded-t-lg"
           style={{
-            width: '120px',
-            height: '100%',
+            width: `${120 * config.scale}px`,
+            height: '85%',
             transform: `scale(${config.scale})`,
             transformOrigin: 'top right'
           }}
@@ -108,8 +108,8 @@ export const WalkingLoader = ({
             transformOrigin: 'bottom left'
           }}
           animate={{
-            x: [0, 200, 280],
-            y: [0, 0, -10]
+            x: [0, `${180 * config.scale}px`, `${250 * config.scale}px`],
+            y: [0, 0, -8]
           }}
           transition={{
             duration: animationDuration / 1000,
@@ -176,7 +176,7 @@ export const WalkingLoader = ({
         <motion.div
           className="absolute bottom-1"
           animate={{
-            x: [20, 220]
+            x: [`${20 * config.scale}px`, `${200 * config.scale}px`]
           }}
           transition={{
             duration: animationDuration / 1000,
