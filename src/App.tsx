@@ -5,20 +5,20 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DatabaseSetup } from "@/components/DatabaseSetup";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import { lazy, Suspense, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { WalkingLoader } from "@/components/ui/walking-loader";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { Layout } from "@/components/Layout";
 
-// Lazy load pages for better performance
-const Index = lazy(() => import("./pages/Index"));
-const About = lazy(() => import("./pages/About"));
-const Browse = lazy(() => import("./pages/Browse"));
-const Profile = lazy(() => import("./pages/Profile"));
-const CreateListing = lazy(() => import("./pages/CreateListing"));
-const FlatDetail = lazy(() => import("./pages/FlatDetail"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const AuthPage = lazy(() => import("@/components/AuthPage").then(module => ({ default: module.AuthPage })));
+// Direct imports instead of lazy loading to fix the loading issue
+import Index from "./pages/Index";
+import About from "./pages/About";
+import Browse from "./pages/Browse";
+import Profile from "./pages/Profile";
+import CreateListing from "./pages/CreateListing";
+import FlatDetail from "./pages/FlatDetail";
+import NotFound from "./pages/NotFound";
+import { AuthPage } from "@/components/AuthPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -77,24 +77,22 @@ function App() {
           <Toaster />
           <BrowserRouter>
             <DatabaseSetup />
-            <Suspense fallback={<PageLoader />}>
-              <Routes>
-                <Route path="/" element={<Layout />}>
-                  <Route index element={<Index />} />
-                  <Route path="about" element={<About />} />
-                  <Route path="browse" element={<Browse />} />
-                  <Route path="flat/:id" element={<FlatDetail />} />
-                  <Route path="profile" element={
-                    <ProtectedRoute>
-                      <Profile />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="create-listing" element={<CreateListing />} />
-                  <Route path="auth" element={<AuthPage />} />
-                  <Route path="*" element={<NotFound />} />
-                </Route>
-              </Routes>
-            </Suspense>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Index />} />
+                <Route path="about" element={<About />} />
+                <Route path="browse" element={<Browse />} />
+                <Route path="flat/:id" element={<FlatDetail />} />
+                <Route path="profile" element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                } />
+                <Route path="create-listing" element={<CreateListing />} />
+                <Route path="auth" element={<AuthPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Route>
+            </Routes>
           </BrowserRouter>
         </TooltipProvider>
       </QueryClientProvider>
