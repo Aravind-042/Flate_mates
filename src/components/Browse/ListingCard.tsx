@@ -76,7 +76,7 @@ export const ListingCard = memo(({
           <ImageCarousel images={listing.images} title={listing.title} height="h-48" showIndicator={true} showArrows={true} />
           
           {/* Property Type and Gender Badge */}
-          <div className="absolute top-4 left-4 z-10">
+          <div className="absolute bottom-4 left-4 z-10">
             <div className="bg-white/95 text-slate-700 border-0 shadow-md font-medium px-2.5 py-1.5 rounded-full text-sm">
               {formatPropertyType(listing.property_type)}
               {listing.preferred_gender && <span className="ml-2 text-purple-600">
