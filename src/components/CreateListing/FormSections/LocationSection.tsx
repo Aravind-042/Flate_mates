@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+import { AddressInput } from "@/components/AddressAutocomplete/AddressInput";
 import type { FormSectionProps } from "./types";
 
 interface Props extends FormSectionProps {
@@ -46,30 +47,32 @@ export const LocationSection = ({ data, onChange, errors = {} }: Props) => {
         </Select>
         {errors['location.city'] && <p className="text-destructive text-xs mt-1">{errors['location.city']}</p>}
       </div>
-      <div>
-        <Label htmlFor="area" className="text-charcoal">
-          Area/Locality <span className="text-destructive">*</span>
-        </Label>
-        <Input
-          id="area"
-          placeholder="e.g., Koramangala, Andheri West"
-          value={data.location.area}
-          onChange={(e) => onChange('location.area', e.target.value)}
-          className={`mt-2 border-light-slate focus:border-deep-blue focus:ring-deep-blue ${errors['location.area'] ? 'border-red-500' : ''}`}
-          required
-        />
-        {errors['location.area'] && <p className="text-destructive text-xs mt-1">{errors['location.area']}</p>}
-      </div>
-      <div>
-        <Label htmlFor="address" className="text-charcoal">Address <span className="text-gray-400">(Optional)</span></Label>
-        <Textarea
-          id="address"
-          placeholder="Building name, street address (will be shared only after acceptance)"
-          value={data.location.address}
-          onChange={(e) => onChange('location.address', e.target.value)}
-          className="mt-2 border-light-slate focus:border-deep-blue focus:ring-deep-blue"
-        />
-      </div>
+      <AddressInput
+        label="Area/Locality"
+        value={data.location.area}
+        onChange={(value, coordinates) => {
+          onChange('location.area', value);
+          if (coordinates) {
+            // Store coordinates for future use with geocoding
+            onChange('location.coordinates', coordinates);
+          }
+        }}
+        placeholder="e.g., Koramangala, Andheri West"
+        required
+        error={errors['location.area']}
+      />
+      <AddressInput
+        label="Full Address"
+        value={data.location.address}
+        onChange={(value, coordinates) => {
+          onChange('location.address', value);
+          if (coordinates) {
+            onChange('location.coordinates', coordinates);
+          }
+        }}
+        placeholder="Building name, street address (will be shared only after acceptance)"
+        error={errors['location.address']}
+      />
     </div>
   );
 };

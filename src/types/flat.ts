@@ -7,6 +7,7 @@ export interface FlatListing {
     city: string;
     area: string;
     address: string;
+    coordinates?: [number, number]; // [lng, lat]
   };
   property: {
     type: string;
