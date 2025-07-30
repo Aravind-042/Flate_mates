@@ -137,6 +137,14 @@ const Browse = () => {
           <EmptyState />
         ) : showMap ? (
           <div className="w-full">
+            <div className="mb-4">
+              <button
+                onClick={() => setShowMap(false)}
+                className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-slate-200 hover:border-coral-400 rounded-xl text-slate-700 font-medium transition-all"
+              >
+                ← Back to List View
+              </button>
+            </div>
             <ListingMap
               listings={filteredListings.map(listing => ListingService.transformToFlatListing(listing))}
               height="600px"
