@@ -5,7 +5,8 @@ import { LoadingGrid } from "@/components/Browse/LoadingGrid";
 import { EmptyState } from "@/components/Browse/EmptyState";
 import { ListingCard } from "@/components/Browse/ListingCard";
 import { SearchBar } from "@/components/ui/search-bar";
-import { Landmark, Factory, Warehouse } from "lucide-react";
+import { ListingMap } from "@/components/Map/ListingMap";
+import { Landmark, Factory, Warehouse, Map } from "lucide-react";
 import { useListings } from "@/hooks/queries/useListings";
 import { ListingService } from "@/services/listingService";
 import { useUIStore } from "@/store/uiStore";
@@ -16,6 +17,7 @@ const Browse = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
+  const [showMap, setShowMap] = useState(false);
   const MIN_RENT = 1;
   const MAX_RENT = 100000;
   const [rentRange, setRentRange] = useState<[number, number]>([MIN_RENT, MAX_RENT]);
@@ -80,6 +82,17 @@ const Browse = () => {
                 </option>)}
             </select>
           </div>
+          <button
+            onClick={() => setShowMap(!showMap)}
+            className={`h-12 px-4 border-2 rounded-xl transition-all flex items-center gap-2 font-medium ${
+              showMap 
+                ? 'bg-blue-500 text-white border-blue-500' 
+                : 'bg-white text-slate-700 border-slate-200 hover:border-coral-400'
+            }`}
+          >
+            <Map size={18} />
+            {showMap ? 'List View' : 'Map View'}
+          </button>
         </div>
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-10 max-w-3xl mx-auto">
@@ -118,35 +131,50 @@ const Browse = () => {
           </div>
         </div>
 
-        {isLoading ? <LoadingGrid /> : filteredListings.length === 0 ? <EmptyState /> : <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {isLoading ? (
+          <LoadingGrid />
+        ) : filteredListings.length === 0 ? (
+          <EmptyState />
+        ) : showMap ? (
+          <div className="w-full">
+            <ListingMap
+              listings={filteredListings.map(listing => ListingService.transformToFlatListing(listing))}
+              height="600px"
+              className="rounded-2xl overflow-hidden shadow-lg"
+              onListingSelect={(listing) => handleFlatClick(listing.id!)}
+            />
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredListings.map(listing => {
-          const flatListing = ListingService.transformToFlatListing(listing);
-          const cardListing = {
-            id: flatListing.id!,
-            title: flatListing.title,
-            description: flatListing.description,
-            property_type: flatListing.property.type,
-            bedrooms: flatListing.property.bedrooms,
-            bathrooms: flatListing.property.bathrooms,
-            monthly_rent: flatListing.rent.amount,
-            security_deposit: flatListing.rent.deposit,
-            is_furnished: flatListing.property.furnished,
-            parking_available: flatListing.property.parking,
-            amenities: flatListing.amenities,
-            address_line1: flatListing.location.address,
-            address_line2: "",
-            images: flatListing.images,
-            owner_id: flatListing.ownerId!,
-            created_at: flatListing.createdAt!,
-            preferred_gender: flatListing.preferences.gender,
-            locations: {
-              city: flatListing.location.city,
-              area: flatListing.location.area
-            }
-          };
-          return <ListingCard key={cardListing.id} listing={cardListing} onCardClick={handleFlatClick} />;
-        })}
-          </div>}
+              const flatListing = ListingService.transformToFlatListing(listing);
+              const cardListing = {
+                id: flatListing.id!,
+                title: flatListing.title,
+                description: flatListing.description,
+                property_type: flatListing.property.type,
+                bedrooms: flatListing.property.bedrooms,
+                bathrooms: flatListing.property.bathrooms,
+                monthly_rent: flatListing.rent.amount,
+                security_deposit: flatListing.rent.deposit,
+                is_furnished: flatListing.property.furnished,
+                parking_available: flatListing.property.parking,
+                amenities: flatListing.amenities,
+                address_line1: flatListing.location.address,
+                address_line2: "",
+                images: flatListing.images,
+                owner_id: flatListing.ownerId!,
+                created_at: flatListing.createdAt!,
+                preferred_gender: flatListing.preferences.gender,
+                locations: {
+                  city: flatListing.location.city,
+                  area: flatListing.location.area
+                }
+              };
+              return <ListingCard key={cardListing.id} listing={cardListing} onCardClick={handleFlatClick} />;
+            })}
+          </div>
+        )}
       </div>
     </div>;
 };
