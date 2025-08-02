@@ -16,15 +16,7 @@ export function NavBarDemo() {
     { name: 'Create', url: '/create-listing', icon: Plus },
   ]
 
-  // Show credits in navbar when user is authenticated
-  const rightItems = user && !creditsLoading ? [
-    {
-      name: `${credits} Credits`,
-      url: '/profile',
-      icon: Coins,
-      badge: credits <= 3 ? 'warning' : undefined
-    }
-  ] : [];
+  const rightItems: any[] = [];
 
   return (
     <>
