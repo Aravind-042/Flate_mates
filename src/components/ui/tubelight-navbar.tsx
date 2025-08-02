@@ -57,7 +57,7 @@ export function NavBar({ leftItems, rightItems = [], className }: NavBarProps) {
           onClick={() => setActiveTab(item.name)}
           className={cn(
             "relative cursor-pointer text-sm font-semibold px-6 py-2 rounded-full transition-all duration-300",
-            "text-foreground/70 hover:text-foreground",
+            "text-slate-700 hover:text-slate-900",
             isActive && "bg-gradient-to-r from-coral-500 to-violet-600 text-white shadow-lg border border-white/20 hover:text-white",
           )}
         >
