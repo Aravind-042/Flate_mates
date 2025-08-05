@@ -18,9 +18,15 @@ export const SignUpForm = ({
   signupRoleIntentProp,
   onSuccess
 }: SignUpFormProps) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [fullName, setFullName] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    fullName: '',
+    phoneNumber: '',
+    city: '',
+    profession: '',
+    age: ''
+  });
   
   const initialRole: 'flat_seeker' | 'flat_owner' = (() => {
     if (signupRoleIntentProp) return signupRoleIntentProp;
@@ -37,8 +43,15 @@ export const SignUpForm = ({
   
   const { signUp, isLoading } = useSignup({ onSuccess });
 
+  const updateFormData = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
   const handleSignUp = () => {
-    signUp(email, password, fullName, role);
+    signUp(formData, role);
   };
 
   return (
@@ -53,9 +66,47 @@ export const SignUpForm = ({
           id="fullNameSignup"
           label="Full Name"
           placeholder="Enter your full name"
-          value={fullName}
-          onChange={setFullName}
+          value={formData.fullName}
+          onChange={(value) => updateFormData('fullName', value)}
         />
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FormField
+            id="phoneNumberSignup"
+            label="Phone Number"
+            placeholder="Your phone number"
+            value={formData.phoneNumber}
+            onChange={(value) => updateFormData('phoneNumber', value)}
+            type="tel"
+          />
+
+          <FormField
+            id="ageSignup"
+            label="Age"
+            placeholder="Your age"
+            value={formData.age}
+            onChange={(value) => updateFormData('age', value)}
+            type="number"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FormField
+            id="citySignup"
+            label="City"
+            placeholder="Your city"
+            value={formData.city}
+            onChange={(value) => updateFormData('city', value)}
+          />
+
+          <FormField
+            id="professionSignup"
+            label="Profession"
+            placeholder="Your profession"
+            value={formData.profession}
+            onChange={(value) => updateFormData('profession', value)}
+          />
+        </div>
 
         <RoleSelector value={role} onChange={setRole} />
 
@@ -63,8 +114,8 @@ export const SignUpForm = ({
           id="emailSignup"
           label="Email Address"
           placeholder="your.email@example.com"
-          value={email}
-          onChange={setEmail}
+          value={formData.email}
+          onChange={(value) => updateFormData('email', value)}
           type="email"
         />
 
@@ -72,8 +123,8 @@ export const SignUpForm = ({
           id="passwordSignup"
           label="Password"
           placeholder="Create a strong password (min 6 characters)"
-          value={password}
-          onChange={setPassword}
+          value={formData.password}
+          onChange={(value) => updateFormData('password', value)}
           showPasswordToggle={true}
           showPassword={showPassword}
           onTogglePassword={() => setShowPassword(!showPassword)}
@@ -97,14 +148,6 @@ export const SignUpForm = ({
         </div>
 
         <OAuthButtons />
-        <div className="relative flex items-center justify-center my-6">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-slate-200"></div>
-          </div>
-          <div className="relative bg-white px-4">
-            <span className="text-slate-400 text-sm font-medium">OR</span>
-          </div>
-        </div>
 
         <AuthModeSwitch
           onSwitch={onSwitchToSignIn}

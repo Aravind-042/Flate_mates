@@ -7,12 +7,24 @@ interface UseSignupProps {
   onSuccess?: () => void;
 }
 
+interface SignupFormData {
+  email: string;
+  password: string;
+  fullName: string;
+  phoneNumber: string;
+  city: string;
+  profession: string;
+  age: string;
+}
+
 export const useSignup = ({ onSuccess }: UseSignupProps = {}) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const signUp = async (email: string, password: string, fullName: string, role: 'flat_seeker' | 'flat_owner') => {
+  const signUp = async (formData: SignupFormData, role: 'flat_seeker' | 'flat_owner') => {
+    const { email, password, fullName, phoneNumber, city, profession, age } = formData;
+    
     if (!email || !password || !fullName) {
-      toast.error("Please fill in all fields");
+      toast.error("Please fill in all required fields");
       return;
     }
 
@@ -26,7 +38,11 @@ export const useSignup = ({ onSuccess }: UseSignupProps = {}) => {
       console.log('Attempting sign up with data:', {
         email,
         full_name: fullName,
-        role: role
+        role: role,
+        phone_number: phoneNumber,
+        city,
+        profession,
+        age: age ? parseInt(age) : null
       });
 
       const redirectUrl = `${window.location.origin}/`;
@@ -38,7 +54,11 @@ export const useSignup = ({ onSuccess }: UseSignupProps = {}) => {
           emailRedirectTo: redirectUrl,
           data: {
             full_name: fullName,
-            role: role
+            role: role,
+            phone_number: phoneNumber,
+            city: city,
+            profession: profession,
+            age: age ? parseInt(age) : null
           }
         }
       });
@@ -57,26 +77,7 @@ export const useSignup = ({ onSuccess }: UseSignupProps = {}) => {
         user_email: data.user?.email,
         session_exists: !!data.session
       });
-      const userId = data.user?.id;
-      console.log(userId)
-      if (userId) {
-        const { error: profileInsertError } = await supabase
-          .from('profiles')
-          .insert([
-            {
-              id: userId,        // assuming your primary key in profiles is 'id' matching auth.user.id
-              full_name: fullName,
-              email:email
-              
-            }
-          ]);
 
-        if (profileInsertError) {
-          console.error('Failed to insert into profiles:', profileInsertError);
-          toast.error("Failed to create user profile. Please contact support.");
-          return;
-        }
-      }
       toast.success("Account created successfully! Please check your email to verify your account.");
       
       // Handle successful sign up
