@@ -69,13 +69,13 @@ export const ProfileTabListings: React.FC = () => {
   return (
     <Card className="bg-white/90 shadow-2xl border-0 rounded-3xl">
       <CardHeader>
-        <div className="flex justify-between items-center">
-          <CardTitle className="text-2xl font-bold text-slate-800">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <CardTitle className="text-xl sm:text-2xl font-bold text-slate-800">
             My Listings
           </CardTitle>
           <Button
             onClick={() => navigate("/create-listing")}
-            className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl"
+            className="bg-gradient-to-r from-coral-400 to-violet-500 hover:from-coral-500 hover:to-violet-600 text-white rounded-xl w-full sm:w-auto"
           >
             <Plus className="h-4 w-4 mr-2" />
             Create Listing
@@ -107,13 +107,13 @@ export const ProfileTabListings: React.FC = () => {
             {listings.map(listing => (
               <div
                 key={listing.id}
-                className="p-4 bg-slate-50 rounded-xl shadow flex justify-between items-start"
+                className="p-4 bg-slate-50 rounded-xl shadow flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4"
               >
-                <div>
-                  <h3 className="text-lg font-semibold text-slate-800">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-lg font-semibold text-slate-800 truncate">
                     {listing.title}
                   </h3>
-                  <p className="text-slate-600">{listing.address_line1}</p>
+                  <p className="text-slate-600 text-sm sm:text-base truncate">{listing.address_line1}</p>
                   <p className="text-sm text-slate-500">
                     Status:{" "}
                     <span
@@ -127,11 +127,11 @@ export const ProfileTabListings: React.FC = () => {
                     </span>
                   </p>
                 </div>
-                <div className="space-x-2 flex-shrink-0">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 flex-shrink-0">
                   {listing.status !== "rented" && (
                     <Button
                       size="sm"
-                      className="bg-green-100 text-green-800 hover:bg-green-200"
+                      className="bg-green-100 text-green-800 hover:bg-green-200 text-xs sm:text-sm w-full sm:w-auto"
                       onClick={() => markAsRented(listing.id)}
                     >
                       Mark as Rented
@@ -140,6 +140,7 @@ export const ProfileTabListings: React.FC = () => {
                   <Button
                     variant="destructive"
                     size="sm"
+                    className="text-xs sm:text-sm w-full sm:w-auto"
                     onClick={() => deleteListing(listing.id)}
                   >
                     Delete
