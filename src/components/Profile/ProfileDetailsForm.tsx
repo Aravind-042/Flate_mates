@@ -8,11 +8,12 @@ import { Save } from "lucide-react";
 
 export interface ProfileDetailsFormProps {
   profileData: {
-    full_name: string;
-    phone_number: string;
+    fullName: string;
+    email: string;
+    phoneNumber: string;
     city: string;
     bio: string;
-    age: number | string;
+    age: string;
     profession: string;
   };
   setProfileData: React.Dispatch<React.SetStateAction<any>>;
@@ -35,8 +36,8 @@ export const ProfileDetailsForm: React.FC<ProfileDetailsFormProps> = ({
           </Label>
           <Input
             id="full_name"
-            value={profileData.full_name}
-            onChange={e => setProfileData(d => ({ ...d, full_name: e.target.value }))}
+            value={profileData.fullName}
+            onChange={e => setProfileData(d => ({ ...d, fullName: e.target.value }))}
             className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
           />
         </div>
@@ -46,8 +47,8 @@ export const ProfileDetailsForm: React.FC<ProfileDetailsFormProps> = ({
           </Label>
           <Input
             id="phone_number"
-            value={profileData.phone_number}
-            onChange={e => setProfileData(d => ({ ...d, phone_number: e.target.value }))}
+            value={profileData.phoneNumber}
+            onChange={e => setProfileData(d => ({ ...d, phoneNumber: e.target.value }))}
             className="h-12 border-2 border-slate-200 focus:border-coral-400 rounded-xl"
           />
         </div>
