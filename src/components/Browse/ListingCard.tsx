@@ -77,11 +77,16 @@ export const ListingCard = memo(({
           
           {/* Property Type and Gender Badge */}
           <div className="absolute bottom-4 left-4 z-10">
-            <div className="bg-white/95 text-slate-700 border-0 shadow-md font-medium px-2.5 py-1.5 rounded-full text-sm">
-              {formatPropertyType(listing.property_type)}
-              {listing.preferred_gender && <span className="ml-2 text-purple-600">
-                  • {formatGenderPreference(listing.preferred_gender)}
-                </span>}
+            <div className="bg-white/95 backdrop-blur-sm text-slate-700 border-0 shadow-lg font-medium px-3 py-2 rounded-full text-sm flex items-center gap-2">
+              <span className="font-semibold">{formatPropertyType(listing.property_type)}</span>
+              {listing.preferred_gender && (
+                <>
+                  <span className="w-1 h-1 bg-purple-500 rounded-full"></span>
+                  <span className="text-purple-600 font-medium">
+                    {formatGenderPreference(listing.preferred_gender)}
+                  </span>
+                </>
+              )}
             </div>
           </div>
 
@@ -92,13 +97,19 @@ export const ListingCard = memo(({
 
           {/* Apply to Join Button - Shows on hover */}
           <div className={`absolute bottom-4 right-4 z-20 transition-all duration-300 ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}>
-            
+            <Button 
+              onClick={handleApplyToJoin}
+              size="sm"
+              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold shadow-lg"
+            >
+              Apply
+            </Button>
           </div>
         </div>
         
         <CardHeader className="pb-3">
           <div className="flex justify-between items-start">
-            <CardTitle className="text-xl font-bold text-slate-800 group-hover:text-coral-500 transition-colors">
+            <CardTitle className="text-xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
               {listing.title}
             </CardTitle>
           </div>
@@ -107,11 +118,11 @@ export const ListingCard = memo(({
         <CardContent className="pt-0">
           {/* Location with enhanced styling */}
           <div className="flex items-center text-slate-600 mb-3">
-            <MapPin className="h-4 w-4 mr-2 text-coral-500" />
+            <MapPin className="h-4 w-4 mr-2 text-blue-500" />
             <span className="text-sm">
               {listing.locations?.area && <span className="font-medium">{listing.locations.area}</span>}
               {listing.locations?.area && listing.locations?.city && <span className="mx-1">•</span>}
-              {listing.locations?.city && <Badge variant="outline" className="ml-1 text-xs border-coral-200 text-coral-700">
+              {listing.locations?.city && <Badge variant="outline" className="ml-1 text-xs border-blue-200 text-blue-700">
                   {listing.locations.city}
                 </Badge>}
               {!listing.locations?.area && !listing.locations?.city && <span>{listing.address_line1}</span>}
@@ -125,12 +136,12 @@ export const ListingCard = memo(({
                 {listing.description.length > 100 && !showFullDescription && <>
                     <span className="bg-gradient-to-r from-transparent to-white absolute right-0 w-8 h-5"></span>
                     ...
-                    <button onClick={handleShowMore} className="text-coral-500 hover:text-coral-600 font-medium ml-1 inline-flex items-center">
+                    <button onClick={handleShowMore} className="text-blue-500 hover:text-blue-600 font-medium ml-1 inline-flex items-center">
                       Read More
                       <ChevronRight className="h-3 w-3 ml-1" />
                     </button>
                   </>}
-                {showFullDescription && <button onClick={handleShowLess} className="text-coral-500 hover:text-coral-600 font-medium ml-1">
+                {showFullDescription && <button onClick={handleShowLess} className="text-blue-500 hover:text-blue-600 font-medium ml-1">
                     Show Less
                   </button>}
               </p>

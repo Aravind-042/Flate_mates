@@ -70,64 +70,102 @@ const Browse = () => {
 
         
 
-        <div className="mb-6 flex flex-col md:flex-row gap-3 md:gap-5 max-w-3xl w-full mx-auto">
-          <div className="flex-1">
+        <div className="mb-8 flex flex-col lg:flex-row gap-4 max-w-6xl w-full mx-auto">
+          {/* Search Bar */}
+          <div className="flex-1 min-w-0">
             <SearchBar placeholder="Search by title, area, or address..." onSearch={setSearchQuery} />
           </div>
-          <div className="md:w-[220px] w-full">
-            <select value={selectedCity} onChange={e => handleCityChange(e.target.value)} className="h-12 px-4 border-2 border-slate-200 focus:border-coral-400 rounded-xl bg-white text-slate-700 transition-all w-full shadow-sm">
+          
+          {/* City Dropdown */}
+          <div className="lg:w-48 w-full">
+            <select 
+              value={selectedCity} 
+              onChange={e => handleCityChange(e.target.value)} 
+              className="h-12 px-4 border-2 border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 rounded-xl bg-white text-slate-700 transition-all w-full shadow-sm font-medium z-50 relative"
+            >
               <option value="">All Cities</option>
               {cities.map(city => <option key={city} value={city}>
                   {city}
                 </option>)}
             </select>
           </div>
+          
+          {/* Map View Toggle */}
           <button
             onClick={() => setShowMap(!showMap)}
-            className={`h-12 px-4 border-2 rounded-xl transition-all flex items-center gap-2 font-medium ${
+            className={`h-12 px-6 border-2 rounded-xl transition-all flex items-center gap-3 font-semibold whitespace-nowrap ${
               showMap 
-                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white border-blue-500 shadow-lg' 
-                : 'bg-white text-slate-700 border-slate-200 hover:border-blue-500 hover:text-blue-600'
+                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white border-blue-500 shadow-lg transform scale-[1.02]' 
+                : 'bg-white text-slate-700 border-slate-200 hover:border-blue-500 hover:text-blue-600 hover:shadow-md'
             }`}
           >
-            <Map size={18} />
+            <Map size={20} />
             {showMap ? 'List View' : 'Map View'}
           </button>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-10 max-w-3xl mx-auto">
+        {/* Enhanced Filters Section */}
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-12 max-w-6xl mx-auto p-6 bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border border-white/20">
           {/* Gender Filter */}
-          <div className="flex items-center gap-4">
-  <span className="text-slate-700 font-medium">Gender :</span>
-  <div className="flex gap-2">
-    {['Male', 'Female', 'Any'].map(gender => {
-              const isSelected = selectedGenders.includes(gender);
-              return <button key={gender} type="button" onClick={() => {
-                setSelectedGenders(prev => isSelected ? prev.filter(g => g !== gender) // Deselect
-                : [...prev, gender] // Select
-                );
-              }} className={`px-4 py-1 rounded-full border transition-all text-sm font-medium ${isSelected ? "bg-blue-500 text-white border-blue-500" : "bg-white text-slate-600 border-slate-300 hover:bg-slate-100"}`}>
-          {gender}
-        </button>;
-            })}
-  </div>
-        </div>
-
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <span className="text-slate-700 font-semibold text-lg">Gender Preference:</span>
+            <div className="flex gap-3">
+              {['Male', 'Female', 'Any'].map(gender => {
+                const isSelected = selectedGenders.includes(gender);
+                return <button 
+                  key={gender} 
+                  type="button" 
+                  onClick={() => {
+                    setSelectedGenders(prev => isSelected ? prev.filter(g => g !== gender) : [...prev, gender]);
+                  }} 
+                  className={`px-6 py-2 rounded-full border-2 transition-all text-sm font-semibold transform hover:scale-105 ${
+                    isSelected 
+                      ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white border-blue-500 shadow-lg" 
+                      : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50 hover:border-blue-400"
+                  }`}
+                >
+                  {gender}
+                </button>;
+              })}
+            </div>
+          </div>
 
           {/* Rent Range Filter */}
-          <div className="w-full md:w-[300px]">
-            <label className="text-slate-700 font-medium">
-              Rent Range: ₹{rentRange[0]} - ₹{rentRange[1]}
+          <div className="w-full lg:w-[350px]">
+            <label className="text-slate-700 font-semibold text-lg block mb-3">
+              Rent Range: ₹{rentRange[0].toLocaleString()} - ₹{rentRange[1].toLocaleString()}
             </label>
-            <Slider range min={MIN_RENT} max={MAX_RENT} step={500} value={rentRange} onChange={(val: [number, number]) => setRentRange(val)} trackStyle={{
-            backgroundColor: "hsl(213, 94%, 68%)"
-          }} handleStyle={[{
-            borderColor: "#0ea5e9",
-            backgroundColor: "#0ea5e9"
-          }, {
-            borderColor: "#0ea5e9",
-            backgroundColor: "#0ea5e9"
-          }]} />
+            <div className="px-2">
+              <Slider 
+                range 
+                min={MIN_RENT} 
+                max={MAX_RENT} 
+                step={500} 
+                value={rentRange} 
+                onChange={(val: [number, number]) => setRentRange(val)} 
+                trackStyle={{
+                  backgroundColor: "rgb(59 130 246)",
+                  height: 6
+                }} 
+                handleStyle={[{
+                  borderColor: "rgb(59 130 246)",
+                  backgroundColor: "rgb(59 130 246)",
+                  width: 20,
+                  height: 20,
+                  marginTop: -7
+                }, {
+                  borderColor: "rgb(59 130 246)",
+                  backgroundColor: "rgb(59 130 246)",
+                  width: 20,
+                  height: 20,
+                  marginTop: -7
+                }]} 
+                railStyle={{
+                  backgroundColor: "rgb(226 232 240)",
+                  height: 6
+                }}
+              />
+            </div>
           </div>
         </div>
 
