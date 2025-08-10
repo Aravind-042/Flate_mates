@@ -104,67 +104,106 @@ const Browse = () => {
           </button>
         </div>
 
-        {/* Enhanced Filters Section */}
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-12 max-w-6xl mx-auto p-6 bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border border-white/20">
-          {/* Gender Filter */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <span className="text-slate-700 font-semibold text-lg">Gender Preference:</span>
-            <div className="flex gap-3">
-              {['Male', 'Female', 'Any'].map(gender => {
-                const isSelected = selectedGenders.includes(gender);
-                return <button 
-                  key={gender} 
-                  type="button" 
-                  onClick={() => {
-                    setSelectedGenders(prev => isSelected ? prev.filter(g => g !== gender) : [...prev, gender]);
-                  }} 
-                  className={`px-6 py-2 rounded-full border-2 transition-all text-sm font-semibold transform hover:scale-105 ${
-                    isSelected 
-                      ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white border-blue-500 shadow-lg" 
-                      : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50 hover:border-blue-400"
-                  }`}
-                >
-                  {gender}
-                </button>;
-              })}
+        {/* Redesigned Filters Section */}
+        <div className="max-w-6xl mx-auto mb-12">
+          <div className="bg-gradient-to-br from-white/95 via-white/90 to-blue-50/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/30 p-8">
+            {/* Header */}
+            <div className="flex items-center gap-3 mb-8">
+              <div className="h-2 w-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"></div>
+              <h3 className="text-xl font-bold bg-gradient-to-r from-slate-700 to-blue-600 bg-clip-text text-transparent">
+                Refine Your Search
+              </h3>
             </div>
-          </div>
+            
+            {/* Filters Grid */}
+            <div className="grid lg:grid-cols-2 gap-8">
+              {/* Gender Filter */}
+              <div className="space-y-4">
+                <label className="text-sm font-semibold text-slate-600 uppercase tracking-wider">
+                  Gender Preference
+                </label>
+                <div className="flex flex-wrap gap-3">
+                  {['Male', 'Female', 'Any'].map(gender => {
+                    const isSelected = selectedGenders.includes(gender);
+                    return <button 
+                      key={gender} 
+                      type="button" 
+                      onClick={() => {
+                        setSelectedGenders(prev => isSelected ? prev.filter(g => g !== gender) : [...prev, gender]);
+                      }} 
+                      className={`group relative px-8 py-3 rounded-2xl border-2 transition-all duration-300 text-sm font-semibold transform hover:scale-105 hover:shadow-lg ${
+                        isSelected 
+                          ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white border-transparent shadow-lg shadow-blue-500/25" 
+                          : "bg-white/70 text-slate-700 border-slate-200 hover:bg-white hover:border-blue-300 hover:text-blue-600"
+                      }`}
+                    >
+                      <span className="relative z-10">{gender}</span>
+                      {isSelected && (
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-2xl blur-xl opacity-30 group-hover:opacity-40 transition-opacity"></div>
+                      )}
+                    </button>;
+                  })}
+                </div>
+              </div>
 
-          {/* Rent Range Filter */}
-          <div className="w-full lg:w-[350px]">
-            <label className="text-slate-700 font-semibold text-lg block mb-3">
-              Rent Range: ₹{rentRange[0].toLocaleString()} - ₹{rentRange[1].toLocaleString()}
-            </label>
-            <div className="px-2">
-              <Slider 
-                range 
-                min={MIN_RENT} 
-                max={MAX_RENT} 
-                step={500} 
-                value={rentRange} 
-                onChange={(val: [number, number]) => setRentRange(val)} 
-                trackStyle={{
-                  backgroundColor: "rgb(59 130 246)",
-                  height: 6
-                }} 
-                handleStyle={[{
-                  borderColor: "rgb(59 130 246)",
-                  backgroundColor: "rgb(59 130 246)",
-                  width: 20,
-                  height: 20,
-                  marginTop: -7
-                }, {
-                  borderColor: "rgb(59 130 246)",
-                  backgroundColor: "rgb(59 130 246)",
-                  width: 20,
-                  height: 20,
-                  marginTop: -7
-                }]} 
-                railStyle={{
-                  backgroundColor: "rgb(226 232 240)",
-                  height: 6
-                }}
-              />
+              {/* Rent Range Filter */}
+              <div className="space-y-4">
+                <label className="text-sm font-semibold text-slate-600 uppercase tracking-wider">
+                  Monthly Rent Range
+                </label>
+                <div className="bg-white/50 rounded-2xl p-6 border border-white/60">
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-lg font-bold text-slate-700">
+                      ₹{rentRange[0].toLocaleString()}
+                    </span>
+                    <span className="text-sm text-slate-500 px-3 py-1 bg-slate-100 rounded-full">to</span>
+                    <span className="text-lg font-bold text-slate-700">
+                      ₹{rentRange[1].toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="px-2">
+                    <Slider 
+                      range 
+                      min={MIN_RENT} 
+                      max={MAX_RENT} 
+                      step={500} 
+                      value={rentRange} 
+                      onChange={(val: [number, number]) => setRentRange(val)} 
+                      trackStyle={{
+                        background: "linear-gradient(90deg, rgb(59 130 246), rgb(147 51 234))",
+                        height: 8,
+                        borderRadius: 8
+                      }} 
+                      handleStyle={[{
+                        borderColor: "transparent",
+                        backgroundColor: "white",
+                        boxShadow: "0 4px 12px rgba(59, 130, 246, 0.4)",
+                        width: 24,
+                        height: 24,
+                        marginTop: -8,
+                        borderWidth: 3,
+                        borderStyle: "solid",
+                        borderRadius: 12
+                      }, {
+                        borderColor: "transparent", 
+                        backgroundColor: "white",
+                        boxShadow: "0 4px 12px rgba(147, 51, 234, 0.4)",
+                        width: 24,
+                        height: 24,
+                        marginTop: -8,
+                        borderWidth: 3,
+                        borderStyle: "solid",
+                        borderRadius: 12
+                      }]} 
+                      railStyle={{
+                        backgroundColor: "rgb(226 232 240)",
+                        height: 8,
+                        borderRadius: 8
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
