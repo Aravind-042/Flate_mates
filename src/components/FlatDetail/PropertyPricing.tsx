@@ -1,7 +1,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Phone, Mail, MessageCircle, Shield, Lock } from "lucide-react";
+import { Phone, Mail, MessageCircle, Shield, Lock, CheckCircle, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { useCredits } from "@/hooks/useCredits";
 import { ContactAccessModal } from "@/components/Credits/ContactAccessModal";
@@ -26,11 +26,23 @@ export const PropertyPricing = ({
   ownerProfile 
 }: PropertyPricingProps) => {
   const [showContactModal, setShowContactModal] = useState(false);
-  const [contactRevealed, setContactRevealed] = useState(false);
-  const { credits, checkContactAccess } = useCredits();
+  const { 
+    credits, 
+    checkContactAccess, 
+    hasAccessedContact, 
+    canAccessContact,
+    getCreditStatus 
+  } = useCredits();
 
+  const contactRevealed = hasAccessedContact(listingId);
+  const creditStatus = getCreditStatus();
   const handleContactAccess = async () => {
-    if (credits <= 0) {
+    if (contactRevealed) {
+      // User already has access, show contacts directly
+      return;
+    }
+    
+    if (!canAccessContact) {
       setShowContactModal(true);
       return;
     }
@@ -41,11 +53,9 @@ export const PropertyPricing = ({
   const handleConfirmAccess = async () => {
     const hasAccess = await checkContactAccess(listingId);
     if (hasAccess) {
-      setContactRevealed(true);
       setShowContactModal(false);
-      toast.success('Contact information revealed!');
     } else {
-      toast.error('Failed to access contact information');
+      setShowContactModal(false);
     }
   };
 
@@ -84,16 +94,16 @@ export const PropertyPricing = ({
 
           {/* Contact Actions */}
           <div className="space-y-3">
-            {!contactRevealed ? (
-              <Button 
-                onClick={handleContactAccess}
-                className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white rounded-xl py-3 text-sm font-semibold shadow-lg"
-              >
-                <Lock className="h-4 w-4 mr-2" />
-                {credits > 0 ? `Reveal Contact (1 Credit)` : 'Get Credits to Access'}
-              </Button>
-            ) : (
+            {contactRevealed ? (
               <>
+                {/* Contact Already Unlocked */}
+                <div className="bg-green-50 border border-green-200 rounded-xl p-3 mb-3">
+                  <div className="flex items-center space-x-2">
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                    <span className="text-sm font-medium text-green-800">Contact Unlocked</span>
+                  </div>
+                </div>
+                
                 <Button 
                   className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white rounded-xl py-3 text-sm font-semibold shadow-lg"
                   onClick={() => window.open(`tel:${ownerProfile?.phone_number}`, '_self')}
@@ -102,6 +112,7 @@ export const PropertyPricing = ({
                   <Phone className="h-4 w-4 mr-2" />
                   Call {formatPhoneNumber(ownerProfile?.phone_number || '')}
                 </Button>
+                
                 <div className="grid grid-cols-2 gap-2">
                   <Button 
                     variant="outline" 
@@ -122,11 +133,54 @@ export const PropertyPricing = ({
                     Email
                   </Button>
                 </div>
+                
                 {ownerProfile?.email && (
                   <div className="text-xs text-muted-foreground text-center p-2 bg-muted/50 rounded-lg">
                     Email: {formatEmail(ownerProfile.email)}
                   </div>
                 )}
+              </>
+            ) : (
+              <>
+                {/* Credit Status Indicator */}
+                <div className={`p-3 rounded-xl border ${creditStatus.borderColor} ${creditStatus.bgColor} mb-3`}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <Coins className="h-4 w-4 text-primary" />
+                      <span className="text-sm font-medium">Available Credits</span>
+                    </div>
+                    <Badge 
+                      variant={credits > 5 ? "default" : credits > 0 ? "secondary" : "destructive"}
+                      className="font-bold"
+                    >
+                      {credits}
+                    </Badge>
+                  </div>
+                  <p className={`text-xs mt-1 ${creditStatus.color}`}>
+                    {creditStatus.message}
+                  </p>
+                </div>
+
+                <Button 
+                  onClick={handleContactAccess}
+                  className={`w-full rounded-xl py-3 text-sm font-semibold shadow-lg transition-all duration-200 ${
+                    canAccessContact
+                      ? "bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white"
+                      : "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+                  }`}
+                >
+                  {canAccessContact ? (
+                    <>
+                      <Lock className="h-4 w-4 mr-2" />
+                      Unlock Contact (1 Credit)
+                    </>
+                  ) : (
+                    <>
+                      <Gift className="h-4 w-4 mr-2" />
+                      Earn Credits to Access
+                    </>
+                  )}
+                </Button>
               </>
             )}
           </div>
@@ -138,7 +192,7 @@ export const PropertyPricing = ({
         onClose={() => setShowContactModal(false)}
         onConfirm={handleConfirmAccess}
         listingTitle={listingTitle}
-        hasCredits={credits > 0}
+        listingId={listingId}
       />
     </>
   );
