@@ -58,7 +58,7 @@ export function NavBar({ leftItems, rightItems = [], className }: NavBarProps) {
           className={cn(
             "relative cursor-pointer text-sm font-semibold px-6 py-2 rounded-full transition-all duration-300",
             "text-slate-700 hover:text-slate-900",
-            isActive && "bg-gradient-to-r from-coral-500 to-violet-600 text-white shadow-lg border border-white/20 hover:text-white",
+            isActive && "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg border border-white/20 hover:text-white",
           )}
         >
           <span className="hidden md:inline">{item.name}</span>
@@ -68,7 +68,7 @@ export function NavBar({ leftItems, rightItems = [], className }: NavBarProps) {
           {isActive && (
             <motion.div
               layoutId="lamp"
-              className="absolute inset-0 w-full bg-gradient-to-r from-coral-400/10 to-violet-500/10 rounded-full -z-10"
+              className="absolute inset-0 w-full bg-gradient-to-r from-blue-400/10 to-purple-500/10 rounded-full -z-10"
               initial={false}
               transition={{
                 type: "spring",
@@ -76,10 +76,10 @@ export function NavBar({ leftItems, rightItems = [], className }: NavBarProps) {
                 damping: 30,
               }}
             >
-              <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-gradient-to-r from-coral-400 to-violet-500 rounded-t-full">
-                <div className="absolute w-12 h-6 bg-coral-400/30 rounded-full blur-md -top-2 -left-2" />
-                <div className="absolute w-8 h-6 bg-violet-500/30 rounded-full blur-md -top-1" />
-                <div className="absolute w-4 h-4 bg-coral-400/20 rounded-full blur-sm top-0 left-2" />
+              <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-gradient-to-r from-blue-400 to-purple-500 rounded-t-full">
+                <div className="absolute w-12 h-6 bg-blue-400/30 rounded-full blur-md -top-2 -left-2" />
+                <div className="absolute w-8 h-6 bg-purple-500/30 rounded-full blur-md -top-1" />
+                <div className="absolute w-4 h-4 bg-blue-400/20 rounded-full blur-sm top-0 left-2" />
               </div>
             </motion.div>
           )}

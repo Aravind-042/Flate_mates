@@ -86,8 +86,8 @@ const Browse = () => {
             onClick={() => setShowMap(!showMap)}
             className={`h-12 px-4 border-2 rounded-xl transition-all flex items-center gap-2 font-medium ${
               showMap 
-                ? 'bg-blue-500 text-white border-blue-500' 
-                : 'bg-white text-slate-700 border-slate-200 hover:border-coral-400'
+                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white border-blue-500 shadow-lg' 
+                : 'bg-white text-slate-700 border-slate-200 hover:border-blue-500 hover:text-blue-600'
             }`}
           >
             <Map size={18} />
@@ -137,10 +137,10 @@ const Browse = () => {
           <EmptyState />
         ) : showMap ? (
           <div className="w-full">
-            <div className="mb-4">
+            <div className="mb-6">
               <button
                 onClick={() => setShowMap(false)}
-                className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-slate-200 hover:border-coral-400 rounded-xl text-slate-700 font-medium transition-all"
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
               >
                 ← Back to List View
               </button>
