@@ -134,9 +134,9 @@ export const ImageCarousel = ({
         </>
       )}
 
-      {/* Image Indicator */}
+      {/* Image Indicator - moved to top-left to avoid favorite button */}
       {showIndicator && imageCount > 1 && (
-        <Badge className="absolute top-3 right-3 bg-black/70 text-white border-0 backdrop-blur-sm text-xs z-10">
+        <Badge className="absolute top-3 left-3 bg-black/70 text-white border-0 backdrop-blur-sm text-xs z-10">
           {currentIndex + 1} / {imageCount}
         </Badge>
       )}

@@ -88,8 +88,8 @@ export const ListingCard = memo(({
             </div>
           </div>
 
-          {/* Optimized Favorite Button - positioned to avoid image indicators */}
-          <div className="absolute top-4 right-4 z-30">
+          {/* Optimized Favorite Button - positioned away from indicators */}
+          <div className="absolute top-3 right-3 z-50">
             <FavoriteButton listingId={listing.id} variant="floating" size="md" />
           </div>
 
@@ -199,9 +199,9 @@ export const ListingCard = memo(({
               <div className="text-sm text-slate-600">per month</div>
             </div>
             
-            {/* Security Deposit Info - only show if > 0 */}
+            {/* Security Deposit Info - only show if exists and > 0 */}
             {listing.security_deposit && listing.security_deposit > 0 && <div className="text-right">
-                <div className="text-xs text-slate-500">Security Deposit</div>
+                <div className="text-xs text-slate-500 mb-1">Security Deposit</div>
                 <div className="text-sm font-semibold text-slate-700">
                   ₹{listing.security_deposit.toLocaleString()}
                 </div>
