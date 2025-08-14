@@ -98,6 +98,50 @@ export type Database = {
           },
         ]
       }
+      credit_transactions: {
+        Row: {
+          amount: number
+          balance_after: number
+          balance_before: number
+          created_at: string | null
+          description: string | null
+          id: string
+          related_id: string | null
+          transaction_type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          balance_after: number
+          balance_before: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          related_id?: string | null
+          transaction_type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          balance_after?: number
+          balance_before?: number
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          related_id?: string | null
+          transaction_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       flat_listings: {
         Row: {
           address_line1: string
@@ -1345,6 +1389,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_credits_to_user: {
+        Args: {
+          target_user_id: string
+          credit_amount: number
+          transaction_type?: string
+          description?: string
+          related_id?: string
+        }
+        Returns: boolean
+      }
       consume_credit_for_contact: {
         Args: { listing_id: string }
         Returns: boolean
@@ -1356,6 +1410,10 @@ export type Database = {
       generate_referral_code: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_user_credit_balance: {
+        Args: { target_user_id: string }
+        Returns: number
       }
       process_referral_signup: {
         Args: { referred_email: string; referral_code: string }
