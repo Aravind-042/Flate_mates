@@ -917,6 +917,39 @@ export type Database = {
           },
         ]
       }
+      rate_limits: {
+        Row: {
+          action_type: string
+          attempt_count: number | null
+          blocked_until: string | null
+          created_at: string | null
+          id: string
+          ip_address: unknown | null
+          user_id: string | null
+          window_start: string | null
+        }
+        Insert: {
+          action_type: string
+          attempt_count?: number | null
+          blocked_until?: string | null
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          user_id?: string | null
+          window_start?: string | null
+        }
+        Update: {
+          action_type?: string
+          attempt_count?: number | null
+          blocked_until?: string | null
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          user_id?: string | null
+          window_start?: string | null
+        }
+        Relationships: []
+      }
       referrals: {
         Row: {
           created_at: string
@@ -1092,6 +1125,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      security_audit_log: {
+        Row: {
+          action: string
+          created_at: string | null
+          details: Json | null
+          id: string
+          ip_address: unknown | null
+          resource_id: string | null
+          resource_type: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          resource_id?: string | null
+          resource_type?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: unknown | null
+          resource_id?: string | null
+          resource_type?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
       subscription_plans: {
         Row: {
@@ -1399,6 +1468,14 @@ export type Database = {
         }
         Returns: boolean
       }
+      check_rate_limit: {
+        Args: {
+          action_type: string
+          max_attempts?: number
+          window_minutes?: number
+        }
+        Returns: boolean
+      }
       consume_credit_for_contact: {
         Args: { listing_id: string }
         Returns: boolean
@@ -1414,6 +1491,15 @@ export type Database = {
       get_user_credit_balance: {
         Args: { target_user_id: string }
         Returns: number
+      }
+      log_security_event: {
+        Args: {
+          action_type: string
+          resource_type?: string
+          resource_id?: string
+          details?: Json
+        }
+        Returns: undefined
       }
       process_referral_signup: {
         Args: { referred_email: string; referral_code: string }
