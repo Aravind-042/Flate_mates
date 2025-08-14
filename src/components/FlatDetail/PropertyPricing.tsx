@@ -1,7 +1,8 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Phone, Mail, MessageCircle, Shield, Lock, CheckCircle, ExternalLink } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Phone, Mail, MessageCircle, Shield, Lock, CheckCircle, ExternalLink, Coins, Gift } from "lucide-react";
 import { useState } from "react";
 import { useCredits } from "@/hooks/useCredits";
 import { ContactAccessModal } from "@/components/Credits/ContactAccessModal";
