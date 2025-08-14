@@ -131,12 +131,28 @@ export const useCredits = () => {
     enabled: true,
   });
 
-  // Enhanced contact access with optimistic updates
+  // Enhanced contact access with optimistic updates and rate limiting
   const checkContactAccess = async (listingId: string): Promise<boolean> => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       toast.error('Please sign in to access contact information');
       return false;
+    }
+
+    // Check rate limit for contact access
+    try {
+      const { data: rateLimitOk } = await supabase.rpc('check_rate_limit', {
+        action_type: 'contact_access',
+        max_attempts: 20,
+        window_minutes: 60
+      });
+
+      if (!rateLimitOk) {
+        toast.error('Too many contact access attempts. Please wait before trying again.');
+        return false;
+      }
+    } catch (error) {
+      console.error('Rate limit check failed:', error);
     }
 
     const currentCredits = optimisticCredits ?? credits?.credits ?? 0;
