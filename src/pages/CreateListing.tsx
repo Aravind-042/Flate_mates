@@ -77,7 +77,7 @@ const CreateListing = () => {
 
   return (
     <div className="min-h-screen py-8 px-4 flex flex-col overflow-auto">
-      <div className="max-w-6xl mx-auto flex-1 flex flex-col">
+      <div className="max-w-7xl mx-auto flex-1 flex flex-col">
         <CreateListingHeader currentStep={currentStep} />
 
         <MainListingLayout

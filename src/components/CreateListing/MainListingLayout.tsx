@@ -56,7 +56,7 @@ export const MainListingLayout = ({
   };
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-[1fr_1.2fr] gap-4 sm:gap-6 lg:gap-8 h-full min-h-[70vh] w-full max-w-7xl mx-auto px-4 sm:px-6">
+    <div className="grid grid-cols-1 xl:grid-cols-[1.4fr_1fr] gap-4 sm:gap-6 lg:gap-8 h-full min-h-[70vh] w-full mx-auto px-4 sm:px-6">
       {/* Left: Form/Preview/Signup Section */}
       <div className="flex flex-col min-h-[50vh] w-full max-w-full order-2 xl:order-1">
         {renderCurrentStep()}
