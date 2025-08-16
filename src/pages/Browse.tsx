@@ -211,21 +211,38 @@ const Browse = () => {
         ) : filteredListings.length === 0 ? (
           <EmptyState />
         ) : showMap ? (
-          <div className="w-full">
-            <div className="mb-6">
+          <div className="w-full space-y-6">
+            {/* Back to List View Button */}
+            <div className="flex justify-start">
               <button
                 onClick={() => setShowMap(false)}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
+                className="flex items-center gap-2 px-6 py-3 bg-white hover:bg-slate-50 text-slate-700 font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 border border-slate-200"
               >
                 ← Back to List View
               </button>
             </div>
-            <ListingMap
-              listings={filteredListings.map(listing => ListingService.transformToFlatListing(listing))}
-              height="600px"
-              className="rounded-2xl overflow-hidden shadow-lg"
-              onListingSelect={(listing) => handleFlatClick(listing.id!)}
-            />
+            
+            {/* Map Container */}
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-slate-200">
+              <ListingMap
+                listings={filteredListings.map(listing => ListingService.transformToFlatListing(listing))}
+                height="600px"
+                className="w-full"
+                onListingSelect={(listing) => handleFlatClick(listing.id!)}
+              />
+              {/* Info Banner for No Coordinates */}
+              {filteredListings.length > 0 && filteredListings.filter(listing => {
+                const flatListing = ListingService.transformToFlatListing(listing);
+                return flatListing.location.coordinates;
+              }).length === 0 && (
+                <div className="bg-blue-50 border-t border-blue-200 p-4">
+                  <div className="text-center text-blue-700">
+                    <p className="text-sm font-medium">📍 Location data is being processed</p>
+                    <p className="text-xs mt-1">Listings will appear on the map once addresses are geocoded</p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

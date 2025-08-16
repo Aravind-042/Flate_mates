@@ -10,6 +10,8 @@ export interface ListingWithLocation extends ListingRow {
   locations?: {
     city: string;
     area: string;
+    latitude?: number | null;
+    longitude?: number | null;
   };
 }
 
@@ -24,7 +26,9 @@ export class ListingService {
         *,
         locations (
           city,
-          area
+          area,
+          latitude,
+          longitude
         )
       `)
       .eq('status', 'active')
@@ -47,7 +51,9 @@ export class ListingService {
         *,
         locations (
           city,
-          area
+          area,
+          latitude,
+          longitude
         )
       `)
       .eq('id', id)
@@ -71,7 +77,9 @@ export class ListingService {
         *,
         locations (
           city,
-          area
+          area,
+          latitude,
+          longitude
         )
       `)
       .eq('owner_id', ownerId)
@@ -157,7 +165,9 @@ export class ListingService {
         *,
         locations (
           city,
-          area
+          area,
+          latitude,
+          longitude
         )
       `)
       .eq('status', 'active');
@@ -206,7 +216,9 @@ export class ListingService {
         *,
         locations (
           city,
-          area
+          area,
+          latitude,
+          longitude
         )
       `)
       .eq('status', 'active')
@@ -233,6 +245,9 @@ export class ListingService {
         city: dbListing.locations?.city ?? "",
         area: dbListing.locations?.area ?? "",
         address: dbListing.address_line1 ?? "",
+        coordinates: (dbListing.locations?.latitude && dbListing.locations?.longitude) 
+          ? [dbListing.locations.longitude, dbListing.locations.latitude] as [number, number]
+          : undefined,
       },
       property: {
         type: dbListing.property_type,
