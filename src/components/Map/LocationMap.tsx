@@ -5,7 +5,13 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 // Get Mapbox token from Supabase secrets via edge function
 const getMapboxToken = async (): Promise<string> => {
   try {
-    const response = await fetch('/api/mapbox-token');
+    // Try to get from Supabase function
+    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mapbox-token`, {
+      headers: {
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+      }
+    });
+    
     if (response.ok) {
       const data = await response.json();
       return data.token;
@@ -13,6 +19,9 @@ const getMapboxToken = async (): Promise<string> => {
   } catch (error) {
     console.error('Error fetching Mapbox token:', error);
   }
+  
+  // Fallback: Show instructions to add token
+  console.warn('Mapbox token not configured. Please add MAPBOX_PUBLIC_TOKEN to Supabase Edge Function Secrets.');
   return '';
 };
 
@@ -44,6 +53,7 @@ export const LocationMap = ({
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const mapMarkersRef = useRef<mapboxgl.Marker[]>([]);
+  const [isTokenMissing, setIsTokenMissing] = React.useState(false);
 
   useEffect(() => {
     const initializeMap = async () => {
@@ -52,9 +62,11 @@ export const LocationMap = ({
       const token = await getMapboxToken();
       if (!token) {
         console.error('Mapbox token not available');
+        setIsTokenMissing(true);
         return;
       }
 
+      setIsTokenMissing(false);
       mapboxgl.accessToken = token;
 
       // Initialize map
@@ -144,10 +156,23 @@ export const LocationMap = ({
   };
 
   return (
-    <div 
-      ref={mapContainer} 
-      className={`rounded-lg overflow-hidden ${className}`}
-      style={{ height, width }}
-    />
+    <div className={`rounded-lg overflow-hidden ${className}`} style={{ height, width }}>
+      {isTokenMissing ? (
+        <div className="w-full h-full bg-slate-100 flex items-center justify-center border-2 border-dashed border-slate-300">
+          <div className="text-center p-8">
+            <div className="text-4xl mb-4">🗺️</div>
+            <h3 className="text-lg font-semibold text-slate-700 mb-2">Map Configuration Required</h3>
+            <p className="text-sm text-slate-600 mb-4 max-w-md">
+              To display the interactive map, please add your Mapbox public token to the Supabase Edge Function Secrets.
+            </p>
+            <p className="text-xs text-slate-500">
+              Get your token at <span className="font-mono bg-slate-200 px-1 rounded">https://mapbox.com</span>
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div ref={mapContainer} className="w-full h-full" />
+      )}
+    </div>
   );
 };
