@@ -30,8 +30,8 @@ export const hasPendingListingData = (): boolean => {
 export const getStorageUsage = (): { used: number; available: number } => {
   try {
     let used = 0;
-    for (let key in localStorage) {
-      if (localStorage.hasOwnProperty(key)) {
+    for (const key in localStorage) {
+      if (Object.prototype.hasOwnProperty.call(localStorage, key)) {
         used += localStorage[key].length;
       }
     }
