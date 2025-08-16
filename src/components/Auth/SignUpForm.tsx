@@ -34,7 +34,9 @@ export const SignUpForm = ({
       if (typeof window !== "undefined" && localStorage.getItem('pendingListingData')) {
         return "flat_owner";
       }
-    } catch (_) {}
+    } catch (_) {
+      // Ignore potential security errors from localStorage access
+    }
     return "flat_seeker";
   })();
   

@@ -19,14 +19,14 @@ export const validateEmail = (email: string): boolean => {
 };
 
 export const validatePhoneNumber = (phone: string): boolean => {
-  const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-  const sanitized = sanitizeInput(phone).replace(/[\s\-\(\)]/g, '');
+  const phoneRegex = /^[+]?[1-9][\d]{0,15}$/;
+  const sanitized = sanitizeInput(phone).replace(/[\s-()]/g, '');
   return phoneRegex.test(sanitized) && sanitized.length >= 10 && sanitized.length <= 15;
 };
 
 export const validateName = (name: string): boolean => {
   const sanitized = sanitizeInput(name);
-  return sanitized.length >= 2 && sanitized.length <= 100 && /^[a-zA-Z\s\-\.]+$/.test(sanitized);
+  return sanitized.length >= 2 && sanitized.length <= 100 && /^[a-zA-Z\s.-]+$/.test(sanitized);
 };
 
 export const validateAmount = (amount: number): boolean => {
