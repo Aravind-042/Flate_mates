@@ -140,7 +140,7 @@ export const ListingCard = memo(({
             </div>}
           
           {/* Property Details with Tooltips */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
             <div className="flex items-center space-x-4 text-sm text-slate-600">
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -191,7 +191,7 @@ export const ListingCard = memo(({
           </div>
           
           {/* Pricing */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <div>
               <div className="text-2xl font-bold text-slate-800">
                 ₹{listing.monthly_rent.toLocaleString()}

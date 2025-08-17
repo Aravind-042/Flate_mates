@@ -107,7 +107,7 @@ export const ProfileTabListings: React.FC = () => {
             {listings.map(listing => (
               <div
                 key={listing.id}
-                className="p-4 bg-slate-50 rounded-xl shadow flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4"
+                className="p-4 bg-slate-50 rounded-xl shadow flex flex-col md:flex-row md:justify-between md:items-start gap-4"
               >
                 <div className="flex-1 min-w-0">
                   <h3 className="text-lg font-semibold text-slate-800 truncate">
@@ -127,7 +127,7 @@ export const ProfileTabListings: React.FC = () => {
                     </span>
                   </p>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 flex-shrink-0">
+                <div className="flex flex-wrap flex-col sm:flex-row gap-2 sm:gap-2 flex-shrink-0">
                   {listing.status !== "rented" && (
                     <Button
                       size="sm"
