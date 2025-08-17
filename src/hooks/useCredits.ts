@@ -164,7 +164,25 @@ export const useCredits = () => {
       return false;
     }
 
-    // Check rate limit for contact access
+    // First check if user already accessed this contact (no rate limiting needed)
+    try {
+      const { data: existingAccess } = await supabase
+        .from('contact_access_log')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('listing_id', listingId)
+        .maybeSingle();
+
+      if (existingAccess) {
+        // User already has access, don't charge again
+        toast.success('Contact information already unlocked!');
+        return true;
+      }
+    } catch (error) {
+      console.error('Error checking existing access:', error);
+    }
+
+    // Check rate limit only for new contact access attempts
     try {
       const { data: rateLimitOk } = await supabase.rpc('check_rate_limit', {
         action_type: 'contact_access',
@@ -190,21 +208,6 @@ export const useCredits = () => {
     try {
       // Optimistic update - immediately reduce credits in UI
       setOptimisticCredits(currentCredits - 1);
-      
-      // Check if user already accessed this contact
-      const { data: existingAccess } = await supabase
-        .from('contact_access_log')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('listing_id', listingId)
-        .maybeSingle();
-
-      if (existingAccess) {
-        // User already has access, don't charge again
-        setOptimisticCredits(null); // Reset optimistic update
-        toast.success('Contact information already unlocked!');
-        return true;
-      }
 
       // Use RPC function to consume credit atomically
       const { data: success, error } = await supabase.rpc('consume_credit_for_contact', {
