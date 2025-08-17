@@ -42,6 +42,8 @@ export const useCredits = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
+      console.log('Fetching credits for user:', user.id);
+
       const { data, error } = await supabase
         .from('user_credits')
         .select('*')
@@ -55,7 +57,29 @@ export const useCredits = () => {
 
       // If no credits record exists, create one with default 10 credits
       if (!data) {
-        console.log('No credits record found, creating default record');
+        console.log('No credits record found, creating default record with 10 credits');
+        
+        // First try using the database function
+        const { data: functionResult, error: functionError } = await supabase
+          .rpc('get_user_credit_balance', { target_user_id: user.id });
+
+        if (!functionError && functionResult !== null) {
+          console.log('Credits initialized via function, balance:', functionResult);
+          
+          // Fetch the created record
+          const { data: newData, error: fetchError } = await supabase
+            .from('user_credits')
+            .select('*')
+            .eq('user_id', user.id)
+            .single();
+            
+          if (!fetchError && newData) {
+            return newData;
+          }
+        }
+
+        // Fallback to direct insert if function fails
+        console.log('Function approach failed, trying direct insert');
         const { data: newCredits, error: insertError } = await supabase
           .from('user_credits')
           .insert({ user_id: user.id, credits: 10 })
@@ -71,6 +95,7 @@ export const useCredits = () => {
         return newCredits;
       }
 
+      console.log('Found existing credits record:', data);
       return data;
     },
     enabled: true,
