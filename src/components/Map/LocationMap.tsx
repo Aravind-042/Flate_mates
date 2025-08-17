@@ -6,9 +6,9 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 const getMapboxToken = async (): Promise<string> => {
   try {
     // Try to get from Supabase function
-    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mapbox-token`, {
+    const response = await fetch(`https://yotshodiprpprkyonwno.supabase.co/functions/v1/mapbox-token`, {
       headers: {
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+        'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlvdHNob2RpcHJwcHJreW9ud25vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2ODUxOTksImV4cCI6MjA2NDI2MTE5OX0.NB2uGqScaOd_v4FJxt4zNrbIN3_GwDZ3qwF9_K7IKR0`
       }
     });
     
