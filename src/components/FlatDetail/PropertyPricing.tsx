@@ -2,10 +2,12 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Mail, MessageCircle, Shield, Lock, CheckCircle, ExternalLink, Coins, Gift } from "lucide-react";
+import { Phone, Mail, MessageCircle, Shield, Lock, CheckCircle, ExternalLink, Coins, Gift, LogIn } from "lucide-react";
 import { useState } from "react";
 import { useCredits } from "@/hooks/useCredits";
 import { ContactAccessModal } from "@/components/Credits/ContactAccessModal";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 interface PropertyPricingProps {
@@ -27,6 +29,8 @@ export const PropertyPricing = ({
   ownerProfile 
 }: PropertyPricingProps) => {
   const [showContactModal, setShowContactModal] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const { 
     credits, 
     checkContactAccess, 
@@ -38,6 +42,12 @@ export const PropertyPricing = ({
   const contactRevealed = hasAccessedContact(listingId);
   const creditStatus = getCreditStatus();
   const handleContactAccess = async () => {
+    // If user is not authenticated, prompt to login
+    if (!isAuthenticated) {
+      navigate('/auth');
+      return;
+    }
+
     if (contactRevealed) {
       // User already has access, show contacts directly
       return;
@@ -143,45 +153,70 @@ export const PropertyPricing = ({
               </>
             ) : (
               <>
-                {/* Credit Status Indicator */}
-                <div className={`p-3 rounded-xl border ${creditStatus.borderColor} ${creditStatus.bgColor} mb-3`}>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Coins className="h-4 w-4 text-primary" />
-                      <span className="text-sm font-medium">Available Credits</span>
+                {!isAuthenticated ? (
+                  <>
+                    {/* Guest User Login Prompt */}
+                    <div className="p-3 rounded-xl border border-blue-200 bg-blue-50 mb-3">
+                      <div className="flex items-center space-x-2">
+                        <LogIn className="h-4 w-4 text-blue-600" />
+                        <span className="text-sm font-medium text-blue-800">Sign in to access contact information</span>
+                      </div>
+                      <p className="text-xs mt-1 text-blue-600">
+                        Create an account to unlock contact details and get 10 free credits!
+                      </p>
                     </div>
-                    <Badge 
-                      variant={credits > 5 ? "default" : credits > 0 ? "secondary" : "destructive"}
-                      className="font-bold"
-                    >
-                      {credits}
-                    </Badge>
-                  </div>
-                  <p className={`text-xs mt-1 ${creditStatus.color}`}>
-                    {creditStatus.message}
-                  </p>
-                </div>
 
-                <Button 
-                  onClick={handleContactAccess}
-                  className={`w-full rounded-xl py-3 text-sm font-semibold shadow-lg transition-all duration-200 ${
-                    canAccessContact
-                      ? "bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white"
-                      : "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
-                  }`}
-                >
-                  {canAccessContact ? (
-                    <>
-                      <Lock className="h-4 w-4 mr-2" />
-                      Unlock Contact (1 Credit)
-                    </>
-                  ) : (
-                    <>
-                      <Gift className="h-4 w-4 mr-2" />
-                      Earn Credits to Access
-                    </>
-                  )}
-                </Button>
+                    <Button 
+                      onClick={handleContactAccess}
+                      className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl py-3 text-sm font-semibold shadow-lg transition-all duration-200"
+                    >
+                      <LogIn className="h-4 w-4 mr-2" />
+                      Sign In to Access Contact
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    {/* Credit Status Indicator for Authenticated Users */}
+                    <div className={`p-3 rounded-xl border ${creditStatus.borderColor} ${creditStatus.bgColor} mb-3`}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <Coins className="h-4 w-4 text-primary" />
+                          <span className="text-sm font-medium">Available Credits</span>
+                        </div>
+                        <Badge 
+                          variant={credits > 5 ? "default" : credits > 0 ? "secondary" : "destructive"}
+                          className="font-bold"
+                        >
+                          {credits}
+                        </Badge>
+                      </div>
+                      <p className={`text-xs mt-1 ${creditStatus.color}`}>
+                        {creditStatus.message}
+                      </p>
+                    </div>
+
+                    <Button 
+                      onClick={handleContactAccess}
+                      className={`w-full rounded-xl py-3 text-sm font-semibold shadow-lg transition-all duration-200 ${
+                        canAccessContact
+                          ? "bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary text-white"
+                          : "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+                      }`}
+                    >
+                      {canAccessContact ? (
+                        <>
+                          <Lock className="h-4 w-4 mr-2" />
+                          Unlock Contact (1 Credit)
+                        </>
+                      ) : (
+                        <>
+                          <Gift className="h-4 w-4 mr-2" />
+                          Earn Credits to Access
+                        </>
+                      )}
+                    </Button>
+                  </>
+                )}
               </>
             )}
           </div>
