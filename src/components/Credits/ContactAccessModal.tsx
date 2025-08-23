@@ -3,12 +3,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Coins, Users, ExternalLink, Copy, Check, AlertTriangle, Gift, CreditCard, LogIn } from 'lucide-react';
+import { Coins, Users, ExternalLink, Copy, Check, AlertTriangle, Gift, CreditCard } from 'lucide-react';
 import { useCredits } from '@/hooks/useCredits';
-import { useAuth } from '@/hooks/useAuth';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
 
 interface ContactAccessModalProps {
   isOpen: boolean;
@@ -25,8 +23,6 @@ export const ContactAccessModal = ({
   listingTitle, 
   listingId 
 }: ContactAccessModalProps) => {
-  const { isAuthenticated } = useAuth();
-  const navigate = useNavigate();
   const { 
     credits, 
     createReferral, 
@@ -46,13 +42,6 @@ export const ContactAccessModal = ({
   const creditStatus = getCreditStatus();
   const alreadyAccessed = hasAccessedContact(listingId);
   const pendingReferrals = getPendingReferralsCount();
-
-  // If user is not authenticated, redirect to auth
-  if (!isAuthenticated) {
-    // Don't render the modal if user is not authenticated
-    // The redirect should be handled in PropertyPricing component
-    return null;
-  }
 
   const handleCreateReferral = () => {
     if (!referredEmail.trim() || !referredEmail.includes('@')) {

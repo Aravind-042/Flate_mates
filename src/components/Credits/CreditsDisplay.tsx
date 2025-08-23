@@ -4,7 +4,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Coins, Users, Gift, TrendingUp, AlertTriangle } from 'lucide-react';
 import { useCredits } from '@/hooks/useCredits';
-import { useAuth } from '@/hooks/useAuth';
 
 interface CreditsDisplayProps {
   showDetails?: boolean;
@@ -17,7 +16,6 @@ export const CreditsDisplay = ({
   showActions = true, 
   compact = false 
 }: CreditsDisplayProps) => {
-  const { isAuthenticated } = useAuth();
   const { 
     credits, 
     creditsLoading, 
@@ -26,11 +24,6 @@ export const CreditsDisplay = ({
     getPendingReferralsCount,
     referrals 
   } = useCredits();
-
-  // Don't show credits display for guest users
-  if (!isAuthenticated) {
-    return null;
-  }
 
   const creditStatus = getCreditStatus();
   const totalEarned = getTotalReferralEarnings();

@@ -42,8 +42,6 @@ export const useCredits = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
-      console.log('Fetching credits for user:', user.id);
-
       const { data, error } = await supabase
         .from('user_credits')
         .select('*')
@@ -57,29 +55,7 @@ export const useCredits = () => {
 
       // If no credits record exists, create one with default 10 credits
       if (!data) {
-        console.log('No credits record found, creating default record with 10 credits');
-        
-        // First try using the database function
-        const { data: functionResult, error: functionError } = await supabase
-          .rpc('get_user_credit_balance', { target_user_id: user.id });
-
-        if (!functionError && functionResult !== null) {
-          console.log('Credits initialized via function, balance:', functionResult);
-          
-          // Fetch the created record
-          const { data: newData, error: fetchError } = await supabase
-            .from('user_credits')
-            .select('*')
-            .eq('user_id', user.id)
-            .single();
-            
-          if (!fetchError && newData) {
-            return newData;
-          }
-        }
-
-        // Fallback to direct insert if function fails
-        console.log('Function approach failed, trying direct insert');
+        console.log('No credits record found, creating default record');
         const { data: newCredits, error: insertError } = await supabase
           .from('user_credits')
           .insert({ user_id: user.id, credits: 10 })
@@ -95,7 +71,6 @@ export const useCredits = () => {
         return newCredits;
       }
 
-      console.log('Found existing credits record:', data);
       return data;
     },
     enabled: true,
@@ -164,25 +139,7 @@ export const useCredits = () => {
       return false;
     }
 
-    // First check if user already accessed this contact (no rate limiting needed)
-    try {
-      const { data: existingAccess } = await supabase
-        .from('contact_access_log')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('listing_id', listingId)
-        .maybeSingle();
-
-      if (existingAccess) {
-        // User already has access, don't charge again
-        toast.success('Contact information already unlocked!');
-        return true;
-      }
-    } catch (error) {
-      console.error('Error checking existing access:', error);
-    }
-
-    // Check rate limit only for new contact access attempts
+    // Check rate limit for contact access
     try {
       const { data: rateLimitOk } = await supabase.rpc('check_rate_limit', {
         action_type: 'contact_access',
@@ -208,6 +165,21 @@ export const useCredits = () => {
     try {
       // Optimistic update - immediately reduce credits in UI
       setOptimisticCredits(currentCredits - 1);
+      
+      // Check if user already accessed this contact
+      const { data: existingAccess } = await supabase
+        .from('contact_access_log')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('listing_id', listingId)
+        .maybeSingle();
+
+      if (existingAccess) {
+        // User already has access, don't charge again
+        setOptimisticCredits(null); // Reset optimistic update
+        toast.success('Contact information already unlocked!');
+        return true;
+      }
 
       // Use RPC function to consume credit atomically
       const { data: success, error } = await supabase.rpc('consume_credit_for_contact', {
