@@ -74,7 +74,7 @@ export const ProfileTabSettings: React.FC<ProfileTabSettingsProps> = ({ user }) 
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
-          <div className="flex flex-wrap items-center justify-start sm:justify-between gap-4 p-4 bg-slate-50 rounded-xl">
+          <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
             <div>
               <h4 className="font-semibold text-slate-800">Email</h4>
               <p className="text-slate-600">{user?.email}</p>
@@ -89,7 +89,7 @@ export const ProfileTabSettings: React.FC<ProfileTabSettingsProps> = ({ user }) 
             </Button>
           </div>
 
-          <div className="flex flex-wrap items-center justify-start sm:justify-between gap-4 p-4 bg-slate-50 rounded-xl">
+          <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
             <div>
               <h4 className="font-semibold text-slate-800">Password</h4>
               <p className="text-slate-600">••••••••</p>
@@ -105,7 +105,7 @@ export const ProfileTabSettings: React.FC<ProfileTabSettingsProps> = ({ user }) 
           </div>
 
           <div className="pt-6 border-t border-slate-200">
-            <div className="flex flex-wrap justify-center gap-4 mt-6 px-4">
+            <div className="flex justify-center gap-4 mt-6 px-4">
               <LogoutButton />
               <Button
                 variant="destructive"
